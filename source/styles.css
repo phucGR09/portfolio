@@ -199,7 +199,7 @@ section > h2 {
 }
 .reward-list li {
   display: grid;
-  grid-template-columns: 4rem 7rem 1fr;
+  grid-template-columns: 4rem 7rem minmax(0, 1fr) auto;
   gap: 1rem;
   align-items: baseline;
   padding: 1rem 0;
@@ -218,6 +218,20 @@ section > h2 {
 .reward-event {
   font-size: 0.82rem;
 }
+.reward-link {
+  color: var(--heading);
+  font-size: 1rem;
+  text-decoration: none;
+  transition: color 160ms ease, transform 160ms ease;
+}
+.reward-link:hover {
+  color: var(--accent);
+  transform: translate(2px, -2px);
+}
+.reward-link:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
 
 .timeline,
 .project-list {
@@ -232,7 +246,7 @@ section > h2 {
   margin-bottom: 1rem;
 }
 .period {
-  margin: 0.3rem 0 0;
+  margin: 1rem 0 0;
   color: var(--slate);
   font-size: 0.68rem;
   font-weight: 500;
@@ -538,15 +552,17 @@ footer a span {
     margin-bottom: 1rem;
     min-height: 10rem;
   }
-  .writing-list a {
-    grid-template-columns: 1fr auto;
-    gap: 0.4rem 1rem;
+  .reward-list li {
+    grid-template-columns: 3.5rem 1fr;
+    gap: 0.35rem 0.8rem;
   }
-  .writing-list time {
-    grid-column: 1 / -1;
+  .reward-event {
+    grid-column: 2;
   }
-  .writing-list span {
-    font-size: 0.8rem;
+  .reward-link {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: end;
   }
   footer {
     display: block;

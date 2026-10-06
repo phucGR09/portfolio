@@ -1,14 +1,19 @@
-# Alex Morgan Portfolio
+# Phan Van Phuc Portfolio
 
-A responsive static portfolio inspired by the **information architecture and editorial, sidebar-based presentation** of [Brittany Chiang's portfolio](https://brittanychiang.com/). It uses original markup, copy, illustrations, and styling, built with plain HTML and CSS.
+A responsive static portfolio for Phan Van Phuc, a fullstack developer and computer science student. Built with plain HTML and CSS.
 
 ## Project structure
 
 ```text
 .
 ├── index.html          # Main page markup
+├── pages/              # Individual experience case studies
+│   ├── golden-owl.html
+│   ├── saigon-solutions.html
+│   └── shub-solution.html
 ├── source/
-│   └── styles.css      # Site styles and responsive layout
+│   ├── case-study.css  # Shared case-study page styles
+│   └── styles.css      # Homepage styles and responsive layout
 ├── .gitignore
 └── README.md
 ```
