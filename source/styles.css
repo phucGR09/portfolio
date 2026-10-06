@@ -170,6 +170,13 @@ section > h2 {
 .education-note {
   color: var(--heading);
 }
+.education-logo {
+  display: block;
+  width: 128px;
+  height: 128px;
+  margin-top: 1rem;
+  object-fit: contain;
+}
 .stack-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
