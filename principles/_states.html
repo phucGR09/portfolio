@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex" />
+  <title>States gallery — Principles Lab (dev only)</title>
+  <link rel="stylesheet" href="../source/principles.css" />
+  <link rel="stylesheet" href="../source/lab.css" />
+  <style>
+    /* Gallery-only CSS. Lives here, not in lab.css/principles.css, so it
+       never counts against their shipped-page byte budgets (§2.2 UI plan). */
+    body { padding: var(--sp-4); }
+    .gallery { border-collapse: collapse; width: 100%; }
+    .gallery caption { text-align: left; color: var(--heading); font-size: var(--fs-h2); margin-bottom: var(--sp-2); }
+    .gallery th, .gallery td { border: 1px solid var(--line); padding: var(--sp-2); vertical-align: top; min-width: 160px; }
+    .gallery th { font: var(--fs-label) / 1 var(--font-sans); text-transform: uppercase; color: var(--slate); text-align: left; }
+    .cell-label { font: var(--fs-label) / 1 var(--font-sans); color: var(--mint); text-transform: uppercase; letter-spacing: 0.06em; display: block; margin-bottom: var(--sp-1); }
+    .cell { padding: var(--sp-2); border: 1px solid var(--line); border-radius: 2px; background: var(--stage-bg-deep); }
+  </style>
+</head>
+<body style="--accent: #64ffda;">
+  <h1>States gallery — every kernel component × 6 states</h1>
+  <p>Dev-only reference. Not linked from anywhere, not indexed. Compare against this page whenever <code>lab.css</code> changes.</p>
+
+  <table class="gallery">
+    <caption>14 kernel components (UI plan §8.2) × 6 states (§7.2)</caption>
+    <thead>
+      <tr><th>Component</th><th>idle</th><th>running</th><th>settled</th><th>compare</th><th>error</th><th>noscript</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th>ModeSwitch</th>
+        <td><div class="cell"><span class="cell-label">ModeSwitch · idle</span><button type="button" class="lab-switch" role="switch" aria-checked="false"><span>Loop per row</span><span>Join + batch</span></button></div></td>
+        <td><div class="cell"><span class="cell-label">ModeSwitch · running</span><button type="button" class="lab-switch" role="switch" aria-checked="false" disabled><span>Loop per row</span><span>Join + batch</span></button></div></td>
+        <td><div class="cell"><span class="cell-label">ModeSwitch · settled</span><button type="button" class="lab-switch" role="switch" aria-checked="true"><span>Loop per row</span><span>Join + batch</span></button></div></td>
+        <td><div class="cell"><span class="cell-label">ModeSwitch · compare</span><button type="button" class="lab-switch" role="switch" aria-checked="true"><span>Loop per row</span><span>Join + batch</span></button></div></td>
+        <td><div class="cell"><span class="cell-label">ModeSwitch · error</span><button type="button" class="lab-switch" role="switch" aria-checked="false"><span>Loop per row</span><span>Join + batch</span></button></div></td>
+        <td><div class="cell"><span class="cell-label">ModeSwitch · noscript</span><p>Mode: Loop per row (static — needs JS to switch)</p></div></td>
+      </tr>
+      <tr>
+        <th>RunButton</th>
+        <td><div class="cell" data-state="idle"><span class="cell-label">RunButton · idle</span><button type="button" class="lab-run">Load candidates</button></div></td>
+        <td><div class="cell" data-state="running"><span class="cell-label">RunButton · running</span><button type="button" class="lab-run">Skip to result</button></div></td>
+        <td><div class="cell" data-state="settled"><span class="cell-label">RunButton · settled</span><button type="button" class="lab-run">Load candidates</button></div></td>
+        <td><div class="cell" data-state="compare"><span class="cell-label">RunButton · compare</span><button type="button" class="lab-run">Load candidates</button></div></td>
+        <td><div class="cell" data-state="error"><span class="cell-label">RunButton · error</span><button type="button" class="lab-run">Load candidates</button></div></td>
+        <td><div class="cell"><span class="cell-label">RunButton · noscript</span><p>Run requires JavaScript.</p></div></td>
+      </tr>
+      <tr>
+        <th>ResetButton</th>
+        <td><div class="cell"><span class="cell-label">ResetButton · idle</span><button type="button" class="lab-reset">Reset</button></div></td>
+        <td><div class="cell"><span class="cell-label">ResetButton · running</span><button type="button" class="lab-reset">Reset</button></div></td>
+        <td><div class="cell"><span class="cell-label">ResetButton · settled</span><button type="button" class="lab-reset">Reset</button></div></td>
+        <td><div class="cell"><span class="cell-label">ResetButton · compare</span><button type="button" class="lab-reset">Reset</button></div></td>
+        <td><div class="cell"><span class="cell-label">ResetButton · error</span><button type="button" class="lab-reset">Reset</button></div></td>
+        <td><div class="cell"><span class="cell-label">ResetButton · noscript</span><p>—</p></div></td>
+      </tr>
+      <tr>
+        <th>Dial</th>
+        <td><div class="cell"><span class="cell-label">Dial · idle</span><label for="d1">Rows</label><input id="d1" type="range" min="0" max="2" value="1" /><output class="lab-dial-value">100</output></div></td>
+        <td><div class="cell"><span class="cell-label">Dial · running</span><label for="d2">Rows</label><input id="d2" type="range" min="0" max="2" value="1" disabled /><output class="lab-dial-value">100</output></div></td>
+        <td><div class="cell"><span class="cell-label">Dial · settled</span><label for="d3">Rows</label><input id="d3" type="range" min="0" max="2" value="1" /><output class="lab-dial-value">100</output></div></td>
+        <td><div class="cell"><span class="cell-label">Dial · compare</span><label for="d4">Rows</label><input id="d4" type="range" min="0" max="2" value="1" /><output class="lab-dial-value">100</output></div></td>
+        <td><div class="cell"><span class="cell-label">Dial · error</span><label for="d5">Rows</label><input id="d5" type="range" min="0" max="2" value="1" /><output class="lab-dial-value">100</output></div></td>
+        <td><div class="cell"><span class="cell-label">Dial · noscript</span><p>Rows: 100 (static)</p></div></td>
+      </tr>
+      <tr>
+        <th>PayloadChip</th>
+        <td><div class="cell"><span class="cell-label">PayloadChip · idle</span><button type="button" class="lab-payload-chip">' OR '1'='1</button></div></td>
+        <td><div class="cell"><span class="cell-label">PayloadChip · running</span><button type="button" class="lab-payload-chip" disabled>' OR '1'='1</button></div></td>
+        <td><div class="cell"><span class="cell-label">PayloadChip · settled</span><button type="button" class="lab-payload-chip">' OR '1'='1</button></div></td>
+        <td><div class="cell"><span class="cell-label">PayloadChip · compare</span><button type="button" class="lab-payload-chip">' OR '1'='1</button></div></td>
+        <td><div class="cell"><span class="cell-label">PayloadChip · error</span><button type="button" class="lab-payload-chip">' OR '1'='1</button></div></td>
+        <td><div class="cell"><span class="cell-label">PayloadChip · noscript</span><p>Payload: <code>' OR '1'='1</code></p></div></td>
+      </tr>
+      <tr>
+        <th>ResponseCard</th>
+        <td><div class="cell lab-response-card"><span class="cell-label">ResponseCard · idle</span><span class="lab-response-card__status">— </span><p class="lab-response-card__body">Waiting for a run…</p></div></td>
+        <td><div class="cell lab-response-card"><span class="cell-label">ResponseCard · running</span><span class="lab-response-card__status" data-sig="warn">streaming…</span><p class="lab-response-card__body">{ "rows": 42 of 101 }</p></div></td>
+        <td><div class="cell lab-response-card"><span class="cell-label">ResponseCard · settled</span><span class="lab-response-card__status" data-sig="ok">200 OK · 84 ms</span><p class="lab-response-card__body">{ "rows": 101 }</p></div></td>
+        <td><div class="cell lab-response-card"><span class="cell-label">ResponseCard · compare</span><span class="lab-response-card__status" data-sig="ok">200 OK</span><p class="lab-response-card__body">3.18 s → 84 ms</p></div></td>
+        <td><div class="cell lab-response-card"><span class="cell-label">ResponseCard · error</span><span class="lab-response-card__status" data-sig="bad">500 Internal Error</span><p class="lab-response-card__body">{ "error": "simulated failure" }</p></div></td>
+        <td><div class="cell lab-response-card"><span class="cell-label">ResponseCard · noscript</span><p class="lab-response-card__body">200 OK · 84 ms (static)</p></div></td>
+      </tr>
+      <tr>
+        <th>LogStream</th>
+        <td><div class="cell"><span class="cell-label">LogStream · idle</span><p class="lab-log__header">0 lines</p><ol class="lab-log__list"></ol></div></td>
+        <td><div class="cell"><span class="cell-label">LogStream · running</span><p class="lab-log__header">12 lines</p><ol class="lab-log__list"><li class="lab-log__line">query #11 42 rows</li><li class="lab-log__line">query #12 1 row</li></ol></div></td>
+        <td><div class="cell"><span class="cell-label">LogStream · settled</span><p class="lab-log__header">101 lines</p><ol class="lab-log__list"><li class="lab-log__line">query #100 1 row</li><li class="lab-log__line">query #101 1 row</li></ol></div></td>
+        <td><div class="cell"><span class="cell-label">LogStream · compare</span><p class="lab-log__header">merged after both runs</p><ol class="lab-log__list"><li class="lab-log__line">naive: 101 lines</li><li class="lab-log__line">principled: 2 lines</li></ol></div></td>
+        <td><div class="cell"><span class="cell-label">LogStream · error</span><p class="lab-log__header">4 lines</p><ol class="lab-log__list"><li class="lab-log__line">query #4 failed: timeout</li></ol></div></td>
+        <td><div class="cell"><span class="cell-label">LogStream · noscript</span><p>Logging requires JavaScript.</p></div></td>
+      </tr>
+      <tr>
+        <th>Readout</th>
+        <td><div class="cell lab-readout"><span class="cell-label">Readout · idle</span><span class="lab-readout__label">Total</span><span class="lab-readout__after">— ms</span></div></td>
+        <td><div class="cell lab-readout"><span class="cell-label">Readout · running</span><span class="lab-readout__label">Total</span><span class="lab-readout__after">612 ms</span></div></td>
+        <td><div class="cell lab-readout"><span class="cell-label">Readout · settled</span><span class="lab-readout__label">Total</span><span class="lab-readout__after">84 ms</span></div></td>
+        <td><div class="cell lab-readout" data-state="compare"><span class="cell-label">Readout · compare</span><span class="lab-readout__label">Total</span><span class="lab-readout__before">3.18 s</span><span class="lab-readout__arrow">→</span><span class="lab-readout__after">84 ms</span></div></td>
+        <td><div class="cell lab-readout"><span class="cell-label">Readout · error</span><span class="lab-readout__label">Total</span><span class="lab-readout__after">— ms</span></div></td>
+        <td><div class="cell lab-readout"><span class="cell-label">Readout · noscript</span><span class="lab-readout__label">Total</span><span class="lab-readout__after">84 ms</span></div></td>
+      </tr>
+      <tr>
+        <th>VerdictBar</th>
+        <td><div class="cell"><span class="cell-label">VerdictBar · idle</span><p>— queries → — queries</p></div></td>
+        <td><div class="cell"><span class="cell-label">VerdictBar · running</span><p>counting…</p></div></td>
+        <td><div class="cell"><span class="cell-label">VerdictBar · settled</span><p>101 queries (one mode only)</p></div></td>
+        <td><div class="cell"><span class="cell-label">VerdictBar · compare</span><p>101 queries → 1 query <strong>×38 faster</strong></p></div></td>
+        <td><div class="cell"><span class="cell-label">VerdictBar · error</span><p>— queries → — queries</p></div></td>
+        <td><div class="cell"><span class="cell-label">VerdictBar · noscript</span><p>101 queries → 1 query (static)</p></div></td>
+      </tr>
+      <tr>
+        <th>StateBanner</th>
+        <td><div class="cell"><span class="cell-label">StateBanner · idle</span><p class="lab-state-banner">idle</p></div></td>
+        <td><div class="cell"><span class="cell-label">StateBanner · running</span><p class="lab-state-banner">running</p></div></td>
+        <td><div class="cell"><span class="cell-label">StateBanner · settled</span><p class="lab-state-banner">settled</p></div></td>
+        <td><div class="cell"><span class="cell-label">StateBanner · compare</span><p class="lab-state-banner">compare</p></div></td>
+        <td><div class="cell"><span class="cell-label">StateBanner · error</span><p class="lab-state-banner">error</p></div></td>
+        <td><div class="cell"><span class="cell-label">StateBanner · noscript</span><p>n/a — no JS state machine</p></div></td>
+      </tr>
+      <tr>
+        <th>ModelNote</th>
+        <td colspan="6"><div class="cell"><span class="cell-label">ModelNote · identical in every state</span><details class="lab-model-note"><summary>ⓘ simulated</summary><p>1 round-trip ≈ 0.8ms + 0.02ms/row, jitter ±12% (seed 20261024). Runs entirely in your browser.</p></details></div></td>
+      </tr>
+      <tr>
+        <th>SafetyLine</th>
+        <td colspan="6"><div class="cell"><span class="cell-label">SafetyLine · identical in every state</span><p class="lab-safety-line">Runs entirely in your browser. No server, no real data.</p></div></td>
+      </tr>
+      <tr>
+        <th>SimClock</th>
+        <td><div class="cell"><span class="cell-label">SimClock · idle</span><button type="button" class="lab-sim-clock">1×</button></div></td>
+        <td><div class="cell"><span class="cell-label">SimClock · running</span><button type="button" class="lab-sim-clock" disabled>1×</button></div></td>
+        <td><div class="cell"><span class="cell-label">SimClock · settled</span><button type="button" class="lab-sim-clock">1×</button></div></td>
+        <td><div class="cell"><span class="cell-label">SimClock · compare</span><button type="button" class="lab-sim-clock">10×</button></div></td>
+        <td><div class="cell"><span class="cell-label">SimClock · error</span><button type="button" class="lab-sim-clock">1×</button></div></td>
+        <td><div class="cell"><span class="cell-label">SimClock · noscript</span><p>Speed: 1× (static)</p></div></td>
+      </tr>
+      <tr>
+        <th>ZoneLabel</th>
+        <td colspan="6"><div class="cell" data-zone="response"><span class="cell-label">ZoneLabel · identical in every state (reads data-zone)</span><p>Content of the zone goes here.</p></div></td>
+      </tr>
+      <tr>
+        <th>ProvenanceTag</th>
+        <td colspan="6"><div class="cell"><span class="cell-label">ProvenanceTag · identical in every state</span><span class="provenance-tag">Classic problem</span></div></td>
+      </tr>
+    </tbody>
+  </table>
+</body>
+</html>

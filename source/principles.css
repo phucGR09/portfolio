@@ -1,0 +1,177 @@
+/* principles.css — Principles Lab's own chassis + shell (LUẬT 0: this file
+   never pulls in the portfolio's styles.css / case-study.css). */
+
+:root {
+  color-scheme: dark;
+
+  /* Tầng A — chassis palette (bất biến) */
+  --navy: #0b192f;
+  --navy-light: #112240;
+  --slate: #8892b0;
+  --slate-light: #a8b2d1;
+  --heading: #ccd6f6;
+  --line: rgba(136, 146, 176, 0.2);
+  --mint: #64ffda;
+
+  /* Tầng D — stage palette */
+  --stage-bg-deep: #0a1528;
+  --stage-bg-raised: #0d1c34;
+  --stage-bg-void: #07101f;
+  --stage-bg-ledger: #0b1b2b;
+
+  /* Tầng C — signal set (ngữ nghĩa, bất biến toàn site) */
+  --sig-ok: #3fb950;
+  --sig-warn: #d29922;
+  --sig-bad: #f85149;
+  --sig-info: #58a6ff;
+  --sig-ghost: rgba(136, 146, 176, 0.45);
+  --sig-focus: #ffffff;
+
+  /* Chữ */
+  --font-sans: Inter, system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "JetBrains Mono", Menlo, Consolas, monospace;
+  --fs-hero: clamp(2.2rem, 5.5vw, 3.6rem);
+  --fs-h2: 1.1rem;
+  --fs-lead: 1.05rem;
+  --fs-body: 0.95rem;
+  --fs-label: 0.68rem;
+  --fs-mono: 0.8rem;
+  --fs-mono-sm: 0.72rem;
+  --fs-readout: clamp(1.6rem, 4vw, 2.4rem);
+
+  /* Spacing */
+  --sp-1: 0.35rem;
+  --sp-2: 0.7rem;
+  --sp-3: 1.1rem;
+  --sp-4: 1.8rem;
+  --sp-5: 3rem;
+  --sp-6: 5rem;
+  --pane-pad: clamp(0.9rem, 2.5vw, 1.4rem);
+  --section-pad: clamp(4rem, 9vw, 8rem);
+
+  /* Motion — UI axis only; sim time lives in clock.js, never CSS */
+  --t-instant: 90ms;
+  --t-ui: 180ms;
+  --t-reveal: 320ms;
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+* { box-sizing: border-box; }
+
+html { background: var(--navy); }
+
+body {
+  background: var(--navy);
+  color: var(--slate-light);
+  font: var(--fs-body) / 1.7 var(--font-sans);
+  margin: 0;
+  --accent-soft: color-mix(in srgb, var(--accent, var(--mint)) 12%, transparent);
+  --accent-line: color-mix(in srgb, var(--accent, var(--mint)) 38%, transparent);
+}
+
+h1, h2, h3 { color: var(--heading); font-family: var(--font-sans); line-height: 1.2; }
+a { color: var(--mint); }
+:focus-visible { outline: 2px solid var(--mint); outline-offset: 2px; }
+
+.metric,
+.counter,
+.log-line {
+  font-variant-numeric: tabular-nums;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+/* ---- Lab nav / footer (own to the Lab — LUẬT 0: no link leaves /principles/) */
+.lab-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--sp-3) var(--sp-4);
+  border-bottom: 1px solid var(--line);
+  font: var(--fs-label) / 1 var(--font-sans);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.lab-nav a { color: var(--slate-light); text-decoration: none; margin-left: var(--sp-3); }
+.lab-nav__wordmark { color: var(--heading); letter-spacing: 0; text-transform: none; }
+
+.lab-footer {
+  padding: var(--sp-4);
+  border-top: 1px solid var(--line);
+  font: var(--fs-label) / 1.6 var(--font-sans);
+  color: var(--slate);
+}
+
+/* ---- Lesson shell: 8 blocks, locked order, lede/content split ---- */
+.lesson-hero { padding: var(--section-pad) var(--sp-4) var(--sp-4); max-width: 68ch; }
+.lesson-hero h1 { font-size: var(--fs-hero); letter-spacing: -0.045em; margin: var(--sp-3) 0; }
+.pill {
+  display: inline-flex;
+  font: var(--fs-label) / 1 var(--font-sans);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border: 1px solid var(--accent-line);
+  color: var(--accent, var(--mint));
+  border-radius: 999px;
+  padding: 0.3em 0.8em;
+  margin-right: var(--sp-2);
+}
+.metric-strip {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-2);
+  font: var(--fs-readout) / 1 var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  margin: var(--sp-3) 0;
+}
+.metric-strip small { font: var(--fs-label) / 1 var(--font-sans); color: var(--slate); }
+
+.lesson-block {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--sp-3);
+  padding: var(--section-pad) var(--sp-4);
+  max-width: 68ch;
+}
+.lesson-block--full { max-width: none; padding: var(--section-pad) 0; }
+@media (min-width: 900px) {
+  .lesson-block { grid-template-columns: 0.43fr 1fr; max-width: none; }
+}
+.lesson-block h2 { font-size: var(--fs-h2); }
+
+.tradeoff-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--sp-3);
+}
+@media (min-width: 720px) {
+  .tradeoff-grid { grid-template-columns: 1fr 1fr; }
+}
+
+.principle-box {
+  border: 1px solid var(--accent-line);
+  border-left-width: 3px;
+  border-radius: 2px;
+  padding: var(--pane-pad);
+}
+
+/* ---- Landing / hub (catalog) — minimal now, grows in P02 ---- */
+.catalog-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--sp-3);
+  padding: var(--sp-4);
+}
+@media (min-width: 720px) {
+  .catalog-grid { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}

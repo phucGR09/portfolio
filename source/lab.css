@@ -1,0 +1,209 @@
+/* lab.css — kernel: 4-zone grid, 6 states, 14 kernel components (UI plan §8.2).
+   Stage-specific layouts live in .stage--<id> files (<=120 lines each), not here. */
+
+[data-lab] {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--sp-4);
+  background: var(--stage-bg-deep);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  padding: var(--pane-pad);
+  min-height: 70vh;
+  position: relative;
+}
+[data-lab][data-stage-bg="deep"] { background: var(--stage-bg-deep); }
+[data-lab][data-stage-bg="raised"] { background: var(--stage-bg-raised); }
+[data-lab][data-stage-bg="void"] { background: var(--stage-bg-void); }
+[data-lab][data-stage-bg="ledger"] { background: var(--stage-bg-ledger); }
+
+[data-zone] {
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  padding: var(--pane-pad);
+  min-height: 3rem;
+}
+[data-zone="control"] { display: flex; flex-wrap: wrap; gap: var(--sp-2); align-items: center; }
+[data-zone]::before {
+  content: attr(data-zone);
+  display: block;
+  font: var(--fs-label) / 1 var(--font-sans);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--slate);
+  margin-bottom: var(--sp-2);
+}
+
+/* ---- State machine (StateBanner + idle/running/settled/compare/error) --- */
+.lab-state-banner {
+  font: var(--fs-label) / 1 var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--slate);
+}
+[data-lab][data-state="idle"] [data-zone="response"],
+[data-lab][data-state="idle"] [data-zone="internals"] {
+  color: var(--slate);
+  font-style: italic;
+}
+[data-lab][data-state="running"] .lab-run { color: var(--sig-focus); border-color: var(--sig-focus); }
+[data-lab][data-state="error"] [data-zone="response"] { border-color: var(--sig-bad); }
+[data-lab][data-state="error"] .lab-error { color: var(--sig-bad); }
+[data-lab][data-state="error"] .lab-error::before { content: "✕ "; }
+
+/* Readout / VerdictBar before->after, only meaningful once both modes ran */
+.lab-readout { display: flex; align-items: baseline; gap: var(--sp-2); min-height: 1.9rem; }
+.lab-readout__label { font: var(--fs-label) / 1 var(--font-sans); color: var(--slate); min-width: 7ch; }
+.lab-readout__before,
+.lab-readout__after {
+  font: var(--fs-readout) / 1 var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  min-width: 6ch;
+  text-align: right;
+}
+.lab-readout__before { color: var(--slate); }
+.lab-readout__arrow { color: var(--slate); }
+[data-lab]:not([data-state="compare"]) .lab-readout__before,
+[data-lab]:not([data-state="compare"]) .lab-readout__arrow {
+  display: none;
+}
+
+/* ---- ModeSwitch — RULE 3: naive is neutral slate, never red ---- */
+.lab-switch {
+  display: inline-flex;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  overflow: hidden;
+  background: none;
+  font: var(--fs-label) / 1 var(--font-sans);
+  cursor: pointer;
+}
+.lab-switch span { padding: 0.4em 0.9em; color: var(--slate); }
+.lab-switch[aria-checked="false"] span:first-child,
+.lab-switch[aria-checked="true"] span:last-child {
+  background: var(--accent-soft);
+  color: var(--heading);
+}
+
+/* ---- RunButton / ResetButton / SimClock ---- */
+.lab-run,
+.lab-reset,
+.lab-sim-clock {
+  font: var(--fs-label) / 1 var(--font-sans);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.6em 1.1em;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background: none;
+  color: var(--heading);
+  cursor: pointer;
+  min-height: 40px;
+  min-width: 40px;
+}
+.lab-run { border-color: var(--accent-line); color: var(--accent); }
+button:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ---- Dial (range control) ---- */
+.lab-dial-value {
+  font: var(--fs-mono) / 1 var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--heading);
+  min-width: 4ch;
+}
+input[type="range"] { accent-color: var(--accent); min-height: 40px; }
+
+/* ---- PayloadChip (Attacker Console labs) ---- */
+.lab-payload-chip {
+  display: inline-flex;
+  font: var(--fs-mono-sm) / 1 var(--font-mono);
+  border: 1px dashed var(--sig-bad);
+  color: var(--sig-bad);
+  border-radius: 2px;
+  padding: 0.3em 0.6em;
+  cursor: pointer;
+  background: none;
+}
+
+/* ---- ResponseCard ---- */
+.lab-response-card { border: 1px solid var(--line); border-radius: 2px; padding: var(--pane-pad); }
+.lab-response-card__status {
+  font: var(--fs-mono) / 1 var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+.lab-response-card__status[data-sig="ok"] { color: var(--sig-ok); }
+.lab-response-card__status[data-sig="warn"] { color: var(--sig-warn); }
+.lab-response-card__status[data-sig="bad"] { color: var(--sig-bad); }
+.lab-response-card__body {
+  font: var(--fs-mono-sm) / 1.5 var(--font-mono);
+  color: var(--slate-light);
+  white-space: pre-wrap;
+  margin-top: var(--sp-2);
+}
+
+/* ---- LogStream ---- */
+.lab-log__header {
+  font: var(--fs-label) / 1 var(--font-mono);
+  color: var(--slate);
+  margin: 0 0 var(--sp-2);
+}
+.lab-log__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 42vh;
+  overflow-y: auto;
+  font: var(--fs-mono-sm) / 1.35 var(--font-mono);
+}
+.lab-log__line {
+  padding: 0.15em 0.3em;
+  border-bottom: 1px solid var(--line);
+  color: var(--sig-info);
+}
+.lab-log__list:hover .lab-log__line { animation-play-state: paused; }
+.lab-log__line:last-child { border-left: 2px solid var(--sig-focus); }
+
+/* ---- ModelNote / SafetyLine ---- */
+.lab-model-note {
+  font: var(--fs-label) / 1.4 var(--font-sans);
+  color: var(--slate);
+}
+.lab-model-note summary { cursor: pointer; color: var(--mint); }
+.lab-model-note p { margin: var(--sp-2) 0 0; font-family: var(--font-mono); font-size: var(--fs-mono-sm); }
+.lab-safety-line {
+  font: var(--fs-label) / 1.4 var(--font-sans);
+  color: var(--sig-warn);
+  border: 1px dashed var(--sig-warn);
+  border-radius: 2px;
+  padding: var(--sp-2);
+}
+
+/* ---- ProvenanceTag ---- */
+.provenance-tag {
+  display: inline-flex;
+  font: var(--fs-label) / 1 var(--font-sans);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--slate);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.3em 0.8em;
+}
+
+/* ---- noscript fallback — never a blank frame ---- */
+[data-lab] noscript { display: block; border: 1px solid var(--line); padding: var(--pane-pad); }
+
+/* ---- Mobile (360px) — LUẬT 11: stage drawn mobile-first already above ---- */
+@media (min-width: 720px) {
+  [data-zone="control"] { grid-column: 1 / -1; }
+}
+
+/* ---- Reduced motion: stepped reveal, never remove content (LUẬT 17) ---- */
+@media (prefers-reduced-motion: reduce) {
+  [data-lab] *,
+  [data-lab] *::before,
+  [data-lab] *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

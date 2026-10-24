@@ -1,0 +1,99 @@
+<!doctype html>
+<!--
+  _template.html — copy this file for a new lesson page (P00–P01, deliberate:
+  3 pages don't earn a generator yet, see docs/implement/README.md D-series).
+
+  TRIPWIRE: when you are about to create the 6th lesson page, STOP. Write
+  tools/stamp.mjs instead (see docs/implement/phase-04-completion.md) and
+  generate every page — including the 5 that already exist — from catalog.js.
+  Hand-copying this file a 6th time is the exact one-rule-five-places mistake
+  this site teaches against.
+
+  Fill in every <!-- FILL: ... --> comment. Do not delete a block — if it has
+  nothing to say, it still needs a sentence (RULE 6b: Trade-offs must never
+  be empty).
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title><!-- FILL: symptom title --> — Principles Lab</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../source/principles.css" />
+  <link rel="stylesheet" href="../source/lab.css" />
+</head>
+<!-- FILL: --accent from the branch's color (UI plan §3.2); --stage-bg-* comes from lab.css, not here -->
+<body style="--accent: #64ffda;">
+  <nav class="lab-nav">
+    <a class="lab-nav__wordmark" href="./">⬡ Principles Lab</a>
+    <div><a href="./">All problems</a><a href="./by/">By principle</a></div>
+  </nav>
+
+  <!-- ① HERO — symptom, in the words of someone who isn't a dev yet -->
+  <header class="lesson-hero">
+    <span class="pill"><!-- FILL: category --></span>
+    <span class="pill"><!-- FILL: difficulty --></span>
+    <span class="pill"><!-- FILL: blast radius --></span>
+    <h1><!-- FILL: symptom headline, no jargon --></h1>
+    <p class="metric-strip"><!-- FILL: before --> <span>→</span> <!-- FILL: after --></p>
+    <span class="provenance-tag"><!-- FILL: classic problem | from the field | constructed example --></span>
+  </header>
+
+  <!-- ② SITUATION — 120-180 words; why the original code was reasonable -->
+  <section class="lesson-block">
+    <h2>The situation</h2>
+    <p><!-- FILL --></p>
+  </section>
+
+  <!-- ③ THE LAB — full-bleed stage, 100% free layout (Stage Contract, §7 UI plan) -->
+  <section class="lesson-block--full">
+    <div data-lab>
+      <noscript>
+        <!-- FILL: static table/verdict equivalent — never a blank frame (M5) -->
+        <p>This lab needs JavaScript. Here is what it would show:</p>
+      </noscript>
+    </div>
+    <script type="module" src="../scripts/labs/REPLACE_ME/index.js"></script>
+  </section>
+
+  <!-- ④ UNDER THE HOOD — SVG diagram + ~150 words -->
+  <section class="lesson-block">
+    <h2>Under the hood</h2>
+    <p><!-- FILL --></p>
+  </section>
+
+  <!-- ⑤ THE PRINCIPLE — now name it, <= 60 words -->
+  <section class="lesson-block principle-box">
+    <h2>The principle</h2>
+    <p><!-- FILL --></p>
+  </section>
+
+  <!-- ⑥ TRADE-OFFS — RULE 6b: must never be empty -->
+  <section class="lesson-block">
+    <h2>Trade-offs &amp; when NOT to</h2>
+    <div class="tradeoff-grid">
+      <div><h3>Apply this when</h3><p><!-- FILL --></p></div>
+      <div><h3>Don't when</h3><p><!-- FILL --></p></div>
+    </div>
+  </section>
+
+  <!-- ⑦ WHERE THIS BITES IN PRACTICE — no personal anecdotes, no badges -->
+  <section class="lesson-block">
+    <h2>Where this bites in practice</h2>
+    <p><!-- FILL --></p>
+  </section>
+
+  <!-- ⑧ CARRY IT AWAY — 4-6 item checklist + related -->
+  <section class="lesson-block">
+    <h2>Carry it away</h2>
+    <ul><!-- FILL --></ul>
+  </section>
+
+  <nav><!-- FILL: prev / next within the same category --></nav>
+  <footer class="lab-footer">
+    <p><!-- FILL: SafetyLine lives in the stage for security labs, not here --></p>
+    <p>Built and maintained by Phuc</p>
+  </footer>
+</body>
+</html>
