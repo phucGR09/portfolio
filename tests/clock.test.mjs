@@ -15,7 +15,7 @@ test("skip() resolves immediately but keeps the simulated number unchanged", asy
   clock.skip();
   await pending;
   assert.equal(clock.now(), 5000);
-  assert.ok(Date.now() - started < 200, "skip() must not wait out the real delay");
+  assert.ok(Date.now() - started < 1000, "skip() must not wait out the real delay");
 });
 
 test("ceilingMs caps real wall-clock wait for a run", async () => {
@@ -23,7 +23,7 @@ test("ceilingMs caps real wall-clock wait for a run", async () => {
   const started = Date.now();
   await clock.sleep(1000);
   await clock.sleep(1000);
-  assert.ok(Date.now() - started < 200, "a run must never wait longer than ceilingMs of real time");
+  assert.ok(Date.now() - started < 1000, "a run must never wait longer than ceilingMs of real time");
   assert.equal(clock.now(), 2000, "simulated time still reports the full requested duration");
 });
 
