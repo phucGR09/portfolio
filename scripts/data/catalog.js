@@ -10,33 +10,36 @@ export const CATEGORIES = ["data", "security", "code-design", "api", "performanc
 export const CATALOG = [
   {
     slug: "n-plus-one-query",
-    title: "The N+1 Query",
+    principle: "N+1 Query",
+    title: "Your candidate list loads instantly with 10 rows. With 500, it crawls.",
     category: "data",
     difficulty: "foundational",
     blastRadius: "expensive",
     provenance: "classic",
     related: [],
-    runnable: false
+    runnable: true
   },
   {
     slug: "sql-injection-contact-form",
-    title: "SQL Injection in a Contact Form",
+    principle: "SQL Injection",
+    title: "A contact form started returning every customer's password hash.",
     category: "security",
     difficulty: "foundational",
     blastRadius: "catastrophic",
     provenance: "classic",
     related: [],
-    runnable: false
+    runnable: true
   },
   {
     slug: "one-rule-five-places",
-    title: "One Rule, Five Places",
+    principle: "DRY (Duplicated Logic)",
+    title: "We updated the tax rate everywhere — except the screen that charges customers.",
     category: "code-design",
     difficulty: "intermediate",
     blastRadius: "expensive",
     provenance: "classic",
     related: [],
-    runnable: false
+    runnable: true
   }
 ];
 

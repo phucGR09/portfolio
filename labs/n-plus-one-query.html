@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Why does the candidate list crawl at 500 rows? — Principles Lab</title>
+  <meta name="description" content="A runnable lab showing the N+1 query problem: one query per row instead of one batched query, and the principle that fixes it." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../source/labs.css" />
+  <link rel="stylesheet" href="../source/lab.css" />
+  <link rel="stylesheet" href="../scripts/labs/n-plus-one.css" />
+</head>
+<body style="--accent: #5fd4c7;">
+  <nav class="lab-nav">
+    <a class="lab-nav__wordmark" href="./">⬡ Principles Lab</a>
+    <div><a href="./">All problems</a></div>
+  </nav>
+
+  <header class="lesson-hero" data-block="hero">
+    <p class="hero-principle">N+1 Query</p>
+    <span class="pill">Data &amp; Database</span>
+    <span class="pill pill--difficulty">Foundational</span>
+    <span class="pill" data-blast="expensive">Expensive</span>
+    <h1>Your candidate list loads instantly with 10 rows. With 500, it crawls.</h1>
+    <p class="metric-strip metric"><span>101 queries</span> <span>→</span> <span>2 queries</span></p>
+    <span class="provenance-tag">Classic problem</span>
+  </header>
+
+  <section class="lesson-block" data-block="situation">
+    <h2>The situation</h2>
+    <p>
+      An applicant tracking page lists candidates with their company name next to each one.
+      The first version was simple: load the candidates, then for each one ask the database
+      for its company. That is exactly how you would describe the task out loud — "for each
+      candidate, look up their company" — so it is exactly how the code reads, and it passed
+      review. It was also tested against five rows of fixture data, where one extra query per
+      row is free. Nobody wrote a bug; they wrote a sentence, and the database bill for a
+      sentence depends entirely on how many times you say it.
+    </p>
+  </section>
+
+  <section class="lesson-block--full" data-block="lab">
+    <div data-lab>
+      <noscript>
+        <p>This lab needs JavaScript. With it: loading 100 candidates one row at a time
+        costs 101 database round-trips; batching the lookup costs 2.</p>
+      </noscript>
+    </div>
+    <script type="module" src="../scripts/labs/n-plus-one.js"></script>
+  </section>
+
+  <section class="lesson-block" data-block="under-the-hood">
+    <h2>Under the hood</h2>
+    <svg viewBox="0 0 320 120" role="img" aria-labelledby="uth-title uth-desc" style="width:100%;max-width:480px;color:var(--text-mute)">
+      <title id="uth-title">Naive loop vs. batched join</title>
+      <desc id="uth-desc">Naive mode sends one query per candidate to fetch its company. Principled mode sends one query for all candidates and one batched query for every company, then joins them in memory.</desc>
+      <text x="4" y="14" font-size="9" fill="var(--sig-bad)">naive</text>
+      <rect x="4" y="22" width="40" height="14" fill="none" stroke="currentColor" />
+      <text x="10" y="32" font-size="8" fill="currentColor">candidates</text>
+      <g fill="var(--sig-bad)">
+        <circle cx="70" cy="29" r="3" /><circle cx="85" cy="29" r="3" /><circle cx="100" cy="29" r="3" />
+        <circle cx="115" cy="29" r="3" /><circle cx="130" cy="29" r="3" />
+      </g>
+      <text x="60" y="46" font-size="8" fill="var(--sig-bad)">1 query per row (N)</text>
+      <line x1="48" y1="29" x2="150" y2="29" stroke="var(--sig-bad)" stroke-dasharray="2 2" />
+      <text x="4" y="70" font-size="9" fill="var(--sig-ok)">principled</text>
+      <rect x="4" y="78" width="40" height="14" fill="none" stroke="currentColor" />
+      <text x="10" y="88" font-size="8" fill="currentColor">candidates</text>
+      <rect x="70" y="78" width="40" height="14" fill="none" stroke="var(--sig-ok)" />
+      <text x="76" y="88" font-size="8" fill="var(--sig-ok)">companies</text>
+      <line x1="48" y1="85" x2="68" y2="85" stroke="var(--sig-ok)" />
+      <text x="60" y="110" font-size="8" fill="var(--sig-ok)">2 queries, joined in memory</text>
+    </svg>
+    <p>
+      Naive mode runs one query to list candidates, then one more query per candidate to
+      fetch its company — <code>N+1</code> round-trips for <code>N</code> rows. Principled
+      mode runs the same candidate query, then a single batched query for every company
+      referenced, and joins the two in memory with a lookup map. The data returned is
+      identical; only the number of round-trips changes.
+    </p>
+  </section>
+
+  <section class="lesson-block principle-box" data-block="principle">
+    <h2>The principle</h2>
+    <p>Fetching related data inside a loop multiplies your query count by the size of the
+    loop. Batch the lookups instead: fetch once, then join in memory.</p>
+  </section>
+
+  <section class="lesson-block" data-block="tradeoffs">
+    <h2>Trade-offs &amp; when NOT to</h2>
+    <div class="tradeoff-grid">
+      <div>
+        <h3>Apply this when</h3>
+        <p>You are joining a small-to-medium set of foreign keys against a table that is
+        cheap to fetch in bulk — companies, categories, any lookup table the loop keeps
+        hitting one row at a time.</p>
+      </div>
+      <div>
+        <h3>Don't when</h3>
+        <p>The batched result would be too large to hold in memory, or each row genuinely
+        needs a different external call (a different API per row, not a different database
+        row). Then the fix is pagination or streaming, not one big batch.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="lesson-block" data-block="bites">
+    <h2>Where this bites in practice</h2>
+    <p>
+      Lazy-loading ORMs are the usual source: ActiveRecord, Eloquent, Hibernate, and Django's
+      ORM all let a simple property access (<code>candidate.company.name</code>) trigger a
+      hidden query. The loop looks completely innocent in the diff. The early sign is a page
+      that "feels slow" only once it meets real data — fixture tests with five rows never
+      show the cost, because five extra queries are free and five hundred are not.
+    </p>
+  </section>
+
+  <section class="lesson-block" data-block="carry-away">
+    <h2>Carry it away</h2>
+    <ul>
+      <li>When a page feels slow, count the queries first — not just the response time.</li>
+      <li>Reach for eager-loading (<code>.select_related()</code>, <code>.includes()</code>, a manual batch query) before reaching for caching.</li>
+      <li>A database call inside a loop is worth a second look, every time, regardless of how natural the sentence reads.</li>
+      <li>Batching changes round-trip count, not correctness — the two modes above return identical data.</li>
+    </ul>
+  </section>
+
+  <footer class="lab-footer">
+    <p>Every number on this page is computed live by the simulation above — nothing here is a stock photo of a chart.</p>
+    <p>Built and maintained by Phuc</p>
+  </footer>
+</body>
+</html>

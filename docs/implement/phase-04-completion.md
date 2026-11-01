@@ -13,7 +13,7 @@
 |---|---|
 | +10 trang (tổng 18) | theo backlog plan cũ §7 |
 | `tools/stamp.mjs` | **sinh HTML từ `catalog.js` + partial nội dung.** Tripwire §2.3 đã nổ từ trang thứ 6 — làm ở đây là **muộn nhất** |
-| `principles/by/<principle>.html` | trang theo nguyên lý (quan hệ nhiều-nhiều) |
+| `labs/by/<principle>.html` | trang theo nguyên lý (quan hệ nhiều-nhiều) |
 | `PrincipleMap` | SVG principle ↔ problem — trái tim của trang tổng hợp |
 | Sơ đồ SVG khối ④ cho mỗi trang | 18 sơ đồ viết tay |
 | `tools/og.mjs` | ảnh OG mỗi trang: symptom + cặp số before/after |
@@ -42,9 +42,9 @@
 **Action:** generator ~60 dòng Node, **chạy tay**, nhận `catalog.js` + partial nội dung → sinh HTML hoàn chỉnh.
 
 ```text
-principles/content/<slug>.html     # chi 8 khoi noi dung (partial, nguoi viet)
+labs/content/<slug>.html     # chi 8 khoi noi dung (partial, nguoi viet)
          +  scripts/data/catalog.js
-         --(stamp.mjs)-->  principles/<slug>.html   # HTML day du, COMMIT vao repo
+         --(stamp.mjs)-->  labs/<slug>.html   # HTML day du, COMMIT vao repo
 ```
 
 **Target & ràng buộc:**
@@ -73,7 +73,7 @@ Nếu thời gian **không** giảm dần qua các lô → kiến trúc chưa tr
 
 ---
 
-### Step 4.3 — `principles/by/<principle>.html` + `PrincipleMap`
+### Step 4.3 — `labs/by/<principle>.html` + `PrincipleMap`
 
 **Quyết định UI chốt ở đây (§12.4 UI plan):** trang principle **không được trùng catalog**.
 
@@ -126,7 +126,7 @@ npm run build
 
 **Ý nghĩa:** từ P04, "build success" là **build thật** — có input (catalog + partial), có output (HTML), có kiểm tra output khớp cái đã commit. Deploy vẫn tĩnh: Pages serve HTML đã commit, không chạy generator.
 
-**CI thêm một bước:** chạy `stamp.mjs --check` trên PR → nếu ai sửa `principles/<slug>.html` bằng tay mà không sửa partial, CI fail. Đây là cơ chế duy nhất giữ "stamp là đường duy nhất tạo trang" khỏi bị xói mòn.
+**CI thêm một bước:** chạy `stamp.mjs --check` trên PR → nếu ai sửa `labs/<slug>.html` bằng tay mà không sửa partial, CI fail. Đây là cơ chế duy nhất giữ "stamp là đường duy nhất tạo trang" khỏi bị xói mòn.
 
 ---
 
@@ -138,7 +138,7 @@ npm run build
 | `tests/labs/contract-diff.test.mjs` (khuôn F) | v1 client + v2 API → gãy đúng field; v2 client + v2 → không gãy; nullable migration đúng thứ tự deploy thì an toàn, sai thứ tự thì không |
 | `tests/labs/*.test.mjs` (10 trang mới) | mỗi lab ít nhất: naive cho kết quả sai/đắt theo đúng cơ chế bài học; principled sửa được; mọi metric truy nguyên về `costs()`/model |
 | `tests/principle-pages.test.mjs` | mỗi principle trong catalog có đúng 1 trang; trang liệt kê đủ problem minh hoạ nó; sort `foundational → advanced`; mở đầu **không** phải grid card (khác catalog) |
-| `tests/links.test.mjs` | 0 link chết; `related` hai chiều; `PrincipleMap` chỉ chứa slug tồn tại; **không link nào ra ngoài `/principles/`** (LUẬT 0) |
+| `tests/links.test.mjs` | 0 link chết; `related` hai chiều; `PrincipleMap` chỉ chứa slug tồn tại; **không link nào ra ngoài `/labs/`** (LUẬT 0) |
 | `tests/og.test.mjs` | 18/18 ảnh tồn tại; kích thước đúng 1200×630; tên file khớp slug |
 | `tests/catalog.test.mjs` (mở rộng) | 18 entry; 6/6 category có ≥ 1 trang; mỗi `difficulty`/`blastRadius` thuộc enum; `stats()` trả `18 · 6 of 6` |
 
@@ -164,7 +164,7 @@ Dùng [`_self-check-template.md`](_self-check-template.md) cho 10 trang mới. �
 
 - [ ] **18/18 trang pass Stage Contract 10 điều** (5 điều tự động + 5 điều tay).
 - [ ] 18/18 pass review gate §14 UI plan: ≥ 11/14, **không trục nào 0**.
-- [ ] **Không còn copy tay HTML**; `stamp.mjs` là đường duy nhất. Thử sửa 1 ký tự trong `principles/<slug>.html` → `npm run build` fail.
+- [ ] **Không còn copy tay HTML**; `stamp.mjs` là đường duy nhất. Thử sửa 1 ký tự trong `labs/<slug>.html` → `npm run build` fail.
 - [ ] Dán link vào một chat nhóm / mạng xã hội: preview tử tế — **kiểm bằng validator của chính nền tảng đó**, không phải bằng cách nhìn file PNG; và đọc thử ở cỡ thumbnail.
 - [ ] Trang principle dẫn chéo đúng quan hệ nhiều-nhiều, **không link chết**.
 - [ ] Mọi trang có khối ⑥ Trade-offs **không rỗng** (LUẬT 6b) — và không có câu tuyệt đối ("luôn", "không bao giờ") trừ khi có điều kiện biên kèm theo.
@@ -176,7 +176,7 @@ Dùng [`_self-check-template.md`](_self-check-template.md) cho 10 trang mới. �
 
 | # | Phá | Kỳ vọng |
 |---|---|---|
-| 1 | Sửa tay 1 ký tự trong `principles/n-plus-one-query.html` | `npm run build` fail ở `stamp --check` |
+| 1 | Sửa tay 1 ký tự trong `labs/n-plus-one-query.html` | `npm run build` fail ở `stamp --check` |
 | 2 | Xoá 1 entry khỏi catalog nhưng giữ file HTML | `check-links` / `catalog.test` fail |
 | 3 | Đổi `related` thành một chiều | `links.test.mjs` fail hoặc tool nói rõ là có chủ ý |
 | 4 | Xoá 1 ảnh OG | `og.test.mjs` fail |

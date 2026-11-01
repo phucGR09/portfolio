@@ -112,7 +112,7 @@ npm run build
 - [ ] Không số literal nào trong lab (grep đã pass, nhưng đọc lại bằng mắt một lượt).
 - [ ] Dữ liệu người rõ ràng là giả (`.invalid`, `Ứng viên 0042`, `$2b$fake$…`).
 - [ ] Trang security: `SafetyLine` **trong stage**, không ở footer.
-- [ ] **LUẬT 0:** trang không có link nào ra ngoài `/principles/`, không nạp CSS của portfolio, không nhắc kinh nghiệm tác giả. `npm test -- --test-name-pattern isolation` pass.
+- [ ] **LUẬT 0:** trang không có link nào ra ngoài `/labs/`, không nạp CSS của portfolio, không nhắc kinh nghiệm tác giả. `npm test -- --test-name-pattern isolation` pass.
 - [ ] Verdict không làm tròn theo hướng có lợi; đơn vị đi kèm mọi số.
 
 ---

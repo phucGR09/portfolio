@@ -34,7 +34,7 @@ Lý do: status code, SQL, `rows scanned`, `Seq Scan on candidates` dịch ra là
 | Bước | Action | Target |
 |---|---|---|
 | A.1 | `catalog.js` thêm field `i18n.vi` cho `symptom`, `verdict`, `title` | một nguồn, hai ngôn ngữ — không fork catalog |
-| A.2 | `principles/content/<slug>.vi.html` — partial tiếng Việt, **chỉ khối văn xuôi** | thiếu file `.vi` → `stamp.mjs` **bỏ qua trang đó ở bản vi**, không sinh trang nửa dịch |
+| A.2 | `labs/content/<slug>.vi.html` — partial tiếng Việt, **chỉ khối văn xuôi** | thiếu file `.vi` → `stamp.mjs` **bỏ qua trang đó ở bản vi**, không sinh trang nửa dịch |
 | A.3 | `stamp.mjs` sinh `/vi/<slug>.html` từ partial vi + **cùng** stage/script tiếng Anh | stage là file dùng chung, không nhân bản |
 | A.4 | `LangToggle` — nhớ qua `pl:v1:prefs.lang` | scope `prefs` đã có whitelist từ P01; không thêm scope mới |
 | A.5 | `hreflang` + `<link rel="alternate">` cho cặp en/vi | SEO đúng, không bị đánh trùng nội dung |
@@ -48,7 +48,7 @@ Lý do: status code, SQL, `rows scanned`, `Seq Scan on candidates` dịch ra là
 | Bước | Action |
 |---|---|
 | B.1 | `tools/rss.mjs` sinh `feed.xml` từ `catalog.js` (cần thêm field `publishedAt` cho mỗi entry) |
-| B.2 | `principles/changelog.html` — sinh cùng lúc, liệt kê theo ngày, **có cả dòng về `stamp.mjs` ra đời ở P04** |
+| B.2 | `labs/changelog.html` — sinh cùng lúc, liệt kê theo ngày, **có cả dòng về `stamp.mjs` ra đời ở P04** |
 | B.3 | `<link rel="alternate" type="application/rss+xml">` trên landing |
 | B.4 | Thêm `rss.mjs` vào `npm run build` |
 

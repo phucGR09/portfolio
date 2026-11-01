@@ -1,5 +1,4 @@
-// lab.js renders the 4 zones, runs the 6-state machine, binds controls, and
-// merges compare. It never draws instruments or computes a lab's math.
+// Renders 4 zones, runs 6 states, binds controls, merges compare. Never draws instruments.
 import { createStore } from "./store.js";
 import { createServer } from "./server.js";
 import { createClock } from "./clock.js";
@@ -32,10 +31,9 @@ function prefersReducedMotion() {
 }
 /** @param {unknown} err @returns {boolean} */
 function isAbort(err) {
-  return err instanceof Error && err.message === "Clock aborted";
+  return err instanceof Error && err.message === "aborted";
 }
-/** @param {Element} root @param {import("../types.d.ts").StageSpec} stage
- * @returns {Record<import("../types.d.ts").Zone, HTMLElement>} */
+/** @param {Element} root @param {import("../types.d.ts").StageSpec} stage @returns {Record<import("../types.d.ts").Zone, HTMLElement>} */
 function buildZones(root, stage) {
   /** @type {Partial<Record<import("../types.d.ts").Zone, HTMLElement>>} */
   const zones = {};
@@ -49,8 +47,7 @@ function buildZones(root, stage) {
   }
   return /** @type {Record<import("../types.d.ts").Zone, HTMLElement>} */ (zones);
 }
-/** @param {HTMLElement} controlZone @param {readonly import("../types.d.ts").Control[]} controls
- * @returns {Record<string, () => number>} */
+/** @param {HTMLElement} controlZone @param {readonly import("../types.d.ts").Control[]} controls @returns {Record<string, () => number>} */
 function buildRangeControls(controlZone, controls) {
   /** @type {Record<string, () => number>} */
   const getters = {};
@@ -71,8 +68,7 @@ function buildRangeControls(controlZone, controls) {
   }
   return getters;
 }
-/** Kernel chrome (ModeSwitch, Dial, RunButton, ResetButton, SimClock).
- * @param {HTMLElement} controlZone @param {import("../types.d.ts").LabSpec} spec */
+/** @param {HTMLElement} controlZone @param {import("../types.d.ts").LabSpec} spec */
 function buildChrome(controlZone, spec) {
   let mode = "naive";
   let speed = 1;
@@ -148,37 +144,57 @@ function buildVerdict(verdictZone, spec) {
     return { metric, before, after };
   });
 }
+/**
+ * A lab passing `{ text: "..." }` gets that string rendered verbatim (no
+ * type prefix, no JSON wrapper) — the convention for a pre-formatted line
+ * such as a SQL statement. Any other payload shape falls back to the raw
+ * `type {...}` dump, which is intended for incidental/debug events only.
+ * @param {string} type @param {unknown} payload @returns {string}
+ */
+function formatLogLine(type, payload) {
+  if (payload && typeof payload === "object" && "text" in payload && typeof /** @type {{ text: unknown }} */ (payload).text === "string") {
+    return /** @type {{ text: string }} */ (payload).text;
+  }
+  return `${type}${payload !== undefined ? ` ${JSON.stringify(payload)}` : ""}`;
+}
 /** @param {HTMLElement} internalsZone */
 function buildLogStream(internalsZone) {
   const header = el("p", { class: "lab-log__header" });
   const list = el("ol", { class: "lab-log__list" });
-  internalsZone.append(header, list);
   let lineCount = 0;
+  let mounted = false;
   return {
     /** @param {string} type @param {unknown} [payload] */
     push(type, payload) {
+      if (!mounted) {
+        internalsZone.append(header, list);
+        mounted = true;
+      }
       lineCount += 1;
       header.textContent = `${lineCount} line${lineCount === 1 ? "" : "s"}`;
       const line = el("li", { class: "lab-log__line" });
-      line.textContent = `${type}${payload !== undefined ? ` ${JSON.stringify(payload)}` : ""}`;
+      line.textContent = formatLogLine(type, payload);
       list.append(line);
     },
     clear() {
       lineCount = 0;
       header.textContent = "0 lines";
       clearNode(list);
+      header.remove();
+      list.remove();
+      mounted = false;
     }
   };
 }
 /** @param {import("../types.d.ts").LabSpec} spec */
 export function defineLab(spec) {
-  const root = document.querySelector("[data-lab]");
-  if (root) mountLab(root, spec);
+  const root = typeof document === "undefined" ? null : document.querySelector("[data-lab]");
+  if (root) mountLab(root, spec); return spec;
 }
 /** @param {Element} root @param {import("../types.d.ts").LabSpec} spec */
 function mountLab(root, spec) {
   root.setAttribute("data-stage-bg", spec.stage.bg);
-  const zones = buildZones(root, spec.stage);
+  root.classList.add(`stage--${spec.id}`); const zones = buildZones(root, spec.stage);
   const chrome = buildChrome(zones.control, spec);
   const metricRows = buildVerdict(zones.verdict, spec);
   const logStream = buildLogStream(zones.internals);
@@ -215,6 +231,9 @@ function mountLab(root, spec) {
       row.after.textContent = "—";
     }
     logStream.clear();
+    clearNode(zones.response);
+    clearNode(zones.internals);
+    spec.renderIdle?.(zones);
     chrome.showSkip(false);
     chrome.setDisabled(false);
   }
@@ -236,7 +255,7 @@ function mountLab(root, spec) {
     const mode = chrome.getMode();
     const clock = createClock({ speed: chrome.getSpeed(), reducedMotion: prefersReducedMotion() });
     activeClock = clock;
-    const store = createStore(() => buildDataset(spec.model.seed));
+    const store = createStore(() => buildDataset(spec.model.seed, spec.model.datasetSize));
     const logger = createLogger();
     logger.on("log", (payload) => logStream.push("log", payload));
     const server = createServer(store, { clock, logger });
@@ -248,7 +267,8 @@ function mountLab(root, spec) {
         db: store,
         server,
         log: (type, payload) => logger.emit(type, payload),
-        clock
+        clock,
+        els: zones
       });
       if (token !== runToken) return;
       for (const row of metricRows) {

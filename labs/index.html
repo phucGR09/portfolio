@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Principles Lab — flip the principle off, watch the system answer</title>
+  <meta name="description" content="Runnable labs that demonstrate software principles with real, measured before/after numbers — free, no sign-up, runs entirely in your browser." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../source/labs.css" />
+  <link rel="stylesheet" href="../source/lab.css" />
+</head>
+<body class="landing" style="--accent: #8d7bff;">
+  <div class="labs-bg" aria-hidden="true"></div>
+
+  <nav class="lab-nav">
+    <a class="lab-nav__wordmark" href="./">⬡ Principles Lab</a>
+  </nav>
+
+  <section class="hero" data-block="hero">
+    <span class="hero__eyebrow">Runnable, measured, free</span>
+    <h1>Flip the principle off. Watch the system answer.</h1>
+    <p class="lead">
+      Principles Lab teaches software principles with runnable demos, not slides. Pick a
+      problem, flip Naive to Principled, and watch the before/after numbers get computed live
+      — free, no sign-up, nothing leaves your browser.
+    </p>
+    <div class="hero__actions">
+      <a class="cta-button" href="#catalog">Browse problems →</a>
+      <p class="metric" data-hero-stats>…</p>
+    </div>
+
+    <div class="hero-demo" aria-hidden="true">
+      <div class="hero-demo__bar">
+        <span class="hero-demo__dot"></span><span class="hero-demo__dot"></span><span class="hero-demo__dot"></span>
+        <span class="hero-demo__url">labs/n-plus-one-query</span>
+      </div>
+      <div class="hero-demo__stage">
+        <div class="hero-demo__scene hero-demo__scene--browse">
+          <div class="hero-demo__row hero-demo__row--1"><span></span><span></span></div>
+          <div class="hero-demo__row hero-demo__row--2"><span></span><span></span></div>
+          <div class="hero-demo__row hero-demo__row--3"><span></span><span></span></div>
+        </div>
+        <div class="hero-demo__scene hero-demo__scene--lab">
+          <div class="hero-demo__mini-stage">
+            <div class="hero-demo__mini-zone"></div>
+            <div class="hero-demo__mini-zone"></div>
+            <div class="hero-demo__mini-zone"></div>
+            <div class="hero-demo__mini-zone"></div>
+          </div>
+          <button class="hero-demo__start" type="button" tabindex="-1">Start</button>
+        </div>
+        <div class="hero-demo__scene hero-demo__scene--loading">
+          <div class="hero-demo__rain"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+          <span class="hero-demo__label">loading…</span>
+        </div>
+        <div class="hero-demo__scene hero-demo__scene--done">
+          <div class="hero-demo__check">✓</div>
+          <span class="hero-demo__done-readout">1 query, not 429</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section data-block="catalog" id="catalog">
+    <h2 class="block-heading">Every problem</h2>
+    <div class="catalog-head">
+      <ul class="catalog-filters" role="group" aria-label="Filter problems">
+        <li><button type="button" data-filter-axis="category" data-filter-value="data" aria-pressed="false">Data &amp; Database</button></li>
+        <li><button type="button" data-filter-axis="category" data-filter-value="security" aria-pressed="false">Security &amp; Trust</button></li>
+        <li><button type="button" data-filter-axis="category" data-filter-value="code-design" aria-pressed="false">Code Design</button></li>
+        <li><button type="button" data-filter-axis="category" data-filter-value="api" aria-pressed="false">API &amp; Contracts</button></li>
+        <li><button type="button" data-filter-axis="category" data-filter-value="performance" aria-pressed="false">Performance &amp; Scale</button></li>
+        <li><button type="button" data-filter-axis="category" data-filter-value="reliability" aria-pressed="false">Reliability &amp; Ops</button></li>
+        <li><button type="button" data-filter-axis="difficulty" data-filter-value="foundational" aria-pressed="false">Foundational</button></li>
+        <li><button type="button" data-filter-axis="difficulty" data-filter-value="intermediate" aria-pressed="false">Intermediate</button></li>
+        <li><button type="button" data-filter-axis="difficulty" data-filter-value="advanced" aria-pressed="false">Advanced</button></li>
+        <li><button type="button" data-filter-axis="blastRadius" data-filter-value="annoying" aria-pressed="false">Annoying</button></li>
+        <li><button type="button" data-filter-axis="blastRadius" data-filter-value="expensive" aria-pressed="false">Expensive</button></li>
+        <li><button type="button" data-filter-axis="blastRadius" data-filter-value="catastrophic" aria-pressed="false">Catastrophic</button></li>
+        <li><button type="button" data-surprise>Surprise me</button></li>
+      </ul>
+      <div class="view-toggle" role="group" aria-label="Catalog view">
+        <button type="button" data-view-list aria-pressed="true">List</button>
+        <button type="button" data-view-slides aria-pressed="false">Slides</button>
+      </div>
+    </div>
+
+    <div class="catalog-list" data-catalog-grid></div>
+    <div class="catalog-track" data-catalog-track tabindex="0" role="region" aria-label="Problems, slide view"></div>
+    <div class="track-controls is-hidden" data-track-controls>
+      <button type="button" data-track-prev aria-label="Previous">‹</button>
+      <button type="button" data-track-next aria-label="Next">›</button>
+    </div>
+  </section>
+
+  <footer class="lab-footer">
+    <p>Every number on this site is computed by a simulation that runs in your browser.</p>
+    <details>
+      <summary>Changelog</summary>
+      <p>2026-10-24 — Landing and 3 runnable labs shipped.</p>
+      <p>2026-11-01 — New identity (graphite + violet, IBM Plex), full-width problem cards, list/slides toggle.</p>
+    </details>
+    <p><button type="button" data-clear-progress>Clear my progress</button></p>
+    <p>Built and maintained by Phuc</p>
+  </footer>
+
+  <script type="module" src="../scripts/labs-bg.js"></script>
+  <script type="module" src="../scripts/hub.js"></script>
+</body>
+</html>

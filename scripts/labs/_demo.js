@@ -2,7 +2,7 @@
 // content — see docs/implement/phase-01-chassis.md Step 1.14.
 import { defineLab } from "../runtime/lab.js";
 
-defineLab({
+export default defineLab({
   id: "_demo",
   stage: {
     bg: "deep",
@@ -20,7 +20,7 @@ defineLab({
     const steps = 20;
     for (let i = 1; i <= steps; i += 1) {
       await clock.sleep(60);
-      log("log", { step: i });
+      log("log", { text: `step ${i}` });
     }
     return { metrics: { steps, ms: clock.now() } };
   }

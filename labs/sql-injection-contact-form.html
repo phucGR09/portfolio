@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>A contact form started returning every password hash — Principles Lab</title>
+  <meta name="description" content="A runnable lab showing SQL injection: a quote character breaking a concatenated query, and why parameterized queries fix it." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../source/labs.css" />
+  <link rel="stylesheet" href="../source/lab.css" />
+  <link rel="stylesheet" href="../scripts/labs/sql-injection.css" />
+</head>
+<body style="--accent: #ff7b72;">
+  <nav class="lab-nav">
+    <a class="lab-nav__wordmark" href="./">⬡ Principles Lab</a>
+    <div><a href="./">All problems</a></div>
+  </nav>
+
+  <header class="lesson-hero" data-block="hero">
+    <p class="hero-principle">SQL Injection</p>
+    <span class="pill">Security &amp; Trust</span>
+    <span class="pill pill--difficulty">Foundational</span>
+    <span class="pill" data-blast="catastrophic">Catastrophic</span>
+    <h1>A contact form started returning every customer's password hash.</h1>
+    <p class="metric-strip"><span>One quote character</span> <span>→</span> <span>the entire users table</span></p>
+    <span class="provenance-tag">Classic problem</span>
+  </header>
+
+  <section class="lesson-block" data-block="situation">
+    <h2>The situation</h2>
+    <p>
+      A "contact us" form checks whether the submitted email already has an account, so it
+      can show a slightly different message. The engineer wrote the lookup by hand and glued
+      the submitted email directly into the query text — the fastest way to ship the feature,
+      and an email field felt like the last place anyone would think to attack. A contact
+      form isn't an admin panel; it didn't occur to anyone that it was also a database
+      interface.
+    </p>
+  </section>
+
+  <section class="lesson-block--full" data-block="lab">
+    <div data-lab>
+      <noscript>
+        <p>This lab needs JavaScript. With it: pasting <code>' OR '1'='1</code> into the
+        email field makes the naive query return every row in the users table, including
+        password hashes; the parameterized version returns zero matches for the same input.</p>
+      </noscript>
+    </div>
+    <script type="module" src="../scripts/labs/sql-injection.js"></script>
+  </section>
+
+  <section class="lesson-block" data-block="under-the-hood">
+    <h2>Under the hood</h2>
+    <svg viewBox="0 0 320 90" role="img" aria-labelledby="uth2-title uth2-desc" style="width:100%;max-width:480px;color:var(--text-mute)">
+      <title id="uth2-title">A quote closes the string literal early</title>
+      <desc id="uth2-desc">The query text is "SELECT * FROM users WHERE email = '" plus the submitted value plus a closing quote. If the value itself contains a quote, it closes the literal early and the rest of the value is read as SQL grammar instead of data.</desc>
+      <text x="4" y="16" font-size="8" fill="currentColor">SELECT * FROM users WHERE email = '</text>
+      <text x="4" y="34" font-size="9" fill="var(--sig-bad)">' OR '1'='1</text>
+      <line x1="4" y1="40" x2="90" y2="40" stroke="var(--sig-bad)" />
+      <text x="4" y="54" font-size="8" fill="var(--sig-bad)">closes the literal, then adds a condition that is always true</text>
+      <text x="4" y="76" font-size="8" fill="var(--sig-ok)">parameterized: the value is never pasted into the query text at all</text>
+    </svg>
+    <p>
+      The query text is one fixed string plus the submitted value plus a closing quote. A
+      normal email has no quote character in it, so the value stays inside the literal.
+      <code>' OR '1'='1</code> contains one: it closes the literal early, and everything
+      after it — <code>OR '1'='1</code> — is read as part of the SQL grammar, not as data.
+      <code>'1'='1'</code> is always true, so the condition matches every row. A parameterized
+      query never pastes the value into the query text in the first place, so this trick has
+      nothing to attach to.
+    </p>
+  </section>
+
+  <section class="lesson-block principle-box" data-block="principle">
+    <h2>The principle</h2>
+    <p>User input is data, never code. Gluing strings together lets input change the grammar
+    of the query; a parameterized query keeps input as a value no matter what characters it
+    contains.</p>
+  </section>
+
+  <section class="lesson-block" data-block="tradeoffs">
+    <h2>Trade-offs &amp; when NOT to</h2>
+    <div class="tradeoff-grid">
+      <div>
+        <h3>Apply this when</h3>
+        <p>Any query, filter, or command built from user-controlled text — form fields, URL
+        parameters, headers, even values forwarded from another internal service you don't
+        fully trust.</p>
+      </div>
+      <div>
+        <h3>Don't when</h3>
+        <p>You're composing the query's structure itself — a table name, a column to sort by
+        — which a parameter can't represent. Those need a vetted allow-list, not string
+        interpolation and not a bind parameter either.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="lesson-block" data-block="bites">
+    <h2>Where this bites in practice</h2>
+    <p>
+      Hand-rolled query builders, legacy code from before the team adopted an ORM, and "quick
+      admin scripts" that skip the ORM for one query are the usual sources. The early sign a
+      reviewer can catch in seconds: string concatenation or template-literal interpolation
+      sitting directly inside a SQL string.
+    </p>
+  </section>
+
+  <section class="lesson-block" data-block="carry-away">
+    <h2>Carry it away</h2>
+    <ul>
+      <li>Treat every external string as data, never as code.</li>
+      <li>Use your ORM or query builder's parameter binding for every value, with no exceptions for "just this one query".</li>
+      <li>Table and column names can't be parameters — validate those against an allow-list.</li>
+      <li>If a diff shows string concatenation building a query, stop and ask why before merging.</li>
+    </ul>
+  </section>
+
+  <footer class="lab-footer">
+    <p>Every number on this page is computed live by the simulation above — nothing here is a stock photo of a chart.</p>
+    <p>Built and maintained by Phuc</p>
+  </footer>
+</body>
+</html>

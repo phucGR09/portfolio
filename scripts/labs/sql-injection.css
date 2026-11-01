@@ -1,0 +1,51 @@
+/* Stage CSS for sql-injection-contact-form. Scoped under
+   .stage--sql-injection-contact-form, <=120 lines (Stage Contract §7 item 8). */
+
+@media (min-width: 720px) {
+  .stage--sql-injection-contact-form {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+.stage--sql-injection-contact-form .lab-email-input {
+  font: var(--fs-mono-sm) / 1.5 var(--font-mono);
+  background: var(--ink);
+  color: var(--text-head);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 0.4em 0.6em;
+  min-width: 22ch;
+  margin-right: var(--sp-2);
+}
+
+.stage--sql-injection-contact-form .lab-string-builder {
+  font: var(--fs-mono) / 1.6 var(--font-mono);
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.stage--sql-injection-contact-form .lab-string-builder span[data-sig="bad"] {
+  color: var(--sig-bad);
+  text-decoration: underline;
+}
+
+.stage--sql-injection-contact-form .lab-string-builder span[data-sig="ok"] {
+  color: var(--sig-ok);
+}
+
+.stage--sql-injection-contact-form .lab-leak-table {
+  width: 100%;
+  border-collapse: collapse;
+  font: var(--fs-mono-sm) / 1.5 var(--font-mono);
+}
+
+.stage--sql-injection-contact-form .lab-leak-table td {
+  padding: 0.3em 0.5em;
+  border-bottom: 1px solid var(--border);
+  color: var(--sig-bad);
+}
+
+.stage--sql-injection-contact-form [data-zone="response"] {
+  max-height: 42vh;
+  overflow-y: auto;
+}

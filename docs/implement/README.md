@@ -149,14 +149,14 @@ npm run check:contract   # tools/check-contract.mjs — stage contract §7.1, đ
 repo/                            # 1 repo, 2 site doc lap (LUAT 0 / D11)
 ├─ index.html                    # PORTFOLIO — khong doi, khong link toi Lab
 ├─ pages/                        # PORTFOLIO — khong doi
-├─ principles/                   # ===== LAB: site hoc tap doc lap =====
+├─ labs/                         # ===== LAB: site hoc tap doc lap =====
 │  ├─ index.html                 # landing: hero + how-it-works + lab mini + catalog
 │  ├─ _template.html             # P01 (bị stamp.mjs thay thế ở P04)
 │  ├─ _states.html               # P01 — noindex, không link từ đâu
 │  ├─ <slug>.html                # 1 file / problem
 │  └─ by/<principle>.html        # P04
 ├─ source/  styles.css · case-study.css        # PORTFOLIO (Lab khong nap)
-│           principles.css · lab.css           # LAB (token rieng)
+│           labs.css · lab.css                 # LAB (token rieng)
 ├─ scripts/
 │  ├─ runtime/  store · server · clock · logger · lab · fmt · rng · persist (.js)
 │  ├─ labs/     <lab-id>.js
@@ -181,3 +181,4 @@ Mọi lệch khỏi plan trong lúc code ghi vào `docs/implement/decisions.log`
 ```
 
 Lý do: 18 trang viết trong nhiều tuần, người viết sẽ quên vì sao đã nhượng bộ. Đây là single source of truth cho các nhượng bộ — và một phần của nó trở thành nội dung thật trên trang `build-it-for-the-future` (changelog ở P04).
+![alt text](image.png)

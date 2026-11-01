@@ -44,11 +44,16 @@ function read(relPath) {
 const portfolioFiles = ["index.html", ...listFiles("pages")].filter((f) =>
   statSync(join(ROOT, f)).isFile()
 );
-const labFiles = listFiles("principles");
+const labFiles = listFiles("labs");
 
-test("case 1: no portfolio file links to principles/", () => {
-  const offenders = portfolioFiles.filter((f) => read(f).includes("principles/"));
-  assert.deepEqual(offenders, [], `portfolio must not reference principles/: ${offenders.join(", ")}`);
+test("case 0: lab files directory exists and is not empty", () => {
+  assert.ok(labFiles.length > 0, "no lab files found");
+});
+
+test("case 1: no portfolio file links to labs/", () => {
+  const LAB_LINK = /(?:href|src)=["'](?:\.\.?\/|\/)?labs\//;
+  const offenders = portfolioFiles.filter((f) => LAB_LINK.test(read(f)));
+  assert.deepEqual(offenders, [], `portfolio must not reference labs/: ${offenders.join(", ")}`);
 });
 
 test("case 2: no lab file links back to the portfolio", () => {
@@ -76,16 +81,16 @@ test("case 4: no lab file references the stack-logo CDN", () => {
   assert.deepEqual(offenders, [], `lab files must not use cdn.simpleicons.org: ${offenders.join(", ")}`);
 });
 
-test("case 5: every lab HTML page loads principles.css and lab.css", () => {
+test("case 5: every lab HTML page loads labs.css and lab.css", () => {
   const htmlFiles = labFiles.filter((f) => f.endsWith(".html"));
   const offenders = htmlFiles.filter((f) => {
     const content = read(f);
-    return !content.includes("source/principles.css") || !content.includes("source/lab.css");
+    return !content.includes("source/labs.css") || !content.includes("source/lab.css");
   });
   assert.deepEqual(offenders, [], `every lab page must load both Lab stylesheets: ${offenders.join(", ")}`);
 });
 
-test("case 6: principles.css never @imports anything (self-contained chassis, RULE 0)", () => {
-  const content = read("source/principles.css");
+test("case 6: labs.css never @imports anything (self-contained chassis, RULE 0)", () => {
+  const content = read("source/labs.css");
   assert.doesNotMatch(content, /@import/);
 });

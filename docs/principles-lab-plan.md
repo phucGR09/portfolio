@@ -2,7 +2,7 @@
 
 > Tài liệu định hướng cho **một site học tập độc lập**: dạy **nguyên lý kiến trúc / nguyên lý lập trình** thông qua **vấn đề thật và demo tương tác được ngay trên web**.
 > Trạng thái: bản thảo thiết kế (chưa code). Ngày: 2026-10-24 · **Cập nhật định vị: 2026-10-24** (xem §1.1).
-> Hosting: sub-path `/<domain>/principles/` — HTML/CSS tĩnh, không build step, deploy GitHub Pages.
+> Hosting: sub-path `/<domain>/labs/` — HTML/CSS tĩnh, không build step, deploy GitHub Pages.
 > **Đây không phải một khu vực của portfolio.** Site không nói về kinh nghiệm của tác giả và không liên kết với portfolio ở bất kỳ chiều nào.
 
 ---
@@ -35,9 +35,9 @@ Bản đầu của tài liệu này định vị sai: nó coi Lab là một *por
 
 **[LUẬT 0 — ISOLATION]** Không có link nào giữa hai site, ở cả hai chiều.
 
-- `index.html`, `pages/*.html` (portfolio) **không được** chứa link tới `principles/`.
-- `principles/**` **không được** chứa link tới `index.html` hoặc `pages/*.html`.
-- Trang Lab **không nạp** `source/styles.css` hay `source/case-study.css`; Lab có token riêng trong `principles.css` (xem §6.1).
+- `index.html`, `pages/*.html` (portfolio) **không được** chứa link tới `labs/`.
+- `labs/**` **không được** chứa link tới `index.html` hoặc `pages/*.html`.
+- Trang Lab **không nạp** `source/styles.css` hay `source/case-study.css`; Lab có token riêng trong `labs.css` (xem §6.1).
 
 Luật này được **kiểm tự động** (`tests/isolation.test.mjs`), không phải chỉ ghi trong tài liệu — vì đây là loại ràng buộc bị xói mòn bằng một lần "thêm tạm một link cho tiện".
 
@@ -315,7 +315,7 @@ Thay vì thiết kế lại mỗi trang từ đầu, chuẩn hoá **7 khuôn**. 
 - **Verdict:** `7 files to maintain, 1 format ever shipped` → `1 file, 1 format, refactor when the second arrives`.
 - **Trade-off:** YAGNI không phải cái cớ để không thiết kế. Ghi rõ ranh giới: *reversible decision* → cứ làm đơn giản; *irreversible* (schema, public API, định dạng lưu trữ) → suy nghĩ trước.
 
-### 5.5. Landing page (`/principles/index.html`) — cửa vào của một site độc lập
+### 5.5. Landing page (`/labs/index.html`) — cửa vào của một site độc lập
 
 Vì Lab không còn được giới thiệu từ trang chủ portfolio (§1.1), **trang này phải tự làm toàn bộ việc giới thiệu**. Nó không còn là một "hub" nằm trong một site lớn hơn; nó là **trang chủ của site**. Người lạ vào đây từ Google hoặc từ một link được gửi, và không biết gì cả.
 
@@ -339,7 +339,7 @@ Vì Lab không còn được giới thiệu từ trang chủ portfolio (§1.1), 
 - **"I've read this":** lưu `localStorage` → đánh dấu card đã đọc. Nhỏ nhưng tạo cảm giác tiến độ, kéo người đọc sang trang thứ 3, thứ 4.
 - **Random:** nút `Surprise me` → mở trang ngẫu nhiên. Rẻ, vui, tăng page / session.
 
-**Landing và catalog nằm cùng một trang hay tách hai trang?** Chốt: **cùng một trang** cho tới khi catalog vượt 12 entry. Dưới ngưỡng đó, tách ra chỉ thêm một cú click giữa người đọc và nội dung. Khi vượt 12 → tách `/principles/catalog.html`, landing giữ lại 6 card nổi bật. Đây là một *reversible decision* có ngưỡng rõ ràng, và nó chính là bài học `build-it-for-the-future` áp vào chính site.
+**Landing và catalog nằm cùng một trang hay tách hai trang?** Chốt: **cùng một trang** cho tới khi catalog vượt 12 entry. Dưới ngưỡng đó, tách ra chỉ thêm một cú click giữa người đọc và nội dung. Khi vượt 12 → tách `/labs/catalog.html`, landing giữ lại 6 card nổi bật. Đây là một *reversible decision* có ngưỡng rõ ràng, và nó chính là bài học `build-it-for-the-future` áp vào chính site.
 
 ### 5.6. Điều hướng giữa các trang
 
@@ -355,7 +355,7 @@ Vì Lab không còn được giới thiệu từ trang chủ portfolio (§1.1), 
 ### 6.1. Ràng buộc đang có (phải tôn trọng)
 
 - HTML / CSS tĩnh, **không build step** để chạy site.
-- Deploy: GitHub Actions upload lên Pages; Lab nằm ở sub-path `/principles/` của cùng domain → **chung repo, chung CI** với portfolio (§1.1), nhưng **không chung nội dung và không chung CSS**.
+- Deploy: GitHub Actions upload lên Pages; Lab nằm ở sub-path `/labs/` của cùng domain → **chung repo, chung CI** với portfolio (§1.1), nhưng **không chung nội dung và không chung CSS**.
 - Hiện **chưa có một dòng JS nào** trong repo.
 
 **Quyết định 1 — giữ nguyên "không build step" để chạy.** Dùng **vanilla ES modules** (`<script type="module">`), chạy trực tiếp trên Pages. Không React, không bundler. Lý do: Lab là nhiều widget nhỏ độc lập, không phải SPA; thêm toolchain là chính cái YAGNI mà site này đang dạy. (Nếu sau này > 25 trang và state phức tạp thì mở lại quyết định này — nhưng ghi lại lý do.)
@@ -363,7 +363,7 @@ Một `package.json` **chỉ chứa devDependencies** được thêm để chạ
 
 **Quyết định 2 — Lab có CSS riêng, không dùng lại CSS của portfolio.**
 
-Bản đầu nói "tái dùng token màu trong `source/styles.css` và `source/case-study.css`". Theo §1.1 thì **không**: trang Lab chỉ nạp `principles.css` + `lab.css`, và `principles.css` tự khai báo `:root` token của nó.
+Bản đầu nói "tái dùng token màu trong `source/styles.css` và `source/case-study.css`". Theo §1.1 thì **không**: trang Lab chỉ nạp `labs.css` + `lab.css`, và `labs.css` tự khai báo `:root` token của nó.
 
 Hai site có thể đang dùng **cùng giá trị màu** (navy + mint là một nền tốt cho instrument, không có lý do kỹ thuật nào để đổi). Nhưng *cùng giá trị* không có nghĩa là *cùng nguồn*:
 
@@ -371,7 +371,7 @@ Hai site có thể đang dùng **cùng giá trị màu** (navy + mint là một 
 
 Đây đúng là trade-off mà trang `one-rule-five-places` dạy (§5.4, Lab 3). Nếu một ngày Lab muốn đổi nền hoặc thêm light mode, nó phải đổi được **mà không chạm vào portfolio**, và ngược lại. Gộp hai bộ token lại sẽ biến mỗi thay đổi nhỏ thành một quyết định cho cả hai site — đó là coupling, không phải DRY.
 
-Hệ quả kiểm được: `tests/isolation.test.mjs` khẳng định không file nào trong `principles/**` tham chiếu `source/styles.css` hoặc `source/case-study.css`.
+Hệ quả kiểm được: `tests/isolation.test.mjs` khẳng định không file nào trong `labs/**` tham chiếu `source/styles.css` hoặc `source/case-study.css`.
 
 ### 6.2. Cấu trúc thư mục đề xuất
 
@@ -379,7 +379,7 @@ Hệ quả kiểm được: `tests/isolation.test.mjs` khẳng định không fi
 repo/                              # 1 repo, 2 site doc lap (§1.1)
 ├─ index.html                      # PORTFOLIO — khong doi gi, khong co link toi Lab
 ├─ pages/                          # PORTFOLIO — khong doi gi
-├─ principles/                     # ===== LAB: site doc lap =====
+├─ labs/                     # ===== LAB: site doc lap =====
 │  ├─ index.html                   # landing + catalog (§5.5)
 │  ├─ _template.html               # khung 8 khối, copy cho trang mới
 │  ├─ n-plus-one-query.html
@@ -389,7 +389,7 @@ repo/                              # 1 repo, 2 site doc lap (§1.1)
 ├─ source/
 │  ├─ styles.css                   # PORTFOLIO (giữ nguyên, Lab khong nap)
 │  ├─ case-study.css               # PORTFOLIO (giữ nguyên, Lab khong nap)
-│  ├─ principles.css               # LAB: token rieng + landing + shell lesson
+│  ├─ labs.css               # LAB: token rieng + landing + shell lesson
 │  └─ lab.css                      # LAB: skin 4 vùng (Control/Response/Internals/Verdict)
 ├─ scripts/
 │  ├─ runtime/
@@ -410,7 +410,7 @@ repo/                              # 1 repo, 2 site doc lap (§1.1)
    └─ principles-lab-plan.md       # tài liệu này
 ```
 
-**Đọc cây này theo một luật duy nhất:** nhánh `principles/` + `source/principles.css` + `source/lab.css` + `scripts/**` là **site Lab**. Mọi thứ còn lại ở cấp gốc là **portfolio**. Hai nhánh không tham chiếu nhau (LUẬT 0).
+**Đọc cây này theo một luật duy nhất:** nhánh `labs/` + `source/labs.css` + `source/lab.css` + `scripts/**` là **site Lab**. Mọi thứ còn lại ở cấp gốc là **portfolio**. Hai nhánh không tham chiếu nhau (LUẬT 0).
 
 ### 6.3. Ý tưởng kỹ thuật trung tâm: một "mini runtime" dùng chung
 
@@ -452,7 +452,7 @@ Hệ quả cho nội dung: khi một lab cần phá luật của runtime để c
 - Sơ đồ: **inline SVG viết tay**, không thư viện chart. Nhẹ, dễ theme 2 màu.
 - Mobile: 4 vùng của Lab xếp dọc theo thứ tự ①②③④; query log giới hạn `max-height` + cuộn riêng.
 - A11y: toggle dùng `role="switch"` + `aria-checked`; panel Response là `aria-live="polite"` để screen reader đọc kết quả; mọi animation tôn trọng `prefers-reduced-motion`.
-- Lab khai báo **bộ token riêng** trong `principles.css` (§6.1 quyết định 2); trong bộ đó **không thêm hệ màu mới** giữa các lab — chỉ thêm biến `--accent` theo category, set inline trên `<body>`.
+- Lab khai báo **bộ token riêng** trong `labs.css` (§6.1 quyết định 2); trong bộ đó **không thêm hệ màu mới** giữa các lab — chỉ thêm biến `--accent` theo category, set inline trên `<body>`.
 
 ### 6.5. Quy trình viết một trang mới (authoring workflow)
 
@@ -462,7 +462,7 @@ Chuẩn hoá để trang thứ 10 nhanh như trang thứ 2:
 2. Xác định **con số** before / after. Nếu không đo được → gộp vào bài khác (xem 2.4).
 3. Chọn **khuôn tương tác** (A–G ở 5.3).
 4. Chọn **`provenance`** (§3.3) — mặc định `classic`; chọn `field-report` chỉ khi ẩn danh được hoàn toàn.
-5. Copy `principles/_template.html`, điền 8 khối.
+5. Copy `labs/_template.html`, điền 8 khối.
 6. Viết `scripts/labs/<id>.js` — chỉ hàm `run`.
 7. Thêm entry vào `scripts/data/catalog.js` → landing tự có card.
 8. Tự kiểm 5 tiêu chí ở 2.4 + test trên mobile + tắt JS xem có suy biến đẹp + **kiểm không có link nào ra ngoài site** (LUẬT 0).
@@ -511,7 +511,7 @@ Ba trang này cover 3 category và 3 khuôn tương tác khác nhau (A, B, C) �
 
 | Phase | Việc làm | Kết quả kiểm chứng được |
 |---|---|---|
-| **P0 — Nền** | `principles.css`, `lab.css`, `runtime/` (store, server, logger, lab), `seed.js`, `_template.html` | Một lab rỗng chạy được với 4 vùng |
+| **P0 — Nền** | `labs.css`, `lab.css`, `runtime/` (store, server, logger, lab), `seed.js`, `_template.html` | Một lab rỗng chạy được với 4 vùng |
 | **P1 — MVP** | 3 trang MVP + **landing riêng của Lab** (hero, how-it-works, lab mini, catalog) | Gửi link cho 2 người lạ, họ tự bấm ra được verdict mà không cần giải thích |
 | **P2 — Chiều sâu** | +5 trang (lên 8), prev/next, localStorage progress, `Surprise me` | Catalog có đủ card để filter *thật sự có ích* |
 | **P3 — Hoàn thiện** | Đủ 18 trang, sơ đồ SVG mỗi trang, trang tổng hợp theo Principle, OG image mỗi trang | Share ra mạng xã hội / chat nhóm có preview tử tế |
@@ -552,7 +552,7 @@ Ba trang này cover 3 category và 3 khuôn tương tác khác nhau (A, B, C) �
 | # | Câu hỏi | Khuyến nghị của mình |
 |---|---|---|
 | 1 | Ngôn ngữ nội dung trên site? | **Tiếng Anh** (thị trường người đọc rộng nhất cho nội dung kỹ thuật); bản `/vi/` để P4 |
-| 2 | Tên site? | `Principles Lab` — route `/principles/`, wordmark riêng, nav riêng |
+| 2 | Tên site? | `Principles Lab` — route `/labs/`, wordmark riêng, nav riêng |
 | 3 | Vanilla ES modules hay thêm toolchain? | **Vanilla** để chạy; devDeps chỉ để kiểm tra (lý do ở 6.1) |
 | 4 | ~~Badge "Seen in production"?~~ | **Đã bỏ** (§1.1). Thay bằng `provenance`: `classic` / `field-report` / `derived` (§3.3) |
 | 5 | Làm MVP 3 trang trước, hay dựng khung 18 trang rỗng? | **3 trang hoàn chỉnh**. Khung rỗng tạo cảm giác site bỏ hoang |
@@ -566,7 +566,7 @@ Ba trang này cover 3 category và 3 khuôn tương tác khác nhau (A, B, C) �
 ## 12. Bước tiếp theo ngay
 
 1. Chốt mục 11 (9 câu, trả lời nhanh được) — đặc biệt câu 7.
-2. Dựng **P0**: `source/principles.css` (token riêng của Lab), `source/lab.css`, `scripts/runtime/*`, `principles/_template.html` + một lab rỗng để bạn xem 4 vùng chạy thật.
+2. Dựng **P0**: `source/labs.css` (token riêng của Lab), `source/lab.css`, `scripts/runtime/*`, `labs/_template.html` + một lab rỗng để bạn xem 4 vùng chạy thật.
 3. Làm **Lab 1 (`n-plus-one-query`)** trọn vẹn làm chuẩn tham chiếu cho mọi trang sau.
 4. Dựng **landing riêng của Lab** (hero + how-it-works + lab mini + catalog). **Không** chạm vào `index.html` của portfolio.
 5. Review cùng nhau, chỉnh khuôn, rồi mới nhân bản sang Lab 2 và Lab 3.

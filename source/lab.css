@@ -6,11 +6,16 @@
   grid-template-columns: 1fr;
   gap: var(--sp-4);
   background: var(--stage-bg-deep);
-  border: 1px solid var(--line);
-  border-radius: 2px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
   padding: var(--pane-pad);
   min-height: 70vh;
   position: relative;
+  /* Full-bleed (LUẬT 6a) means "dramatically wider than the 68ch prose column
+     above it", not "unbounded" — past ~1600px a table/log zone just becomes
+     sparse and unreadable instead of more full-bleed. */
+  max-width: 1600px;
+  margin-inline: auto;
 }
 [data-lab][data-stage-bg="deep"] { background: var(--stage-bg-deep); }
 [data-lab][data-stage-bg="raised"] { background: var(--stage-bg-raised); }
@@ -18,19 +23,22 @@
 [data-lab][data-stage-bg="ledger"] { background: var(--stage-bg-ledger); }
 
 [data-zone] {
-  border: 1px solid var(--line);
-  border-radius: 2px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
   padding: var(--pane-pad);
   min-height: 3rem;
 }
-[data-zone="control"] { display: flex; flex-wrap: wrap; gap: var(--sp-2); align-items: center; }
+/* Verdict is the answer the other 3 zones build up to — give it a visual anchor. */
+[data-zone="verdict"] { border-color: var(--accent-line); border-left-width: 3px; }
+[data-zone="control"] { display: flex; flex-wrap: wrap; gap: var(--sp-3); align-items: center; }
+[data-zone="control"] > .lab-state-banner { margin-left: auto; }
 [data-zone]::before {
   content: attr(data-zone);
   display: block;
   font: var(--fs-label) / 1 var(--font-sans);
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--slate);
+  color: var(--text-mute);
   margin-bottom: var(--sp-2);
 }
 
@@ -39,11 +47,11 @@
   font: var(--fs-label) / 1 var(--font-mono);
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: var(--slate);
+  color: var(--text-mute);
 }
 [data-lab][data-state="idle"] [data-zone="response"],
 [data-lab][data-state="idle"] [data-zone="internals"] {
-  color: var(--slate);
+  color: var(--text-mute);
   font-style: italic;
 }
 [data-lab][data-state="running"] .lab-run { color: var(--sig-focus); border-color: var(--sig-focus); }
@@ -53,7 +61,7 @@
 
 /* Readout / VerdictBar before->after, only meaningful once both modes ran */
 .lab-readout { display: flex; align-items: baseline; gap: var(--sp-2); min-height: 1.9rem; }
-.lab-readout__label { font: var(--fs-label) / 1 var(--font-sans); color: var(--slate); min-width: 7ch; }
+.lab-readout__label { font: var(--fs-label) / 1 var(--font-sans); color: var(--text-mute); min-width: 7ch; }
 .lab-readout__before,
 .lab-readout__after {
   font: var(--fs-readout) / 1 var(--font-mono);
@@ -61,8 +69,8 @@
   min-width: 6ch;
   text-align: right;
 }
-.lab-readout__before { color: var(--slate); }
-.lab-readout__arrow { color: var(--slate); }
+.lab-readout__before { color: var(--text-mute); }
+.lab-readout__arrow { color: var(--text-mute); }
 [data-lab]:not([data-state="compare"]) .lab-readout__before,
 [data-lab]:not([data-state="compare"]) .lab-readout__arrow {
   display: none;
@@ -71,44 +79,50 @@
 /* ---- ModeSwitch — RULE 3: naive is neutral slate, never red ---- */
 .lab-switch {
   display: inline-flex;
-  border: 1px solid var(--line);
-  border-radius: 999px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
   overflow: hidden;
   background: none;
-  font: var(--fs-label) / 1 var(--font-sans);
+  font: var(--fs-control) / 1 var(--font-sans);
   cursor: pointer;
 }
-.lab-switch span { padding: 0.4em 0.9em; color: var(--slate); }
+.lab-switch span { padding: 0.4em 0.9em; color: var(--text-mute); }
 .lab-switch[aria-checked="false"] span:first-child,
 .lab-switch[aria-checked="true"] span:last-child {
   background: var(--accent-soft);
-  color: var(--heading);
+  color: var(--text-head);
 }
 
 /* ---- RunButton / ResetButton / SimClock ---- */
 .lab-run,
 .lab-reset,
 .lab-sim-clock {
-  font: var(--fs-label) / 1 var(--font-sans);
+  font: var(--fs-control) / 1 var(--font-sans);
   text-transform: uppercase;
   letter-spacing: 0.08em;
   padding: 0.6em 1.1em;
-  border: 1px solid var(--line);
-  border-radius: 2px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
   background: none;
-  color: var(--heading);
+  color: var(--text-body);
   cursor: pointer;
   min-height: 40px;
   min-width: 40px;
 }
-.lab-run { border-color: var(--accent-line); color: var(--accent); }
+/* The one primary action in the zone — filled, so it reads as "press this first". */
+.lab-run {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 600;
+}
 button:disabled { opacity: 0.4; cursor: not-allowed; }
 
 /* ---- Dial (range control) ---- */
 .lab-dial-value {
   font: var(--fs-mono) / 1 var(--font-mono);
   font-variant-numeric: tabular-nums;
-  color: var(--heading);
+  color: var(--text-head);
   min-width: 4ch;
 }
 input[type="range"] { accent-color: var(--accent); min-height: 40px; }
@@ -119,14 +133,14 @@ input[type="range"] { accent-color: var(--accent); min-height: 40px; }
   font: var(--fs-mono-sm) / 1 var(--font-mono);
   border: 1px dashed var(--sig-bad);
   color: var(--sig-bad);
-  border-radius: 2px;
+  border-radius: var(--radius);
   padding: 0.3em 0.6em;
   cursor: pointer;
   background: none;
 }
 
 /* ---- ResponseCard ---- */
-.lab-response-card { border: 1px solid var(--line); border-radius: 2px; padding: var(--pane-pad); }
+.lab-response-card { border: 1px solid var(--border); border-radius: var(--radius); padding: var(--pane-pad); }
 .lab-response-card__status {
   font: var(--fs-mono) / 1 var(--font-mono);
   font-variant-numeric: tabular-nums;
@@ -136,7 +150,7 @@ input[type="range"] { accent-color: var(--accent); min-height: 40px; }
 .lab-response-card__status[data-sig="bad"] { color: var(--sig-bad); }
 .lab-response-card__body {
   font: var(--fs-mono-sm) / 1.5 var(--font-mono);
-  color: var(--slate-light);
+  color: var(--text-body);
   white-space: pre-wrap;
   margin-top: var(--sp-2);
 }
@@ -144,7 +158,7 @@ input[type="range"] { accent-color: var(--accent); min-height: 40px; }
 /* ---- LogStream ---- */
 .lab-log__header {
   font: var(--fs-label) / 1 var(--font-mono);
-  color: var(--slate);
+  color: var(--text-mute);
   margin: 0 0 var(--sp-2);
 }
 .lab-log__list {
@@ -157,7 +171,7 @@ input[type="range"] { accent-color: var(--accent); min-height: 40px; }
 }
 .lab-log__line {
   padding: 0.15em 0.3em;
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid var(--border);
   color: var(--sig-info);
 }
 .lab-log__list:hover .lab-log__line { animation-play-state: paused; }
@@ -166,17 +180,30 @@ input[type="range"] { accent-color: var(--accent); min-height: 40px; }
 /* ---- ModelNote / SafetyLine ---- */
 .lab-model-note {
   font: var(--fs-label) / 1.4 var(--font-sans);
-  color: var(--slate);
+  color: var(--text-mute);
 }
-.lab-model-note summary { cursor: pointer; color: var(--mint); }
+.lab-model-note summary { cursor: pointer; color: var(--accent); }
 .lab-model-note p { margin: var(--sp-2) 0 0; font-family: var(--font-mono); font-size: var(--fs-mono-sm); }
 .lab-safety-line {
   font: var(--fs-label) / 1.4 var(--font-sans);
   color: var(--sig-warn);
   border: 1px dashed var(--sig-warn);
-  border-radius: 2px;
+  border-radius: var(--radius);
   padding: var(--sp-2);
 }
+
+/* ---- RowTable (used by n-plus-one-query; kept generic for the next lab that grows a table) ---- */
+.lab-row-table { width: 100%; border-collapse: collapse; font: var(--fs-mono-sm) / 1.5 var(--font-mono); }
+.lab-row-table th {
+  text-align: left;
+  font: var(--fs-label) / 1 var(--font-sans);
+  text-transform: uppercase;
+  color: var(--text-mute);
+  border-bottom: 1px solid var(--border);
+  padding: 0.3em 0.5em;
+}
+.lab-row-table td { padding: 0.3em 0.5em; border-bottom: 1px solid var(--border); color: var(--text-body); }
+.lab-row-table tr[data-sig="ghost"] td { color: var(--sig-ghost); }
 
 /* ---- ProvenanceTag ---- */
 .provenance-tag {
@@ -184,14 +211,14 @@ input[type="range"] { accent-color: var(--accent); min-height: 40px; }
   font: var(--fs-label) / 1 var(--font-sans);
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--slate);
-  border: 1px solid var(--line);
-  border-radius: 999px;
+  color: var(--text-mute);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
   padding: 0.3em 0.8em;
 }
 
 /* ---- noscript fallback — never a blank frame ---- */
-[data-lab] noscript { display: block; border: 1px solid var(--line); padding: var(--pane-pad); }
+[data-lab] noscript { display: block; border: 1px solid var(--border); padding: var(--pane-pad); }
 
 /* ---- Mobile (360px) — LUẬT 11: stage drawn mobile-first already above ---- */
 @media (min-width: 720px) {

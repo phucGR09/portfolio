@@ -19,19 +19,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title><!-- FILL: symptom title --> — Principles Lab</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../source/principles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../source/labs.css" />
   <link rel="stylesheet" href="../source/lab.css" />
 </head>
 <!-- FILL: --accent from the branch's color (UI plan §3.2); --stage-bg-* comes from lab.css, not here -->
-<body style="--accent: #64ffda;">
+<body style="--accent: #8d7bff;">
   <nav class="lab-nav">
     <a class="lab-nav__wordmark" href="./">⬡ Principles Lab</a>
-    <div><a href="./">All problems</a><a href="./by/">By principle</a></div>
+    <div><a href="./">All problems</a></div>
   </nav>
 
   <!-- ① HERO — symptom, in the words of someone who isn't a dev yet -->
-  <header class="lesson-hero">
+  <header class="lesson-hero" data-block="hero">
+    <p class="hero-principle"><!-- FILL: short canonical name, e.g. "N+1 Query" — this is the first thing read, not the symptom --></p>
     <span class="pill"><!-- FILL: category --></span>
     <span class="pill"><!-- FILL: difficulty --></span>
     <span class="pill"><!-- FILL: blast radius --></span>
@@ -41,36 +42,36 @@
   </header>
 
   <!-- ② SITUATION — 120-180 words; why the original code was reasonable -->
-  <section class="lesson-block">
+  <section class="lesson-block" data-block="situation">
     <h2>The situation</h2>
     <p><!-- FILL --></p>
   </section>
 
   <!-- ③ THE LAB — full-bleed stage, 100% free layout (Stage Contract, §7 UI plan) -->
-  <section class="lesson-block--full">
+  <section class="lesson-block--full" data-block="lab">
     <div data-lab>
       <noscript>
         <!-- FILL: static table/verdict equivalent — never a blank frame (M5) -->
         <p>This lab needs JavaScript. Here is what it would show:</p>
       </noscript>
     </div>
-    <script type="module" src="../scripts/labs/REPLACE_ME/index.js"></script>
+    <script type="module" src="../scripts/labs/REPLACE_ME.js"></script>
   </section>
 
   <!-- ④ UNDER THE HOOD — SVG diagram + ~150 words -->
-  <section class="lesson-block">
+  <section class="lesson-block" data-block="under-the-hood">
     <h2>Under the hood</h2>
     <p><!-- FILL --></p>
   </section>
 
   <!-- ⑤ THE PRINCIPLE — now name it, <= 60 words -->
-  <section class="lesson-block principle-box">
+  <section class="lesson-block principle-box" data-block="principle">
     <h2>The principle</h2>
     <p><!-- FILL --></p>
   </section>
 
   <!-- ⑥ TRADE-OFFS — RULE 6b: must never be empty -->
-  <section class="lesson-block">
+  <section class="lesson-block" data-block="tradeoffs">
     <h2>Trade-offs &amp; when NOT to</h2>
     <div class="tradeoff-grid">
       <div><h3>Apply this when</h3><p><!-- FILL --></p></div>
@@ -79,13 +80,13 @@
   </section>
 
   <!-- ⑦ WHERE THIS BITES IN PRACTICE — no personal anecdotes, no badges -->
-  <section class="lesson-block">
+  <section class="lesson-block" data-block="bites">
     <h2>Where this bites in practice</h2>
     <p><!-- FILL --></p>
   </section>
 
   <!-- ⑧ CARRY IT AWAY — 4-6 item checklist + related -->
-  <section class="lesson-block">
+  <section class="lesson-block" data-block="carry-away">
     <h2>Carry it away</h2>
     <ul><!-- FILL --></ul>
   </section>

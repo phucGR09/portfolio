@@ -22,9 +22,8 @@ function buildKey(ns, scope, id) {
 }
 
 /**
- * Wraps localStorage: key schema `pl:<ver>:<scope>[:<id>]` (RULE 12b), a
- * code-enforced scope whitelist (RULE 18 — nothing a reader typed is ever
- * persisted), and try/catch on every access (RULE 12c).
+ * localStorage wrapper: key schema `pl:<ver>:<scope>[:<id>]` (12b), scope
+ * whitelist in code (18), try/catch on every access (12c).
  * @param {string} [ns]
  * @param {Storage | undefined} [storage]
  * @returns {import("../types.d.ts").Persist}

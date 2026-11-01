@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>We updated the tax rate everywhere — except where it charges customers — Principles Lab</title>
+  <meta name="description" content="A runnable lab showing change propagation: a value copied into five places, and the one that gets missed when it changes." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../source/labs.css" />
+  <link rel="stylesheet" href="../source/lab.css" />
+  <link rel="stylesheet" href="../scripts/labs/one-rule-five-places.css" />
+</head>
+<body style="--accent: #e8b04b;">
+  <nav class="lab-nav">
+    <a class="lab-nav__wordmark" href="./">⬡ Principles Lab</a>
+    <div><a href="./">All problems</a></div>
+  </nav>
+
+  <header class="lesson-hero" data-block="hero">
+    <p class="hero-principle">DRY (Duplicated Logic)</p>
+    <span class="pill">Code Design</span>
+    <span class="pill pill--difficulty">Intermediate</span>
+    <span class="pill" data-blast="expensive">Expensive</span>
+    <h1>We updated the tax rate everywhere — except the one screen that actually charges the customer.</h1>
+    <p class="metric-strip metric"><span>5 files to change</span> <span>→</span> <span>1 file to change</span></p>
+    <span class="provenance-tag">Classic problem</span>
+  </header>
+
+  <section class="lesson-block" data-block="situation">
+    <h2>The situation</h2>
+    <p>
+      The VAT rate started as one number in the cart's checkout code. When the invoice email
+      needed it too, someone copied the number over — one line, shipped same day. Then the
+      admin report needed it. Then the mobile app. Each copy was a reasonable call in
+      isolation: asking for a shared config felt like over-engineering for a number that
+      "never changes." Then the rate changed, and updating it meant remembering every place
+      that copy had ended up.
+    </p>
+  </section>
+
+  <section class="lesson-block--full" data-block="lab">
+    <div data-lab>
+      <noscript>
+        <p>This lab needs JavaScript. With it: deploying a new rate with the value
+        duplicated across 5 screens updates 4 of them and silently misses one; deploying from
+        a single source updates all 5.</p>
+      </noscript>
+    </div>
+    <script type="module" src="../scripts/labs/one-rule-five-places.js"></script>
+  </section>
+
+  <section class="lesson-block" data-block="under-the-hood">
+    <h2>Under the hood</h2>
+    <svg viewBox="0 0 320 110" role="img" aria-labelledby="uth3-title uth3-desc" style="width:100%;max-width:480px;color:var(--text-mute)">
+      <title id="uth3-title">One source fanning out to five screens</title>
+      <desc id="uth3-desc">A single rate value is copied into five screens. Four copies get updated when the rate changes; one copy, chosen by a seeded random pick, is missed and keeps the old value.</desc>
+      <text x="4" y="12" font-size="8" fill="currentColor">rate = 8%</text>
+      <g font-size="8" fill="var(--sig-ok)">
+        <text x="120" y="14">Cart</text>
+        <text x="120" y="30">Invoice</text>
+        <text x="120" y="46">Email receipt</text>
+        <text x="120" y="62">Admin report</text>
+      </g>
+      <text x="120" y="78" font-size="8" fill="var(--sig-bad)">Mobile app — missed</text>
+      <line x1="60" y1="10" x2="116" y2="12" stroke="var(--sig-ok)" />
+      <line x1="60" y1="10" x2="116" y2="28" stroke="var(--sig-ok)" />
+      <line x1="60" y1="10" x2="116" y2="44" stroke="var(--sig-ok)" />
+      <line x1="60" y1="10" x2="116" y2="60" stroke="var(--sig-ok)" />
+      <line x1="60" y1="10" x2="116" y2="76" stroke="var(--sig-bad)" stroke-dasharray="2 2" />
+      <text x="4" y="100" font-size="8" fill="var(--text-mute)">single source: one edit reaches all five, with no copy to forget</text>
+    </svg>
+    <p>
+      In duplicated mode, "deploy" means finding and editing five copies by hand — and the
+      lab always finds one (chosen by a seeded random pick, so it's reproducible, not
+      hand-picked) that gets missed. In single-source mode, the five screens read the rate
+      from one place, so there is nothing to forget: one edit, five correct screens.
+    </p>
+  </section>
+
+  <section class="lesson-block principle-box" data-block="principle">
+    <h2>The principle</h2>
+    <p>A value that must be the same in five places will eventually be different in one of
+    them. Put the shared fact in one place and have every screen read from it, so a change
+    takes one edit, not five.</p>
+  </section>
+
+  <section class="lesson-block" data-block="tradeoffs">
+    <h2>Trade-offs &amp; when NOT to</h2>
+    <div class="tradeoff-grid">
+      <div>
+        <h3>Apply this when</h3>
+        <p>A business fact — a rate, a limit, a feature flag — must be identical everywhere
+        it's used. If two places can legitimately disagree, it isn't this problem.</p>
+      </div>
+      <div>
+        <h3>Don't when</h3>
+        <p>Two blocks of code merely look similar today but change for different reasons.
+        That's not duplication, it's two domain rules that happen to coincide right now —
+        merging them creates coupling, and the two rules will need to diverge later anyway.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="lesson-block" data-block="bites">
+    <h2>Where this bites in practice</h2>
+    <p>
+      Pricing and tax rates, feature flags, API version strings, and "just this one timeout
+      value" are the repeat offenders — anywhere a number got copy-pasted because a shared
+      config felt like overkill for a value that supposedly never changes. The early sign:
+      grep the codebase for the literal value and count more than one hit outside of tests.
+    </p>
+  </section>
+
+  <section class="lesson-block" data-block="carry-away">
+    <h2>Carry it away</h2>
+    <ul>
+      <li>Before copying a value a second time, ask where it will need to change next, and put it there once.</li>
+      <li>A number used in more than one place is a shared fact, not a coincidence — give it one address.</li>
+      <li>"It's just one value" is the sentence right before "it's just one more place to miss."</li>
+      <li>Two similar-looking blocks aren't necessarily duplicates — check whether they change for the same reason before merging them.</li>
+    </ul>
+  </section>
+
+  <footer class="lab-footer">
+    <p>Every number on this page is computed live by the simulation above — nothing here is a stock photo of a chart.</p>
+    <p>Built and maintained by Phuc</p>
+  </footer>
+</body>
+</html>

@@ -129,7 +129,7 @@ Bốn thứ đó là toàn bộ "thương hiệu" của Lab. Ngoài bốn thứ 
 | Syntax highlight | **Không** | Mỗi lab chỉ cần tô ≤ 2 loại token. Nhúng Prism (~15KB) để tô 1 đoạn SQL là phản nguyên lý |
 | Font | **Inter** (đã có) + **mono hệ thống** | Mono không tải thêm byte nào — xem §4.1 |
 | Icon | **inline SVG, 100%** | Site Lab không có logo stack để hiện (đó là nhu cầu của portfolio, không phải của Lab). Icon chức năng là phần của instrument, không được phụ thuộc mạng |
-| CSS của portfolio | **Không nạp** (`styles.css`, `case-study.css`) | Hai site độc lập (plan §1.1, §6.1). Lab khai token riêng trong `principles.css` |
+| CSS của portfolio | **Không nạp** (`styles.css`, `case-study.css`) | Hai site độc lập (plan §1.1, §6.1). Lab khai token riêng trong `labs.css` |
 | Service Worker | **Không, tới hết P3** | SW stale trên site tĩnh = cơn đau đầu không có ai support. Xem §11.6 |
 | Analytics | **Không mặc định** | Nếu thêm phải ghi rõ trên trang. Site dạy least-privilege thì không được âm thầm theo dõi |
 
@@ -137,7 +137,7 @@ Bốn thứ đó là toàn bộ "thương hiệu" của Lab. Ngoài bốn thứ 
 
 | Mục | Trần | Ghi chú |
 |---|---|---|
-| `source/principles.css` | 14 KB | token riêng của Lab + landing + shell lesson |
+| `source/labs.css` | 14 KB | token riêng của Lab + landing + shell lesson |
 | `source/lab.css` | 18 KB | kernel 4 vùng + component dùng ≥ 2 lần |
 | CSS riêng mỗi stage | **120 dòng** | vượt là dấu hiệu pattern nên lên `lab.css` |
 | `scripts/runtime/*` tổng | 24 KB | store + server + clock + logger + lab |
@@ -166,7 +166,7 @@ Mục bạn hỏi kỹ nhất, nên đi chi tiết nhất. Hệ màu chia **4 t�
 
 ### 3.1. Tầng A — Chassis palette (bất biến, không lab nào được chạm)
 
-Khai báo **trong `source/principles.css`** — đây là bộ token **của riêng site Lab**, không import từ CSS của portfolio (plan §6.1 quyết định 2). Không lab nào được thêm hoặc sửa.
+Khai báo **trong `source/labs.css`** — đây là bộ token **của riêng site Lab**, không import từ CSS của portfolio (plan §6.1 quyết định 2). Không lab nào được thêm hoặc sửa.
 
 Giá trị dưới đây **trùng** với palette portfolio đang dùng, và đó là cố ý: đây là một nền tối đã được kiểm contrast, và instrument của Lab được thiết kế quanh signal color trên nền tối. **Trùng giá trị không phải là chung nguồn.** Lab đổi `--navy` sau này không được ảnh hưởng portfolio, và ngược lại — hai site thay đổi vì hai lý do khác nhau, nên chúng là hai nguồn (xem trade-off ở `one-rule-five-places`).
 
@@ -210,7 +210,7 @@ Cách dùng branch color — **[LUẬT 2a]** branch color chỉ xuất hiện tr
 
 Lý do: trong một lab, **màu là dữ liệu** (§3.3). Nếu branch color cũng tham gia mã hoá dữ liệu thì cùng một màu mang hai nghĩa ở hai trang, và người đọc phải học lại bảng màu mỗi lần sang trang. Branch color ở ngoài khung, signal color ở trong ruột — xung đột tự hết.
 
-Phái sinh từ `--accent`, khai báo một lần trong `principles.css`:
+Phái sinh từ `--accent`, khai báo một lần trong `labs.css`:
 
 ```css
 body {
@@ -647,7 +647,7 @@ Mỗi phase mở một nhóm khuôn tương tác mới, nên mở một nhóm in
 
 | Phase | Tool |
 |---|---|
-| P0 | **`principles/_states.html`** — gallery mọi component × 6 trạng thái (xem §12.1); **`tests/isolation.test.mjs`** — canh LUẬT 0 (không link / không CSS dùng chung giữa Lab và portfolio) |
+| P0 | **`labs/_states.html`** — gallery mọi component × 6 trạng thái (xem §12.1); **`tests/isolation.test.mjs`** — canh LUẬT 0 (không link / không CSS dùng chung giữa Lab và portfolio) |
 | P1 | `tools/check-contract.mjs` — kiểm điều 1,2,7,8 của Stage Contract bằng cách parse HTML/CSS |
 | P2 | `tools/budget.mjs` — in kích thước từng file so với trần §2.2 |
 | P3 | `tools/stamp.mjs` — sinh HTML từ catalog + partial (tripwire §2.3); `tools/og.mjs` — sinh ảnh OG |
@@ -743,7 +743,7 @@ Lý do luật này vẫn nghiêm dù đã bỏ portfolio: đây là site **dạy
 repo/                                # 1 repo, 2 site doc lap (plan §1.1)
 ├─ index.html                        # PORTFOLIO — khong doi, khong link toi Lab
 ├─ pages/                            # PORTFOLIO — khong doi
-├─ principles/                       # ===== LAB =====
+├─ labs/                       # ===== LAB =====
 │  ├─ index.html                     # landing: hero + how-it-works + lab mini + catalog
 │  ├─ _template.html                 # khung 8 khối, copy cho trang mới (P0–P1)
 │  ├─ _states.html                   # ★ gallery component × 6 trạng thái (dev-only, noindex)
@@ -753,7 +753,7 @@ repo/                                # 1 repo, 2 site doc lap (plan §1.1)
 ├─ source/
 │  ├─ styles.css                     # PORTFOLIO (Lab khong nap)
 │  ├─ case-study.css                 # PORTFOLIO (Lab khong nap)
-│  ├─ principles.css                 # LAB: chassis rieng + landing + shell lesson
+│  ├─ labs.css                 # LAB: chassis rieng + landing + shell lesson
 │  └─ lab.css                        # LAB: kernel 4 vùng + component dùng ≥ 2 lần
 ├─ scripts/
 │  ├─ runtime/
@@ -801,17 +801,17 @@ Bốn file runtime đánh ★ là bổ sung của mình so với plan cũ. `fmt.
 
 ### 10.3. Routing và deep-link state
 
-- Landing (trang chủ của Lab): `/principles/`
-- Lesson: `/principles/<slug>.html`
-- Trang principle (P3): `/principles/by/<principle-slug>.html`
-- Catalog tách riêng (chỉ khi > 12 entry, plan §5.5): `/principles/catalog.html`
+- Landing (trang chủ của Lab): `/labs/`
+- Lesson: `/labs/<slug>.html`
+- Trang principle (P3): `/labs/by/<principle-slug>.html`
+- Catalog tách riêng (chỉ khi > 12 entry, plan §5.5): `/labs/catalog.html`
 
-**[LUẬT]** Không route nào của Lab trỏ ra ngoài `/principles/`, và không route nào của portfolio trỏ vào (LUẬT 0).
+**[LUẬT]** Không route nào của Lab trỏ ra ngoài `/labs/`, và không route nào của portfolio trỏ vào (LUẬT 0).
 
 **Deep-link trạng thái lab** — bổ sung của mình, không có trong plan cũ:
 
 ```text
-/principles/n-plus-one-query.html?mode=naive&rows=500&speed=10
+/labs/n-plus-one-query.html?mode=naive&rows=500&speed=10
 ```
 
 `lab.js` đọc query string khi khởi tạo, và dùng `history.replaceState` khi người đọc đổi control (không reload, không thêm history entry rác). Nút `Copy link to this run` ở góc stage.
@@ -927,7 +927,7 @@ new IntersectionObserver(async ([e], obs) => {
 | Asset | Chiến lược |
 |---|---|
 | HTML | ETag mặc định của GitHub Pages. Không cố chỉnh |
-| `principles.css`, `lab.css` | **`?v=YYYYMMDD` bump tay** khi sửa. Pages không hash tên file, mà hai file này sửa thường xuyên và sai phiên bản thì layout vỡ ở người đã cache |
+| `labs.css`, `lab.css` | **`?v=YYYYMMDD` bump tay** khi sửa. Pages không hash tên file, mà hai file này sửa thường xuyên và sai phiên bản thì layout vỡ ở người đã cache |
 | `scripts/**` | ES module có ETag, revalidate nhanh. Không cần `?v=` — và không nên, vì `?v=` trên module làm hỏng cache của các module nó import |
 | Google Fonts | `preconnect` (đã có) + `display=swap` (đã có). Không đổi |
 | CDN ngoài | **Không có trên site Lab.** Chỉ 2 request ngoài: Google Fonts css + woff2 (§2.2) |
@@ -972,13 +972,13 @@ Mỗi phase có: **mục tiêu · phạm vi · deliverable · component mới ·
 
 | Deliverable | Nội dung |
 |---|---|
-| `source/principles.css` | token bổ sung (mono, signal, motion, spacing), shell 8 khối, hub layout |
+| `source/labs.css` | token bổ sung (mono, signal, motion, spacing), shell 8 khối, hub layout |
 | `source/lab.css` | kernel 4 vùng, 6 trạng thái, 14 kernel component (§8.2) |
 | `scripts/runtime/` | `store.js`, `server.js`, `clock.js`, `logger.js`, `lab.js`, `fmt.js`, `rng.js`, `persist.js` |
 | `scripts/data/seed.js` | generator có seed cho candidates / companies / users / transactions |
 | `scripts/data/catalog.js` | schema + 3 entry MVP (chưa cần đủ 18) |
-| `principles/_template.html` | khung 8 khối, comment hướng dẫn điền |
-| `principles/_states.html` | **gallery: mọi component × 6 trạng thái** |
+| `labs/_template.html` | khung 8 khối, comment hướng dẫn điền |
+| `labs/_states.html` | **gallery: mọi component × 6 trạng thái** |
 | Lab rỗng `scripts/labs/_demo/` | 1 control, 1 response giả, 1 log 20 dòng, 1 verdict |
 
 **Component mới:** toàn bộ 14 kernel component ở §8.2. Không có instrument nào.
@@ -1020,7 +1020,7 @@ Mỗi phase có: **mục tiêu · phạm vi · deliverable · component mới ·
 | `n-plus-one-query.html` + lab | khuôn A, `data`, stage-bg `deep` |
 | `sql-injection-contact-form.html` + lab | khuôn B, `security`, stage-bg `void`, có `SafetyLine` trong stage |
 | `one-rule-five-places.html` + lab | khuôn C, `code-design`, stage-bg `raised` |
-| `principles/index.html` | **landing riêng của Lab**: hero + how-it-works + **lab mini nhúng** + catalog (filter chips, card grid, `Surprise me`) + footer riêng |
+| `labs/index.html` | **landing riêng của Lab**: hero + how-it-works + **lab mini nhúng** + catalog (filter chips, card grid, `Surprise me`) + footer riêng |
 | `scripts/hub.js` | filter bằng `data-*` + `classList`; đọc `pl:v1:hub` |
 | `index.html` của portfolio | **không chạm vào.** Không nav link, không section giới thiệu (LUẬT 0) |
 | `tests/isolation.test.mjs` | canh LUẬT 0 trong CI |
@@ -1095,7 +1095,7 @@ Mỗi phase có: **mục tiêu · phạm vi · deliverable · component mới ·
 | Deliverable | Ghi chú |
 |---|---|
 | +10 trang (tổng 18) | theo backlog plan cũ §7 |
-| `principles/by/<principle>.html` | trang theo nguyên lý: liệt kê problem minh hoạ nó (quan hệ nhiều-nhiều) |
+| `labs/by/<principle>.html` | trang theo nguyên lý: liệt kê problem minh hoạ nó (quan hệ nhiều-nhiều) |
 | `PrincipleMap` | SVG principle ↔ problem, là trái tim của trang tổng hợp |
 | Sơ đồ SVG cho khối ④ mỗi trang | 18 sơ đồ viết tay |
 | `tools/stamp.mjs` | **tripwire §2.3 đã nổ từ trang thứ 6** — làm ở đây là muộn nhất |
@@ -1221,7 +1221,7 @@ Sau khi bạn làm rõ: Lab là **site học tập độc lập**, ở sub-path 
 |---|---|---|---|
 | 13 | Badge `Seen in production` ở hero + card, link tới case study trong `pages/` | **`ProvenanceTag`**: `Classic problem` / `From the field` / `Constructed example` | Badge cũ nói về *CV của tác giả*; nhãn mới nói về *xuất xứ của vấn đề*. Giữ nguyên giá trị chống-nói-quá, bỏ phần phụ thuộc portfolio. Rà soát cho thấy badge **chưa từng là component** (chỉ nằm trong sơ đồ §5.2 + §9.4) nên đây là sửa spec, không phải xoá code — §8.2 |
 | 14 | `case-nav` dùng chung + tên tác giả ở góc phải; trang chủ portfolio có nav link + section 3 card | **Nav + footer riêng của Lab**; portfolio **không chạm vào** | Hai site độc lập thì không chia sẻ nav. Và nav chung là cái khiến người đọc tưởng đang xem portfolio — đúng điều cần tránh — §5.2 |
-| 15 | "Giữ nguyên 100% token trong `source/styles.css`"; stage-bg "dùng lại giá trị của `case-study.css` để nối liền với case study" | **Lab khai token riêng trong `principles.css`**; stage-bg được biện minh bằng **bậc sáng + contrast**, không bằng nguồn gốc | Hai site đổi vì hai lý do khác nhau → hai nguồn. Trùng *giá trị* không phải chung *nguồn*; gộp lại là coupling, không phải DRY — §3.1, §3.4 |
+| 15 | "Giữ nguyên 100% token trong `source/styles.css`"; stage-bg "dùng lại giá trị của `case-study.css` để nối liền với case study" | **Lab khai token riêng trong `labs.css`**; stage-bg được biện minh bằng **bậc sáng + contrast**, không bằng nguồn gốc | Hai site đổi vì hai lý do khác nhau → hai nguồn. Trùng *giá trị* không phải chung *nguồn*; gộp lại là coupling, không phải DRY — §3.1, §3.4 |
 | 16 | Hub page = filter + grid, nằm trong một site lớn hơn | **Landing đầy đủ**: hero → how-it-works + **lab mini nhúng** → browse by category → catalog → footer | Không còn trang chủ portfolio làm việc giới thiệu. Landing phải tự thuyết phục trong 10 giây đầu, và cách rẻ nhất là cho người ta bấm thử ngay — plan §5.5 |
 | 17 | Khối ⑦ *From experience* — trải nghiệm của tác giả | Khối ⑦ ***Where this bites in practice*** — vấn đề xuất hiện ở đâu, dấu hiệu sớm | Người đọc không cần biết tác giả là ai mới dùng được trang. Đồng thời xoá luôn động cơ phóng đại kinh nghiệm — plan §4.1, §9.4 |
 | 18 | Lý lẽ dựa trên "recruiter / người phỏng vấn / một portfolio không cần offline" | Lý lẽ dựa trên **3 persona học tập**, đặc biệt **người dạy** | Lý lẽ sai người đọc sẽ kéo thiết kế lệch dần. Persona "người dạy" là lý do deep-link, OG image và lab-không-cần-cài-đặt được ưu tiên cao — plan §2.2 |
@@ -1235,7 +1235,7 @@ Một chỗ mình **không** đổi, dù có thể bị cho là mâu thuẫn: gi
 ## 16. Bước tiếp theo ngay
 
 1. **Đọc §3 và §7.** Hai mục này là 80% giá trị tài liệu. Nếu bạn không đồng ý chỗ nào trong đó, nói trước khi mình code — sửa luật thì rẻ, sửa 8 lab đã viết thì không.
-2. **Mình dựng P0**, theo đúng thứ tự: `principles.css` → `lab.css` → `runtime/` → `_states.html` → lab rỗng.
+2. **Mình dựng P0**, theo đúng thứ tự: `labs.css` → `lab.css` → `runtime/` → `_states.html` → lab rỗng.
 3. **Bạn review `_states.html`** trước khi mình viết lab thật đầu tiên. Đây là điểm kiểm soát quan trọng nhất của cả dự án: ở đó bạn thấy toàn bộ ngôn ngữ thị giác của 18 trang, trong một màn hình, trước khi nó bị nhân bản.
 4. Chốt xong `_states.html` → làm `n-plus-one-query` trọn vẹn làm chuẩn tham chiếu.
 5. Rồi mới sang lab 2, lab 3 — và kiểm đúng một điều: **mình có phải sửa `lab.js` không.** Nếu có, runtime sai, sửa trước khi viết tiếp.

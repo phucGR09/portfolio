@@ -5,21 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="robots" content="noindex" />
   <title>States gallery — Principles Lab (dev only)</title>
-  <link rel="stylesheet" href="../source/principles.css" />
+  <link rel="stylesheet" href="../source/labs.css" />
   <link rel="stylesheet" href="../source/lab.css" />
   <style>
-    /* Gallery-only CSS. Lives here, not in lab.css/principles.css, so it
+    /* Gallery-only CSS. Lives here, not in lab.css/labs.css, so it
        never counts against their shipped-page byte budgets (§2.2 UI plan). */
     body { padding: var(--sp-4); }
     .gallery { border-collapse: collapse; width: 100%; }
-    .gallery caption { text-align: left; color: var(--heading); font-size: var(--fs-h2); margin-bottom: var(--sp-2); }
-    .gallery th, .gallery td { border: 1px solid var(--line); padding: var(--sp-2); vertical-align: top; min-width: 160px; }
-    .gallery th { font: var(--fs-label) / 1 var(--font-sans); text-transform: uppercase; color: var(--slate); text-align: left; }
-    .cell-label { font: var(--fs-label) / 1 var(--font-sans); color: var(--mint); text-transform: uppercase; letter-spacing: 0.06em; display: block; margin-bottom: var(--sp-1); }
-    .cell { padding: var(--sp-2); border: 1px solid var(--line); border-radius: 2px; background: var(--stage-bg-deep); }
+    .gallery caption { text-align: left; color: var(--text-head); font-size: var(--fs-h2); margin-bottom: var(--sp-2); }
+    .gallery th, .gallery td { border: 1px solid var(--border); padding: var(--sp-2); vertical-align: top; min-width: 160px; }
+    .gallery th { font: var(--fs-label) / 1 var(--font-sans); text-transform: uppercase; color: var(--text-mute); text-align: left; }
+    .cell-label { font: var(--fs-label) / 1 var(--font-sans); color: var(--accent); text-transform: uppercase; letter-spacing: 0.06em; display: block; margin-bottom: var(--sp-1); }
+    .cell { padding: var(--sp-2); border: 1px solid var(--border); border-radius: 2px; background: var(--stage-bg-deep); }
   </style>
 </head>
-<body style="--accent: #64ffda;">
+<body style="--accent: #8d7bff;">
   <h1>States gallery — every kernel component × 6 states</h1>
   <p>Dev-only reference. Not linked from anywhere, not indexed. Compare against this page whenever <code>lab.css</code> changes.</p>
 

@@ -1,7 +1,6 @@
 /**
- * Two time axes (RULE 16): now() is simulated time a Verdict reports;
- * sleep() spends real time so a run feels slow, capped by ceilingMs.
- * Only module allowed to call setTimeout.
+ * now() is simulated time; sleep() spends real time, capped by ceilingMs.
+ * Only module allowed to call setTimeout (RULE 16).
  * @param {import("../types.d.ts").ClockOptions} [options]
  * @returns {import("../types.d.ts").Clock}
  */
@@ -32,7 +31,7 @@ export function createClock(options = {}) {
     },
 
     sleep(ms) {
-      if (aborted) return Promise.reject(new Error("Clock aborted"));
+      if (aborted) return Promise.reject(new Error("aborted"));
 
       return new Promise((resolve, reject) => {
         /** @type {PendingSleep} */
@@ -81,7 +80,7 @@ export function createClock(options = {}) {
 
     abort() {
       aborted = true;
-      for (const entry of pending) entry.reject(new Error("Clock aborted"));
+      for (const entry of pending) entry.reject(new Error("aborted"));
     },
 
     onTick(fn) {

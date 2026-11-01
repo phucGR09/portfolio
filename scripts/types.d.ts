@@ -155,6 +155,8 @@ export interface StageSpec {
 export interface ModelSpec {
   readonly note: string;
   readonly seed: number;
+  /** Sizes forwarded to buildDataset() — bump when a control (e.g. a 500-row Dial) needs more seed rows than the default. */
+  readonly datasetSize?: { candidates?: number; companies?: number; users?: number; transactions?: number };
 }
 
 export interface MetricSpec {
@@ -171,6 +173,8 @@ export interface RunContext {
   readonly server: Server;
   readonly log: (type: string, payload?: unknown) => void;
   readonly clock: Clock;
+  /** Direct zone elements — Response/Internals are free layout (Stage Contract §7); draw your instrument here. */
+  readonly els: Readonly<Record<Zone, HTMLElement>>;
 }
 
 export interface LabRunOutcome {
@@ -186,6 +190,8 @@ export interface LabSpec {
   readonly metrics: readonly MetricSpec[];
   /** SafetyLine text ("Runs entirely in your browser..."). Required on every security lab. */
   readonly safety?: string;
+  /** Draws the idle frame for Response/Internals (axes, empty table, empty tiles). Called on mount and every Reset. */
+  readonly renderIdle?: (els: Readonly<Record<Zone, HTMLElement>>) => void;
   readonly run: (ctx: RunContext) => Promise<LabRunOutcome>;
 }
 
@@ -227,6 +233,9 @@ export interface Dataset {
 
 export interface CatalogEntry {
   readonly slug: string;
+  /** Short canonical name of the problem/principle (e.g. "N+1 Query") — the primary text on a catalog card. */
+  readonly principle: string;
+  /** Symptom headline, used on the lesson page itself, never as the card's primary text. */
   readonly title: string;
   readonly category: Category;
   readonly difficulty: Difficulty;

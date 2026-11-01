@@ -12,11 +12,11 @@
 
 | Deliverable | Khuôn | Category | Stage bg |
 |---|---|---|---|
-| `principles/n-plus-one-query.html` + `scripts/labs/n-plus-one.js` | A — Request Inspector | `data` | `deep` |
-| `principles/sql-injection-contact-form.html` + `scripts/labs/sql-injection.js` | B — Attacker Console | `security` | `void` |
-| `principles/one-rule-five-places.html` + `scripts/labs/one-rule-five-places.js` | C — Change Propagation | `code-design` | `raised` |
-| `principles/index.html` + `scripts/hub.js` — **landing**: hero, how-it-works + lab mini, browse-by-category, catalog, footer | — | — | — |
-| Nav + footer riêng của Lab (trong `principles.css`) | — | — | — |
+| `labs/n-plus-one-query.html` + `scripts/labs/n-plus-one.js` | A — Request Inspector | `data` | `deep` |
+| `labs/sql-injection-contact-form.html` + `scripts/labs/sql-injection.js` | B — Attacker Console | `security` | `void` |
+| `labs/one-rule-five-places.html` + `scripts/labs/one-rule-five-places.js` | C — Change Propagation | `code-design` | `raised` |
+| `labs/index.html` + `scripts/hub.js` — **landing**: hero, how-it-works + lab mini, browse-by-category, catalog, footer | — | — | — |
+| Nav + footer riêng của Lab (trong `labs.css`) | — | — | — |
 | `tools/check-contract.mjs` — triển khai thật | — | — | — |
 
 **Component mới (8 instrument, §8.3 UI plan):** `TimingWaterfall`, `QueryLogStream`, `RowTable`, `StringBuilder`, `LeakTable`, `FileGraph`, `ScreenTiles`, `DiffColumns`.
@@ -108,7 +108,7 @@ manual still required: 3 (six states) 5 (360px) 6 (keyboard/SR) 9 (reset) 10 (Mo
 
 ---
 
-### Step 2.5 — Landing: `principles/index.html` + `scripts/hub.js`
+### Step 2.5 — Landing: `labs/index.html` + `scripts/hub.js`
 
 **Đây là deliverable khó nhất của P02**, và nó khó vì một lý do mới: Lab không còn được giới thiệu từ trang chủ portfolio (LUẬT 0), nên **landing phải tự thuyết phục một người lạ hoàn toàn**. Người vào đây từ Google hoặc từ một link được gửi, và không biết gì cả.
 
@@ -128,7 +128,7 @@ Năm khối, theo đúng thứ tự trên màn hình (plan §5.5):
 2. Card hiện **symptom**, không hiện tên nguyên lý. (Đã chốt ở plan cũ; nhắc lại vì đây là chỗ dễ làm sai nhất lúc code.)
 3. Sort mặc định theo blast-radius giảm dần.
 4. Filter không ra kết quả → hiện **câu gợi ý bỏ filter nào**, không hiện "0 results".
-5. **Landing và catalog nằm cùng một trang** cho tới khi vượt 12 entry, rồi tách `/principles/catalog.html` (plan §5.5). Dưới 12, tách ra chỉ thêm một cú click giữa người đọc và nội dung.
+5. **Landing và catalog nằm cùng một trang** cho tới khi vượt 12 entry, rồi tách `/labs/catalog.html` (plan §5.5). Dưới 12, tách ra chỉ thêm một cú click giữa người đọc và nội dung.
 
 **Trần:** `hub.js` ≤ 6 KB; landing **chỉ nạp thêm code của lab mini** (lazy, khi khối 2 vào khung nhìn), không nạp lab nào khác (budget check canh).
 
@@ -165,11 +165,11 @@ npm test -- --test-name-pattern isolation
 | `tests/labs/sql-injection.test.mjs` | naive + payload kết thúc-câu-lệnh → `rows > 0` và SQL sinh ra **chứa** payload; principled cùng payload → `rows === 0` và payload nằm trong tham số (không trong câu lệnh); mọi email seed kết thúc `.invalid`; `password_hash` khớp mẫu fake | bài học + an toàn uy tín |
 | `tests/labs/one-rule-five-places.test.mjs` | duplicated → đúng 1/5 screen còn giá cũ, và screen đó xác định theo seed; single-source → 5/5 đúng; verdict đếm `filesChanged`/`missed` từ model | bài học |
 | `tests/hub.test.mjs` (linkedom) | `stats()` khớp số entry (3, không phải 18); filter 1 chip → đúng tập card; 2 chip khác trục → giao; filter rỗng kết quả → hiện gợi ý **không** hiện "0 results"; sort mặc định blast-radius giảm dần; `Surprise me` chỉ chọn trong slug tồn tại; **mỗi card có `ProvenanceTag` với 1 trong 3 giá trị** | quyết định 1–5 |
-| `tests/landing.test.mjs` (linkedom) | đủ 5 khối theo `data-block`; hero có wordmark + tagline + 3 số từ `stats()`; khối 2 có điểm mount cho **lab mini**; browse-by-category liệt kê đủ 6 nhánh với số đếm đúng; footer có dòng safety + link changelog; **không link nào ra ngoài `/principles/`** | plan §5.5, LUẬT 0 |
-| `tests/attribution.test.mjs` | footer của **mọi** trang Lab (landing + 3 lesson) chứa đúng chuỗi `Built and maintained by Phuc`; **không `<a>` nào bọc nó**; chuỗi `Phuc` **không xuất hiện** trong nav, hero, hay khối ⑦; không có chức danh / tên đầy đủ / `mailto:` ở đâu trong `principles/**` | plan §1.1 (đã chốt) |
+| `tests/landing.test.mjs` (linkedom) | đủ 5 khối theo `data-block`; hero có wordmark + tagline + 3 số từ `stats()`; khối 2 có điểm mount cho **lab mini**; browse-by-category liệt kê đủ 6 nhánh với số đếm đúng; footer có dòng safety + link changelog; **không link nào ra ngoài `/labs/`** | plan §5.5, LUẬT 0 |
+| `tests/attribution.test.mjs` | footer của **mọi** trang Lab (landing + 3 lesson) chứa đúng chuỗi `Built and maintained by Phuc`; **không `<a>` nào bọc nó**; chuỗi `Phuc` **không xuất hiện** trong nav, hero, hay khối ⑦; không có chức danh / tên đầy đủ / `mailto:` ở đâu trong `labs/**` | plan §1.1 (đã chốt) |
 | `tests/contract.test.mjs` | chạy `check-contract.mjs` qua API trên **cả 3 trang** → pass; cố tình thêm số literal vào một lab → fail đúng dòng | điều 1,2,4,7,8 |
 | `tests/pages.test.mjs` | mỗi trang có đủ 8 khối theo `data-block`; khối Trade-offs **không rỗng** (LUẬT 6b); có `<noscript>`; có `ModelNote`; có **`ProvenanceTag`** ở hero; trang security có `SafetyLine`; nav + footer là của Lab; mọi link nội bộ trỏ tới file tồn tại | 6b, 7b, điều 10, plan §3.3 |
-| `tests/isolation.test.mjs` (từ P00/P01) | **lần đầu chạy trên file thật**: 3 trang lesson + landing không link ra ngoài, không nạp CSS portfolio; `index.html` + `pages/**` không nhắc `principles/` | **LUẬT 0** |
+| `tests/isolation.test.mjs` (từ P00/P01) | **lần đầu chạy trên file thật**: 3 trang lesson + landing không link ra ngoài, không nạp CSS portfolio; `index.html` + `pages/**` không nhắc `labs/` | **LUẬT 0** |
 
 **Bổ sung regression:** chạy lại toàn bộ test P01 — đặc biệt case không-cache của `store`. Ba lab mới là lần đầu store bị dùng thật; nếu có ai "tối ưu" nó để lab nhanh hơn, test đó là chỗ phát hiện.
 

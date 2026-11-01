@@ -171,12 +171,12 @@ export default [
 
 | # | Case | Vì sao |
 |---|---|---|
-| 1 | Không file nào trong `index.html` + `pages/**` chứa chuỗi `principles/` | Portfolio không được giới thiệu Lab |
-| 2 | Không file nào trong `principles/**` link tới `../index.html`, `index.html` ở gốc, hay `pages/*.html` | Lab không được dẫn về portfolio |
-| 3 | Không file nào trong `principles/**` nạp `source/styles.css` hoặc `source/case-study.css` | Hai site không chung CSS (plan §6.1 quyết định 2) |
-| 4 | Không file nào trong `principles/**` chứa `cdn.simpleicons.org` | Lab không có logo stack; đó là nhu cầu của portfolio |
+| 1 | Không file nào trong `index.html` + `pages/**` chứa chuỗi `labs/` | Portfolio không được giới thiệu Lab |
+| 2 | Không file nào trong `labs/**` link tới `../index.html`, `index.html` ở gốc, hay `pages/*.html` | Lab không được dẫn về portfolio |
+| 3 | Không file nào trong `labs/**` nạp `source/styles.css` hoặc `source/case-study.css` | Hai site không chung CSS (plan §6.1 quyết định 2) |
+| 4 | Không file nào trong `labs/**` chứa `cdn.simpleicons.org` | Lab không có logo stack; đó là nhu cầu của portfolio |
 
-**Ở P00 chưa có file nào trong `principles/`** → 3 case cuối pass theo kiểu "không có gì vi phạm". Đúng và cố ý: test tồn tại **trước** thứ nó canh, nên không có cửa sổ thời gian nào mà vi phạm lọt vào không bị phát hiện.
+**Ở P00 chưa có file nào trong `labs/`** → 3 case cuối pass theo kiểu "không có gì vi phạm". Đúng và cố ý: test tồn tại **trước** thứ nó canh, nên không có cửa sổ thời gian nào mà vi phạm lọt vào không bị phát hiện.
 
 **Target:** từ P00, repo đã có hai test *bảo vệ hai quyết định kiến trúc* (`dependencies` rỗng, và isolation), không phải test trang trí.
 
@@ -188,7 +188,7 @@ export default [
 
 ```js
 const BUDGET = {
-  "source/principles.css": 14 * 1024,
+  "source/labs.css": 14 * 1024,
   "source/lab.css": 18 * 1024,
   "scripts/runtime": 24 * 1024,   // tong thu muc
   "scripts/hub.js": 6 * 1024
@@ -198,7 +198,7 @@ const BUDGET = {
 - File chưa tồn tại → **skip, không fail** (P00 chưa có file nào). Cấu trúc này cho phép tool chạy pass từ P00 và tự chặt dần theo phase.
 - Thêm cột `% trần` để thấy đang gần ngưỡng — quan trọng hơn pass/fail, vì nó cảnh báo trước.
 
-**`tools/check-contract.mjs`** — P00 chỉ dựng khung: nhận danh sách file `principles/*.html`, hiện chưa có file nào → exit 0 kèm dòng `no pages yet`. Từ P02 kiểm thật (xem phase-02 Step 2.7).
+**`tools/check-contract.mjs`** — P00 chỉ dựng khung: nhận danh sách file `labs/*.html`, hiện chưa có file nào → exit 0 kèm dòng `no pages yet`. Từ P02 kiểm thật (xem phase-02 Step 2.7).
 
 **Target:** cả 2 tool chạy được ngay ở P00 → `npm run verify` xanh ngay từ commit đầu. **Một pipeline xanh từ commit đầu là điều kiện để nó không bao giờ bị bỏ qua.**
 
@@ -293,8 +293,8 @@ Một cổng chưa được chứng minh là *bắt được lỗi* thì chưa p
 | 2 | Thêm `el.innerHTML = x;` vào `scripts/labs/tmp.js` | `lint` **fail** kèm message tiếng Việt |
 | 3 | Thêm `"linkedom"` vào `dependencies` | `test` **fail** ở `toolchain.test.mjs` case 3 |
 | 4 | Tạo `source/lab.css` 20 KB rác | `check:budget` **fail** |
-| 5 | Thêm `<a href="principles/">Principles</a>` vào `index.html` | `test` **fail** ở `isolation.test.mjs` case 1 |
-| 6 | Tạo `principles/tmp.html` có `<link href="../source/styles.css">` | `test` **fail** ở `isolation.test.mjs` case 3 |
+| 5 | Thêm `<a href="labs/">Principles</a>` vào `index.html` | `test` **fail** ở `isolation.test.mjs` case 1 |
+| 6 | Tạo `labs/tmp.html` có `<link href="../source/styles.css">` | `test` **fail** ở `isolation.test.mjs` case 3 |
 
 Sau 6 phép thử: `git checkout .` và `rm` file tạm. **Phase này chưa xong nếu chưa chạy 6 phép thử — đây là deliverable thật của P00, không phải các file config.**
 

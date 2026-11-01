@@ -177,15 +177,15 @@ export interface LabSpec { /* id, stage, modes, controls, model, metrics, run */
 
 ---
 
-### Step 1.11 — `source/principles.css` + `source/lab.css`
+### Step 1.11 — `source/labs.css` + `source/lab.css`
 
 | File | Nội dung | Trần |
 |---|---|---|
-| `principles.css` | **token riêng của Lab** (chassis + mono, signal, motion, spacing), shell 8 khối của trang lesson, nav + footer riêng, layout landing | 14 KB |
+| `labs.css` | **token riêng của Lab** (chassis + mono, signal, motion, spacing), shell 8 khối của trang lesson, nav + footer riêng, layout landing | 14 KB |
 | `lab.css` | kernel 4 vùng, 6 trạng thái, 14 kernel component (§8.2 UI plan) | 18 KB |
 
 **Target:**
-- **`principles.css` tự khai `:root` token của Lab** — **không** `@import`, **không** `<link>` tới `source/styles.css` / `case-study.css` (LUẬT 0 / plan §6.1 quyết định 2). Giá trị có thể trùng palette portfolio; trùng giá trị không phải chung nguồn.
+- **`labs.css` tự khai `:root` token của Lab** — **không** `@import`, **không** `<link>` tới `source/styles.css` / `case-study.css` (LUẬT 0 / plan §6.1 quyết định 2). Giá trị có thể trùng palette portfolio; trùng giá trị không phải chung nguồn.
 - **Không thêm hệ màu mới giữa các lab.** Branch color qua `--accent` inline trên `<body>` của trang lesson.
 - `--accent` 6 nhánh theo §3.2 UI plan, **có đổi `reliability` thành `#b5e853`** (sửa #2 của UI plan §15: `#a5d6ff` quá gần `#79c0ff` của `api`, hai pill cạnh nhau không phân biệt được).
 - Số đo: `font-variant-numeric: tabular-nums` **bắt buộc** cho mọi phần tử `.metric`, `.counter`, `.log-line` (LUẬT 4c). Không có nó, counter rung khi đếm và lab trông như đồ chơi — 0 byte để sửa.
@@ -194,7 +194,7 @@ export interface LabSpec { /* id, stage, modes, controls, model, metrics, run */
 
 ---
 
-### Step 1.12 — `principles/_template.html`
+### Step 1.12 — `labs/_template.html`
 
 **Action:** khung 8 khối (plan cũ §4.1) với comment hướng dẫn điền, `--accent` inline, `<noscript>` mẫu, `ModelNote` + `SafetyLine` placeholder.
 
@@ -204,7 +204,7 @@ Comment này là cơ chế chống quên quan trọng nhất của P04, và nó 
 
 ---
 
-### Step 1.13 — `principles/_states.html` (deliverable có ROI cao nhất của P01)
+### Step 1.13 — `labs/_states.html` (deliverable có ROI cao nhất của P01)
 
 **Action:** gallery **mọi kernel component × 6 trạng thái**.
 
@@ -239,8 +239,8 @@ Comment này là cơ chế chống quên quan trọng nhất của P04, và nó 
 | Type | `scripts/types.d.ts` |
 | Runtime | `rng.js` `fmt.js` `logger.js` `clock.js` `store.js` `server.js` `persist.js` `lab.js` |
 | Data | `scripts/data/seed.js` `scripts/data/catalog.js` |
-| CSS | `source/principles.css` `source/lab.css` |
-| HTML | `principles/_template.html` `principles/_states.html` |
+| CSS | `source/labs.css` `source/lab.css` |
+| HTML | `labs/_template.html` `labs/_states.html` |
 | Lab | `scripts/labs/_demo.js` |
 | Component | 14 kernel component (§8.2 UI plan) — **không instrument nào** |
 
@@ -261,7 +261,7 @@ Mỗi dòng là một file test; cột *case* là mức tối thiểu.
 | `tests/persist.test.mjs` | key đúng `pl:v1:<scope>`; `fakeStorage({throwing:true})` **không** làm throw lọt ra; scope ngoài whitelist bị từ chối | 12b, 12c, 18 |
 | `tests/seed.test.mjs` | dataset xác định theo seed; toàn vẹn tham chiếu `companyId`; email đều `.invalid`; 50k dòng sinh < 100ms | 7c |
 | `tests/catalog.test.mjs` | slug unique; `related` trỏ tới slug tồn tại; `category` thuộc 6 giá trị; `stats()` tính từ mảng; **`provenance` thuộc enum và không entry nào bỏ trống**; không chuỗi nào chứa tên công ty / sản phẩm | §10.1, uy tín |
-| `tests/isolation.test.mjs` (mở rộng từ P00) | thêm case: **mọi file `principles/*.html` nạp đúng `principles.css` + `lab.css` và không nạp CSS của portfolio**; `principles.css` không có `@import` ra ngoài | **LUẬT 0** |
+| `tests/isolation.test.mjs` (mở rộng từ P00) | thêm case: **mọi file `labs/*.html` nạp đúng `labs.css` + `lab.css` và không nạp CSS của portfolio**; `labs.css` không có `@import` ra ngoài | **LUẬT 0** |
 | `tests/lab.test.mjs` (linkedom) | 4 vùng có `data-zone` đúng tên; **thứ tự DOM = ①②③④**; `idle→running→settled→reset→idle` 3 lần giống hệt; `role="switch"` + `aria-checked`; Response có `aria-live="polite"`; chạy 2 mode → `data-state="compare"` | điều 1,2,6,9; §7.2 |
 
 **Ngưỡng:** `scripts/runtime/**` ≥ 85% line coverage (`npm run test:coverage`).
@@ -279,12 +279,12 @@ npm run typecheck           # 0 error
 npm run lint                # 0 error 0 warning
 npm test                    # 10 file test, 0 fail
 npm run test:coverage       # runtime >= 85% line
-npm run check:budget        # principles.css <= 14KB, lab.css <= 18KB, runtime <= 24KB
+npm run check:budget        # labs.css <= 14KB, lab.css <= 18KB, runtime <= 24KB
 npm run build               # ca 5 buoc exit 0
 wc -l scripts/runtime/lab.js   # <= 300 (tripwire)
 ```
 
-### Checklist tay (mở `principles/_states.html` và trang lab rỗng)
+### Checklist tay (mở `labs/_states.html` và trang lab rỗng)
 
 - [ ] **M7** — `_states.html` hiện đủ 14 component × 6 trạng thái, **không ô nào trống**.
 - [ ] Lab rỗng: `idle → running → settled → reset → idle`, 3 lần, trạng thái giống hệt.

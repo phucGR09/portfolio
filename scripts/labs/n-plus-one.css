@@ -1,0 +1,21 @@
+/* Stage CSS for n-plus-one-query. Scoped under .stage--n-plus-one-query, <=120
+   lines (Stage Contract §7 item 8). Desktop-only layout tweaks — mobile
+   stacks ①②③④ via lab.css's single-column default. */
+
+@media (min-width: 720px) {
+  .stage--n-plus-one-query {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* th sticky positioning is stage-specific (needs this stage's own background behind it). */
+.stage--n-plus-one-query .lab-row-table th {
+  position: sticky;
+  top: 0;
+  background: var(--stage-bg-deep);
+}
+
+.stage--n-plus-one-query [data-zone="response"] {
+  max-height: 42vh;
+  overflow-y: auto;
+}
