@@ -106,6 +106,17 @@ function buildChrome(controlZone, spec) {
   });
   const banner = el("p", { class: "lab-state-banner" });
   controlZone.append(runButton, resetButton, speedToggle, banner);
+  if (spec.renderControls) {
+    controlZone.replaceChildren();
+    spec.renderControls(controlZone, {
+      run: () => onRun(),
+      reset: () => onReset(),
+      setMode: (next) => { mode = next; },
+      getMode: () => /** @type {import("../types.d.ts").Mode} */ (mode)
+    });
+    banner.hidden = true;
+    controlZone.append(banner);
+  }
   return {
     banner,
     resetButton,
@@ -121,7 +132,7 @@ function buildChrome(controlZone, spec) {
     onSkip: (/** @type {() => void} */ fn) => (onSkip = fn),
     setDisabled: (/** @type {boolean} */ disabled) => {
       for (const node of controlZone.querySelectorAll("button, input")) {
-        if (node === resetButton) continue;
+        if (node === resetButton || node.hasAttribute("data-lab-reset")) continue;
         /** @type {HTMLButtonElement | HTMLInputElement} */ (node).disabled = disabled;
       }
     }

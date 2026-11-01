@@ -121,31 +121,49 @@ export function createFlowDiagram(root, spec) {
   scroll.className = "fd-scroll";
   scroll.append(board);
   root.append(title, scroll);
+  // Ambient auto-loop (CSS, .fd[data-idle-loop] in lab.css) — a resting
+  // diagram should read as a live machine, not a dead outline. A real run
+  // takes over the instant it activates anything, and clear() hands it back.
+  root.dataset.idleLoop = "true";
 
   return {
     clear() {
+      root.dataset.idleLoop = "true";
       for (const node of nodeEls.values()) node.dataset.active = "false";
       for (const edge of edgeEls.values()) {
         edge.dataset.active = "false";
+        delete edge.dataset.sig;
         edge.setAttribute("marker-end", "url(#fdArrow)");
       }
       for (const badge of badgeEls.values()) {
         badge.classList.remove("show");
         badge.textContent = "0";
       }
-      for (const label of labelEls.values()) label.classList.remove("active");
+      for (const label of labelEls.values()) {
+        label.classList.remove("active");
+        delete label.dataset.sig;
+      }
     },
     /** @param {string} id */
     activateNode(id) {
+      delete root.dataset.idleLoop;
       const node = nodeEls.get(id);
       if (node) node.dataset.active = "true";
     },
     /** @param {string} id */
     activateEdge(id) {
+      delete root.dataset.idleLoop;
       const edge = edgeEls.get(id);
       if (!edge) return;
       edge.dataset.active = "true";
       edge.setAttribute("marker-end", "url(#fdArrowActive)");
+    },
+    /** @param {string} id @param {"ok" | "bad"} sig */
+    setEdgeSig(id, sig) {
+      const edge = edgeEls.get(id);
+      if (edge) edge.dataset.sig = sig;
+      const label = labelEls.get(id);
+      if (label) label.dataset.sig = sig;
     },
     /** @param {string} id @param {string | number} value @param {boolean} [show] */
     setBadge(id, value, show = true) {

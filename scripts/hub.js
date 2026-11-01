@@ -169,6 +169,21 @@ function setupCatalog() {
     });
   }
 
+  // A category picked from the header nav's Browse menu on another page
+  // (scripts/lab-nav.js) lands here as a persisted value, not a URL param —
+  // click the matching chip so this page's own filter logic stays the only
+  // place that applies category filters.
+  const persist = createPersist();
+  const pendingCategory = persist.get("hub", "navCategory");
+  if (pendingCategory) {
+    persist.remove("hub", "navCategory");
+    const chip = /** @type {HTMLElement | null} */ (
+      document.querySelector(`[data-filter-axis="category"][data-filter-value="${pendingCategory}"]`)
+    );
+    chip?.click();
+    document.getElementById("catalog")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
   const surprise = document.querySelector("[data-surprise]");
   surprise?.addEventListener("click", () => {
     const slug = pickSurprise();

@@ -81,9 +81,14 @@ export interface SelectOptions {
   readonly limit?: number;
 }
 
+export interface InsertOptions {
+  /** Table has a B-tree index to maintain — insert costs more (no-index-no-mercy's reverse trade-off). */
+  readonly indexed?: boolean;
+}
+
 export interface Store {
   select(table: string, predicate: (row: Row) => boolean, opts?: SelectOptions): readonly Row[];
-  insert(table: string, row: Row): void;
+  insert(table: string, row: Row, opts?: InsertOptions): void;
   tx<T>(fn: () => T): T;
   costs(): readonly QueryCost[];
   reset(): void;
@@ -190,9 +195,18 @@ export interface LabSpec {
   readonly metrics: readonly MetricSpec[];
   /** SafetyLine text ("Runs entirely in your browser..."). Required on every security lab. */
   readonly safety?: string;
+  /** Replace the default action chrome with the app's own form and controls. */
+  readonly renderControls?: (root: HTMLElement, actions: LabControlActions) => void;
   /** Draws the idle frame for Response/Internals (axes, empty table, empty tiles). Called on mount and every Reset. */
   readonly renderIdle?: (els: Readonly<Record<Zone, HTMLElement>>) => void;
   readonly run: (ctx: RunContext) => Promise<LabRunOutcome>;
+}
+
+export interface LabControlActions {
+  run(): void;
+  reset(): void;
+  setMode(mode: Mode): void;
+  getMode(): Mode;
 }
 
 // ---- data/seed.js --------------------------------------------------

@@ -13,10 +13,52 @@
   <link rel="stylesheet" href="../scripts/labs/n-plus-one.css" />
 </head>
 <body style="--accent: #5fd4c7;">
-  <nav class="lab-nav">
-    <a class="lab-nav__wordmark" href="./">⬡ Principles Lab</a>
-    <div><a href="./">All problems</a></div>
-  </nav>
+  <header class="lab-header" data-lab-header>
+    <div class="lab-header__bar">
+      <a class="lab-nav__wordmark" href="./">⬡ Principles Lab</a>
+
+      <nav class="lab-header__primary" aria-label="Primary">
+        <a href="./">All problems</a>
+        <div class="lab-header__browse" data-nav-browse>
+          <button type="button" class="lab-header__browse-toggle" data-nav-browse-toggle aria-haspopup="true" aria-expanded="false">
+            Browse
+            <svg viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.6" fill="none"/></svg>
+          </button>
+          <div class="lab-header__browse-menu" data-nav-browse-menu role="menu"></div>
+        </div>
+      </nav>
+
+      <div class="lab-header__spacer"></div>
+
+      <div class="lab-header__utility">
+        <span class="lab-header__stat" data-nav-stat></span>
+
+        <div class="lab-header__search" data-nav-search>
+          <input type="text" class="lab-header__search-input" data-nav-search-input placeholder="Search problems…" autocomplete="off" />
+          <div class="lab-header__search-results" data-nav-search-results hidden></div>
+        </div>
+
+        <button type="button" class="lab-header__burger" data-nav-burger aria-label="Open menu" aria-expanded="false">
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 5h14M3 10h14M3 15h14"></path></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="lab-header__mobile" data-nav-mobile>
+      <div class="lab-header__mobile-group">
+        <p class="lab-header__mobile-label">Navigate</p>
+        <a href="./">All problems</a>
+      </div>
+      <div class="lab-header__mobile-group" data-nav-mobile-categories>
+        <p class="lab-header__mobile-label">Browse by category</p>
+      </div>
+      <div class="lab-header__mobile-group lab-header__mobile-search">
+        <p class="lab-header__mobile-label">Search</p>
+        <input type="text" class="lab-header__search-input" data-nav-mobile-search-input placeholder="Search problems…" autocomplete="off" />
+        <div class="lab-header__search-results" data-nav-mobile-search-results hidden></div>
+      </div>
+    </div>
+  </header>
 
   <nav class="lesson-rail" aria-label="On this page">
     <a href="#situation" data-rail><span class="dot"></span><span class="label">Situation</span></a>
@@ -155,5 +197,6 @@
   </footer>
 
   <script type="module" src="../scripts/lesson-rail.js"></script>
+  <script type="module" src="../scripts/lab-nav.js"></script>
 </body>
 </html>

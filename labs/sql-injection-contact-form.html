@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>A contact form started returning every password hash — Principles Lab</title>
-  <meta name="description" content="A runnable lab showing SQL injection: a quote character breaking a concatenated query, and why parameterized queries fix it." />
+  <title>A login accepted the wrong password — Principles Lab</title>
+  <meta name="description" content="Try a realistic login form and see how SQL injection can bypass a vulnerable password check. Compare concatenated SQL with bound parameters." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="icon" href="../assets/labs-favicon.svg" type="image/svg+xml" />
@@ -13,10 +13,52 @@
   <link rel="stylesheet" href="../scripts/labs/sql-injection.css" />
 </head>
 <body style="--accent: #ff7b72;">
-  <nav class="lab-nav">
-    <a class="lab-nav__wordmark" href="./">⬡ Principles Lab</a>
-    <div><a href="./">All problems</a></div>
-  </nav>
+  <header class="lab-header" data-lab-header>
+    <div class="lab-header__bar">
+      <a class="lab-nav__wordmark" href="./">⬡ Principles Lab</a>
+
+      <nav class="lab-header__primary" aria-label="Primary">
+        <a href="./">All problems</a>
+        <div class="lab-header__browse" data-nav-browse>
+          <button type="button" class="lab-header__browse-toggle" data-nav-browse-toggle aria-haspopup="true" aria-expanded="false">
+            Browse
+            <svg viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.6" fill="none"/></svg>
+          </button>
+          <div class="lab-header__browse-menu" data-nav-browse-menu role="menu"></div>
+        </div>
+      </nav>
+
+      <div class="lab-header__spacer"></div>
+
+      <div class="lab-header__utility">
+        <span class="lab-header__stat" data-nav-stat></span>
+
+        <div class="lab-header__search" data-nav-search>
+          <input type="text" class="lab-header__search-input" data-nav-search-input placeholder="Search problems…" autocomplete="off" />
+          <div class="lab-header__search-results" data-nav-search-results hidden></div>
+        </div>
+
+        <button type="button" class="lab-header__burger" data-nav-burger aria-label="Open menu" aria-expanded="false">
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 5h14M3 10h14M3 15h14"></path></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="lab-header__mobile" data-nav-mobile>
+      <div class="lab-header__mobile-group">
+        <p class="lab-header__mobile-label">Navigate</p>
+        <a href="./">All problems</a>
+      </div>
+      <div class="lab-header__mobile-group" data-nav-mobile-categories>
+        <p class="lab-header__mobile-label">Browse by category</p>
+      </div>
+      <div class="lab-header__mobile-group lab-header__mobile-search">
+        <p class="lab-header__mobile-label">Search</p>
+        <input type="text" class="lab-header__search-input" data-nav-mobile-search-input placeholder="Search problems…" autocomplete="off" />
+        <div class="lab-header__search-results" data-nav-mobile-search-results hidden></div>
+      </div>
+    </div>
+  </header>
 
   <nav class="lesson-rail" aria-label="On this page">
     <a href="#situation" data-rail><span class="dot"></span><span class="label">Situation</span></a>
@@ -34,29 +76,30 @@
     <span class="pill">Security &amp; Trust</span>
     <span class="pill pill--difficulty">Foundational</span>
     <span class="pill" data-blast="catastrophic">Catastrophic</span>
-    <h1>A contact form started returning every customer's password hash.</h1>
-    <p class="metric-strip"><span>One quote character</span> <span>→</span> <span>the entire users table</span></p>
+    <h1>A login page let someone in without the right password.</h1>
+    <p class="metric-strip"><span>One crafted email</span> <span>→</span> <span>a workspace that wasn't theirs</span></p>
     <span class="provenance-tag">Classic problem</span>
   </header>
 
   <section class="lesson-block" id="situation" data-block="situation">
     <h2>The situation</h2>
     <p>
-      A "contact us" form checks whether the submitted email already has an account, so it
-      can show a slightly different message. The engineer wrote the lookup by hand and glued
-      the submitted email directly into the query text — the fastest way to ship the feature,
-      and an email field felt like the last place anyone would think to attack. A contact
-      form isn't an admin panel; it didn't occur to anyone that it was also a database
-      interface.
+      Northstar is a fictional project workspace with an ordinary email-and-password login.
+      Its legacy backend builds a SQL query by joining the submitted email to a password
+      condition, then creates a session if a row matches. A crafted email closes the quoted
+      value and comments out the password condition. The wrong password is still submitted,
+      but the database no longer checks it. Try the login below to see the consequence:
+      the workspace opens for someone who does not know the account's password.
     </p>
   </section>
 
   <section class="lesson-block--full" id="lab" data-block="lab">
     <div data-lab>
       <noscript>
-        <p>This lab needs JavaScript. With it: pasting <code>' OR '1'='1</code> into the
-        email field makes the naive query return every row in the users table, including
-        password hashes; the parameterized version returns zero matches for the same input.</p>
+        <p>This browser-only demo needs JavaScript. A normal login requires the demo email
+        and password. An attack such as <code>fake.user+0001@example.invalid' -- -</code>
+        sent directly to the vulnerable login API removes the password check and opens a
+        workspace. With bound parameters, the same input matches no account.</p>
       </noscript>
     </div>
     <script type="module" src="../scripts/labs/sql-injection.js"></script>
@@ -67,25 +110,30 @@
     <div class="block__body">
     <div class="schematic">
     <svg viewBox="0 0 320 90" role="img" aria-labelledby="uth2-title uth2-desc" style="width:100%;max-width:480px;color:var(--text-mute)">
-      <title id="uth2-title">A quote closes the string literal early</title>
-      <desc id="uth2-desc">The query text is "SELECT * FROM users WHERE email = '" plus the submitted value plus a closing quote. If the value itself contains a quote, it closes the literal early and the rest of the value is read as SQL grammar instead of data.</desc>
-      <text x="4" y="16" font-size="8" fill="currentColor">SELECT * FROM users WHERE email = '</text>
-      <text x="4" y="34" font-size="9" fill="var(--sig-bad)">' OR '1'='1</text>
+      <title id="uth2-title">The email ends the literal and comments out the password check</title>
+      <desc id="uth2-desc">In the concatenated login query, an email followed by a quote and a double-dash comment turns the remaining password predicate into a comment. A parameterized query binds the entire email as data.</desc>
+      <text x="4" y="16" font-size="8" fill="currentColor">WHERE email = 'email' AND passwordHash = '…'</text>
+      <text x="4" y="34" font-size="9" fill="var(--sig-bad)">email' -- </text>
       <line x1="4" y1="40" x2="90" y2="40" stroke="var(--sig-bad)" />
       <circle class="flow-pulse" r="2.4" fill="var(--sig-bad)" style="offset-path:path('M4,40 L90,40');--speed:1.8s" />
-      <text x="4" y="54" font-size="8" fill="var(--sig-bad)">closes the literal, then adds a condition that is always true</text>
+      <text x="4" y="54" font-size="8" fill="var(--sig-bad)">the remaining password condition becomes a comment</text>
       <text x="4" y="76" font-size="8" fill="var(--sig-ok)">parameterized: the value is never pasted into the query text at all</text>
     </svg>
     </div>
     <p>
-      The query text is one fixed string plus the submitted value plus a closing quote. A
-      normal email has no quote character in it, so the value stays inside the literal.
-      <code>' OR '1'='1</code> contains one: it closes the literal early, and everything
-      after it — <code>OR '1'='1</code> — is read as part of the SQL grammar, not as data.
-      <code>'1'='1'</code> is always true, so the condition matches every row. A parameterized
-      query never pastes the value into the query text in the first place, so this trick has
-      nothing to attach to.
+      In the vulnerable implementation, the email becomes part of the query text. The
+      targeted attack ends that quoted value with <code>'</code>, then starts a SQL comment
+      with <code>-- </code>, removing the password predicate. The second attack also adds
+      <code>OR '1'='1'</code>, an always-true condition; the login uses the first matching
+      account. In the parameterized implementation, the query keeps its <code>?</code>
+      placeholders and receives both values separately, so neither input can change its
+      grammar. Browser email validation is useful feedback, but a client can send a request
+      directly to the API. The attack cards explicitly replay that path.
     </p>
+    <p>This simulation uses fake password markers to isolate the SQL
+    behavior of a legacy login. For a real login, bind the email lookup, then verify a
+    securely stored password hash with a suitable password library. Do not store plaintext
+    passwords or copy the demo's marker comparison into production.</p>
     </div>
   </section>
 
@@ -117,10 +165,12 @@
   <section class="lesson-block" id="bites" data-block="bites">
     <h2>Where this bites in practice</h2>
     <p>
-      Hand-rolled query builders, legacy code from before the team adopted an ORM, and "quick
-      admin scripts" that skip the ORM for one query are the usual sources. The early sign a
-      reviewer can catch in seconds: string concatenation or template-literal interpolation
-      sitting directly inside a SQL string.
+      Login endpoints, password-reset lookups, account searches, and admin filters can all
+      receive attacker-controlled input. A vulnerable login is especially direct: if the
+      handler creates a session from a query whose password condition can be removed,
+      injection becomes an account takeover. Review the server query and session creation,
+      not just the email field's browser validation. Look for string concatenation or
+      template-literal interpolation inside SQL, including raw queries issued through an ORM.
     </p>
   </section>
 
@@ -140,5 +190,6 @@
   </footer>
 
   <script type="module" src="../scripts/lesson-rail.js"></script>
+  <script type="module" src="../scripts/lab-nav.js"></script>
 </body>
 </html>

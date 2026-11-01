@@ -22,7 +22,7 @@ export const CATALOG = [
   {
     slug: "sql-injection-contact-form",
     principle: "SQL Injection",
-    title: "A contact form started returning every customer's password hash.",
+    title: "A login page let someone in without the right password.",
     category: "security",
     difficulty: "foundational",
     blastRadius: "catastrophic",

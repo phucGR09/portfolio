@@ -3,6 +3,7 @@ import { createRng } from "./rng.js";
 const SELECT_BASE_MS = 0.8;
 const SELECT_MS_PER_ROW = 0.02;
 const INSERT_BASE_MS = 0.5;
+const INSERT_INDEX_PENALTY_MS = 0.6;
 const JITTER_PCT = 0.12;
 
 /**
@@ -38,13 +39,15 @@ export function createStore(datasetFactory, options = {}) {
       return typeof opts.limit === "number" ? matched.slice(0, opts.limit) : matched;
     },
 
-    insert(table, row) {
+    insert(table, row, opts = {}) {
       const rows = tables[table];
       if (!rows) throw new Error(`Unknown table: ${table}`);
 
       rows.push(row);
-      const ms = Math.max(0, rng.jitter(INSERT_BASE_MS, JITTER_PCT));
-      costs.push({ table, op: "insert", rowsScanned: 0, rowsReturned: 1, usedIndex: false, ms });
+      const indexed = Boolean(opts.indexed);
+      const base = indexed ? INSERT_BASE_MS + INSERT_INDEX_PENALTY_MS : INSERT_BASE_MS;
+      const ms = Math.max(0, rng.jitter(base, JITTER_PCT));
+      costs.push({ table, op: "insert", rowsScanned: 0, rowsReturned: 1, usedIndex: indexed, ms });
     },
 
     tx(fn) {

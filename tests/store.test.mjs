@@ -53,6 +53,23 @@ test("insert() accounts for its own cost", () => {
   assert.equal(store.costs()[0]?.op, "insert");
 });
 
+test("insert() on an indexed table costs more than on a plain table (the reverse trade-off)", () => {
+  const plain = createStore(makeDataset);
+  const indexed = createStore(makeDataset);
+  const samples = 40;
+  let plainTotal = 0;
+  let indexedTotal = 0;
+  for (let i = 0; i < samples; i += 1) {
+    plain.insert("items", { id: 1000 + i });
+    indexed.insert("items", { id: 1000 + i }, { indexed: true });
+    plainTotal += plain.costs().at(-1)?.ms ?? 0;
+    indexedTotal += indexed.costs().at(-1)?.ms ?? 0;
+  }
+  assert.ok(indexedTotal > plainTotal, "an indexed table's inserts must average costlier than a plain table's");
+  assert.equal(indexed.costs()[0]?.usedIndex, true);
+  assert.equal(plain.costs()[0]?.usedIndex, false);
+});
+
 test("reset() regenerates from the factory — 3 resets give identical state", () => {
   const store = createStore(makeDataset);
   store.insert("items", { id: 999 });

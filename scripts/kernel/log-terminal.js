@@ -5,7 +5,7 @@
 // timer, so this module never needs setTimeout (clock.js owns all sim timing).
 
 /**
- * @typedef {{ ts: string, method: string, path: string, status: "ok" | "warn", statusText: string, dur: string }} LogTerminalLine
+ * @typedef {{ ts: string, method: string, path: string, status: "ok" | "warn" | "bad", statusText: string, dur: string }} LogTerminalLine
  */
 
 /** @param {string} tag @param {Record<string, string>} [attrs] @returns {HTMLElement} */
