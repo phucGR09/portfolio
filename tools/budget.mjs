@@ -12,14 +12,15 @@ const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
 // Keys are paths relative to repo root; a path ending without an extension
 // is treated as a directory total.
 const BUDGET = {
-  "source/labs.css": 26 * 1024,
-  "source/lab.css": 18 * 1024,
+  "source/labs.css": 36 * 1024,
+  "source/lab.css": 20 * 1024,
   "scripts/runtime": 26 * 1024,
   "scripts/kernel": 24 * 1024,
-  "scripts/hub.js": 7 * 1024,
+  "scripts/hub.js": 9 * 1024,
   "scripts/hub-view.js": 3.5 * 1024,
   "scripts/lab-card-anim.js": 4.5 * 1024,
-  "scripts/labs-bg.js": 2.5 * 1024
+  "scripts/labs-bg.js": 2.5 * 1024,
+  "scripts/lesson-rail.js": 2 * 1024
 };
 
 /**
@@ -80,7 +81,7 @@ for (const row of rows) {
 // + kernel) + 1 lab must stay under 60KB total for a lesson page.
 const LAB_FILE_LIMIT = 10 * 1024;
 const PAGE_JS_LIMIT = 60 * 1024;
-const sharedJsSize = (sizeOf("scripts/runtime") ?? 0) + (sizeOf("scripts/kernel") ?? 0);
+const sharedJsSize = (sizeOf("scripts/runtime") ?? 0) + (sizeOf("scripts/kernel") ?? 0) + (sizeOf("scripts/lesson-rail.js") ?? 0);
 const labsDir = join(ROOT, "scripts", "labs");
 /** @type {import("node:fs").Dirent[]} */
 let labEntries = [];

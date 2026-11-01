@@ -29,6 +29,59 @@ function renderHero() {
   stat.textContent = `${s.problems} problem${s.problems === 1 ? "" : "s"} · ${s.categoriesUsed} of ${s.categoriesTotal} categories · every one runnable`;
 }
 
+function renderCategoryCounts() {
+  for (const el of document.querySelectorAll("[data-cat-count]")) {
+    const cat = el.getAttribute("data-cat-count");
+    const n = CATALOG.filter((e) => e.category === cat).length;
+    el.textContent = n === 0 ? "none yet" : `${n} lab${n === 1 ? "" : "s"}`;
+  }
+}
+
+function setupMoreFilters() {
+  const triggerEl = document.querySelector("[data-more-trigger]");
+  const panelEl = document.querySelector("[data-more-panel]");
+  const badgeEl = document.querySelector("[data-more-badge]");
+  const searchEl = document.querySelector("[data-filter-search]");
+  if (!triggerEl || !panelEl || !badgeEl || !searchEl) return;
+  const trigger = /** @type {HTMLElement} */ (triggerEl);
+  const panel = /** @type {HTMLElement} */ (panelEl);
+  const badge = /** @type {HTMLElement} */ (badgeEl);
+  const search = /** @type {HTMLInputElement} */ (searchEl);
+
+  function close() {
+    trigger.setAttribute("aria-expanded", "false");
+    panel.classList.add("is-hidden");
+  }
+  trigger.addEventListener("click", () => {
+    const open = trigger.getAttribute("aria-expanded") === "true";
+    trigger.setAttribute("aria-expanded", String(!open));
+    panel.classList.toggle("is-hidden", open);
+  });
+  document.addEventListener("click", (event) => {
+    const target = /** @type {Node} */ (event.target);
+    if (!panel.contains(target) && !trigger.contains(target)) close();
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") close();
+  });
+
+  const rows = Array.from(panel.querySelectorAll("[data-filter-axis]"));
+  search.addEventListener("input", () => {
+    const q = search.value.trim().toLowerCase();
+    for (const row of rows) {
+      const term = (row.getAttribute("data-term") ?? "").toLowerCase();
+      row.classList.toggle("is-search-hidden", q.length > 0 && !term.includes(q));
+    }
+  });
+
+  function updateBadge() {
+    const count = rows.filter((row) => row.getAttribute("aria-pressed") === "true").length;
+    badge.hidden = count === 0;
+    badge.textContent = String(count);
+  }
+  for (const row of rows) row.addEventListener("click", updateBadge);
+}
+
 /** @param {import("./types.d.ts").BlastRadius} blast @returns {HTMLElement} */
 function buildSeverityBadge(blast) {
   const badge = el("span", `badge-severity badge-severity--${blast}`);
@@ -141,5 +194,7 @@ function setupClearProgress() {
 }
 
 renderHero();
+renderCategoryCounts();
 setupCatalog();
+setupMoreFilters();
 setupClearProgress();

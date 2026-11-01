@@ -60,17 +60,27 @@
 
 /* ---- State machine (StateBanner + idle/running/settled/compare/error) --- */
 .lab-state-banner {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
   font: var(--fs-label) / 1 var(--font-mono);
   text-transform: uppercase;
   letter-spacing: 0.12em;
   color: var(--text-mute);
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  padding: 0.5em 0.9em;
 }
+.lab-state-banner::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+[data-lab][data-state="running"] .lab-state-banner { color: var(--accent); border-color: var(--accent-line); background: var(--accent-soft); }
+[data-lab][data-state="settled"] .lab-state-banner,
+[data-lab][data-state="compare"] .lab-state-banner { color: var(--sig-ok); border-color: var(--sig-ok); }
 [data-lab][data-state="idle"] [data-zone="response"],
 [data-lab][data-state="idle"] [data-zone="internals"] {
   color: var(--text-mute);
   font-style: italic;
 }
-[data-lab][data-state="running"] .lab-run { color: var(--sig-focus); border-color: var(--sig-focus); }
+[data-lab][data-state="running"] .lab-run { box-shadow: 0 0 0 3px var(--accent-soft), 0 8px 20px -8px var(--accent); }
 [data-lab][data-state="error"] [data-zone="response"] { border-color: var(--sig-bad); }
 [data-lab][data-state="error"] .lab-error { color: var(--sig-bad); }
 [data-lab][data-state="error"] .lab-error::before { content: "✕ "; }
@@ -92,21 +102,23 @@
   display: none;
 }
 
-/* ---- ModeSwitch — RULE 3: naive is neutral slate, never red ---- */
+/* ---- ModeSwitch — RULE 3: naive is neutral slate, never red. Pill chrome
+   (2026-11-01 action-card revamp) replaces the rectangular 3px-radius one. */
 .lab-switch {
   display: inline-flex;
   border: 1px solid var(--border-strong);
-  border-radius: var(--radius);
-  overflow: hidden;
-  background: none;
+  border-radius: 999px;
+  padding: 3px;
+  gap: 2px;
+  background: var(--ink);
   font: var(--fs-control) / 1 var(--font-sans);
   cursor: pointer;
 }
-.lab-switch span { padding: 0.4em 0.9em; color: var(--text-mute); }
+.lab-switch span { padding: 0.5em 1em; border-radius: 999px; color: var(--text-mute); }
 .lab-switch[aria-checked="false"] span:first-child,
 .lab-switch[aria-checked="true"] span:last-child {
-  background: var(--accent-soft);
-  color: var(--text-head);
+  background: var(--accent);
+  color: var(--accent-ink);
 }
 
 /* ---- RunButton / ResetButton / SimClock ---- */
@@ -116,23 +128,24 @@
   font: var(--fs-control) / 1 var(--font-sans);
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  padding: 0.6em 1.1em;
+  padding: 0.6em 1.2em;
   border: 1px solid var(--border-strong);
-  border-radius: var(--radius);
+  border-radius: 999px;
   background: none;
   color: var(--text-body);
   cursor: pointer;
   min-height: 40px;
   min-width: 40px;
 }
-/* The one primary action in the zone — filled, so it reads as "press this first". */
+/* The one primary action in the zone — filled + lifted, so it reads as "press this first". */
 .lab-run {
-  border-color: var(--accent);
-  background: var(--accent-soft);
-  color: var(--accent);
-  font-weight: 600;
+  border: none;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 700;
+  box-shadow: 0 8px 20px -8px var(--accent);
 }
-button:disabled { opacity: 0.4; cursor: not-allowed; }
+button:disabled { opacity: 0.4; cursor: not-allowed; box-shadow: none; }
 
 /* ---- Dial (range control) ---- */
 .lab-dial-value {
@@ -224,6 +237,8 @@ input[type="range"] { accent-color: var(--accent); min-height: 40px; }
 /* ---- ProvenanceTag ---- */
 .provenance-tag {
   display: inline-flex;
+  align-items: center;
+  gap: 0.55em;
   font: var(--fs-label) / 1 var(--font-sans);
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -232,6 +247,7 @@ input[type="range"] { accent-color: var(--accent); min-height: 40px; }
   border-radius: var(--radius);
   padding: 0.3em 0.8em;
 }
+.provenance-tag::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex: none; }
 
 /* ---- noscript fallback — never a blank frame ---- */
 [data-lab] noscript { display: block; border: 1px solid var(--border); padding: var(--pane-pad); }

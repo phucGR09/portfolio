@@ -18,8 +18,19 @@
     <div><a href="./">All problems</a></div>
   </nav>
 
+  <nav class="lesson-rail" aria-label="On this page">
+    <a href="#situation" data-rail><span class="dot"></span><span class="label">Situation</span></a>
+    <a href="#lab" data-rail><span class="dot"></span><span class="label">The lab</span></a>
+    <a href="#under-the-hood" data-rail><span class="dot"></span><span class="label">Under the hood</span></a>
+    <a href="#principle" data-rail><span class="dot"></span><span class="label">Principle</span></a>
+    <a href="#tradeoffs" data-rail><span class="dot"></span><span class="label">Trade-offs</span></a>
+    <a href="#bites" data-rail><span class="dot"></span><span class="label">Where it bites</span></a>
+    <a href="#carry-away" data-rail><span class="dot"></span><span class="label">Carry it away</span></a>
+  </nav>
+
   <header class="lesson-hero" data-block="hero">
     <p class="hero-principle">SQL Injection</p>
+    <div class="hero__rule"><span></span></div>
     <span class="pill">Security &amp; Trust</span>
     <span class="pill pill--difficulty">Foundational</span>
     <span class="pill" data-blast="catastrophic">Catastrophic</span>
@@ -28,7 +39,7 @@
     <span class="provenance-tag">Classic problem</span>
   </header>
 
-  <section class="lesson-block" data-block="situation">
+  <section class="lesson-block" id="situation" data-block="situation">
     <h2>The situation</h2>
     <p>
       A "contact us" form checks whether the submitted email already has an account, so it
@@ -40,7 +51,7 @@
     </p>
   </section>
 
-  <section class="lesson-block--full" data-block="lab">
+  <section class="lesson-block--full" id="lab" data-block="lab">
     <div data-lab>
       <noscript>
         <p>This lab needs JavaScript. With it: pasting <code>' OR '1'='1</code> into the
@@ -51,8 +62,10 @@
     <script type="module" src="../scripts/labs/sql-injection.js"></script>
   </section>
 
-  <section class="lesson-block" data-block="under-the-hood">
+  <section class="lesson-block" id="under-the-hood" data-block="under-the-hood">
     <h2>Under the hood</h2>
+    <div class="block__body">
+    <div class="schematic">
     <svg viewBox="0 0 320 90" role="img" aria-labelledby="uth2-title uth2-desc" style="width:100%;max-width:480px;color:var(--text-mute)">
       <title id="uth2-title">A quote closes the string literal early</title>
       <desc id="uth2-desc">The query text is "SELECT * FROM users WHERE email = '" plus the submitted value plus a closing quote. If the value itself contains a quote, it closes the literal early and the rest of the value is read as SQL grammar instead of data.</desc>
@@ -63,6 +76,7 @@
       <text x="4" y="54" font-size="8" fill="var(--sig-bad)">closes the literal, then adds a condition that is always true</text>
       <text x="4" y="76" font-size="8" fill="var(--sig-ok)">parameterized: the value is never pasted into the query text at all</text>
     </svg>
+    </div>
     <p>
       The query text is one fixed string plus the submitted value plus a closing quote. A
       normal email has no quote character in it, so the value stays inside the literal.
@@ -72,16 +86,17 @@
       query never pastes the value into the query text in the first place, so this trick has
       nothing to attach to.
     </p>
+    </div>
   </section>
 
-  <section class="lesson-block principle-box" data-block="principle">
+  <section class="lesson-block principle-box" id="principle" data-block="principle">
     <h2>The principle</h2>
     <p>User input is data, never code. Gluing strings together lets input change the grammar
     of the query; a parameterized query keeps input as a value no matter what characters it
     contains.</p>
   </section>
 
-  <section class="lesson-block" data-block="tradeoffs">
+  <section class="lesson-block" id="tradeoffs" data-block="tradeoffs">
     <h2>Trade-offs &amp; when NOT to</h2>
     <div class="tradeoff-grid">
       <div>
@@ -99,7 +114,7 @@
     </div>
   </section>
 
-  <section class="lesson-block" data-block="bites">
+  <section class="lesson-block" id="bites" data-block="bites">
     <h2>Where this bites in practice</h2>
     <p>
       Hand-rolled query builders, legacy code from before the team adopted an ORM, and "quick
@@ -109,7 +124,7 @@
     </p>
   </section>
 
-  <section class="lesson-block" data-block="carry-away">
+  <section class="lesson-block" id="carry-away" data-block="carry-away">
     <h2>Carry it away</h2>
     <ul>
       <li>Treat every external string as data, never as code.</li>
@@ -123,5 +138,7 @@
     <p>Every number on this page is computed live by the simulation above — nothing here is a stock photo of a chart.</p>
     <p>Built and maintained by Phuc</p>
   </footer>
+
+  <script type="module" src="../scripts/lesson-rail.js"></script>
 </body>
 </html>

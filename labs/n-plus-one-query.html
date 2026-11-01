@@ -18,8 +18,19 @@
     <div><a href="./">All problems</a></div>
   </nav>
 
+  <nav class="lesson-rail" aria-label="On this page">
+    <a href="#situation" data-rail><span class="dot"></span><span class="label">Situation</span></a>
+    <a href="#lab" data-rail><span class="dot"></span><span class="label">The lab</span></a>
+    <a href="#under-the-hood" data-rail><span class="dot"></span><span class="label">Under the hood</span></a>
+    <a href="#principle" data-rail><span class="dot"></span><span class="label">Principle</span></a>
+    <a href="#tradeoffs" data-rail><span class="dot"></span><span class="label">Trade-offs</span></a>
+    <a href="#bites" data-rail><span class="dot"></span><span class="label">Where it bites</span></a>
+    <a href="#carry-away" data-rail><span class="dot"></span><span class="label">Carry it away</span></a>
+  </nav>
+
   <header class="lesson-hero" data-block="hero">
     <p class="hero-principle">N+1 Query</p>
+    <div class="hero__rule"><span></span></div>
     <span class="pill">Data &amp; Database</span>
     <span class="pill pill--difficulty">Foundational</span>
     <span class="pill" data-blast="expensive">Expensive</span>
@@ -28,7 +39,7 @@
     <span class="provenance-tag">Classic problem</span>
   </header>
 
-  <section class="lesson-block" data-block="situation">
+  <section class="lesson-block" id="situation" data-block="situation">
     <h2>The situation</h2>
     <p>
       An applicant tracking page lists candidates with their company name next to each one.
@@ -41,7 +52,7 @@
     </p>
   </section>
 
-  <section class="lesson-block--full" data-block="lab">
+  <section class="lesson-block--full" id="lab" data-block="lab">
     <div data-lab>
       <noscript>
         <p>This lab needs JavaScript. With it: loading 100 candidates one row at a time
@@ -51,8 +62,10 @@
     <script type="module" src="../scripts/labs/n-plus-one.js"></script>
   </section>
 
-  <section class="lesson-block" data-block="under-the-hood">
+  <section class="lesson-block" id="under-the-hood" data-block="under-the-hood">
     <h2>Under the hood</h2>
+    <div class="block__body">
+    <div class="schematic">
     <svg viewBox="0 0 320 120" role="img" aria-labelledby="uth-title uth-desc" style="width:100%;max-width:480px;color:var(--text-mute)">
       <title id="uth-title">Naive loop vs. batched join</title>
       <desc id="uth-desc">Naive mode sends one query per candidate to fetch its company. Principled mode sends one query for all candidates and one batched query for every company, then joins them in memory.</desc>
@@ -80,6 +93,7 @@
       <line x1="48" y1="85" x2="68" y2="85" stroke="var(--sig-ok)" />
       <text x="60" y="110" font-size="8" fill="var(--sig-ok)">2 queries, joined in memory</text>
     </svg>
+    </div>
     <p>
       Naive mode runs one query to list candidates, then one more query per candidate to
       fetch its company — <code>N+1</code> round-trips for <code>N</code> rows. Principled
@@ -87,15 +101,16 @@
       referenced, and joins the two in memory with a lookup map. The data returned is
       identical; only the number of round-trips changes.
     </p>
+    </div>
   </section>
 
-  <section class="lesson-block principle-box" data-block="principle">
+  <section class="lesson-block principle-box" id="principle" data-block="principle">
     <h2>The principle</h2>
     <p>Fetching related data inside a loop multiplies your query count by the size of the
     loop. Batch the lookups instead: fetch once, then join in memory.</p>
   </section>
 
-  <section class="lesson-block" data-block="tradeoffs">
+  <section class="lesson-block" id="tradeoffs" data-block="tradeoffs">
     <h2>Trade-offs &amp; when NOT to</h2>
     <div class="tradeoff-grid">
       <div>
@@ -113,7 +128,7 @@
     </div>
   </section>
 
-  <section class="lesson-block" data-block="bites">
+  <section class="lesson-block" id="bites" data-block="bites">
     <h2>Where this bites in practice</h2>
     <p>
       Lazy-loading ORMs are the usual source: ActiveRecord, Eloquent, Hibernate, and Django's
@@ -124,7 +139,7 @@
     </p>
   </section>
 
-  <section class="lesson-block" data-block="carry-away">
+  <section class="lesson-block" id="carry-away" data-block="carry-away">
     <h2>Carry it away</h2>
     <ul>
       <li>When a page feels slow, count the queries first — not just the response time.</li>
@@ -138,5 +153,7 @@
     <p>Every number on this page is computed live by the simulation above — nothing here is a stock photo of a chart.</p>
     <p>Built and maintained by Phuc</p>
   </footer>
+
+  <script type="module" src="../scripts/lesson-rail.js"></script>
 </body>
 </html>

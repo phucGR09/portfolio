@@ -18,8 +18,19 @@
     <div><a href="./">All problems</a></div>
   </nav>
 
+  <nav class="lesson-rail" aria-label="On this page">
+    <a href="#situation" data-rail><span class="dot"></span><span class="label">Situation</span></a>
+    <a href="#lab" data-rail><span class="dot"></span><span class="label">The lab</span></a>
+    <a href="#under-the-hood" data-rail><span class="dot"></span><span class="label">Under the hood</span></a>
+    <a href="#principle" data-rail><span class="dot"></span><span class="label">Principle</span></a>
+    <a href="#tradeoffs" data-rail><span class="dot"></span><span class="label">Trade-offs</span></a>
+    <a href="#bites" data-rail><span class="dot"></span><span class="label">Where it bites</span></a>
+    <a href="#carry-away" data-rail><span class="dot"></span><span class="label">Carry it away</span></a>
+  </nav>
+
   <header class="lesson-hero" data-block="hero">
     <p class="hero-principle">DRY (Duplicated Logic)</p>
+    <div class="hero__rule"><span></span></div>
     <span class="pill">Code Design</span>
     <span class="pill pill--difficulty">Intermediate</span>
     <span class="pill" data-blast="expensive">Expensive</span>
@@ -28,7 +39,7 @@
     <span class="provenance-tag">Classic problem</span>
   </header>
 
-  <section class="lesson-block" data-block="situation">
+  <section class="lesson-block" id="situation" data-block="situation">
     <h2>The situation</h2>
     <p>
       The VAT rate started as one number in the cart's checkout code. When the invoice email
@@ -40,7 +51,7 @@
     </p>
   </section>
 
-  <section class="lesson-block--full" data-block="lab">
+  <section class="lesson-block--full" id="lab" data-block="lab">
     <div data-lab>
       <noscript>
         <p>This lab needs JavaScript. With it: deploying a new rate with the value
@@ -51,8 +62,10 @@
     <script type="module" src="../scripts/labs/one-rule-five-places.js"></script>
   </section>
 
-  <section class="lesson-block" data-block="under-the-hood">
+  <section class="lesson-block" id="under-the-hood" data-block="under-the-hood">
     <h2>Under the hood</h2>
+    <div class="block__body">
+    <div class="schematic">
     <svg viewBox="0 0 320 110" role="img" aria-labelledby="uth3-title uth3-desc" style="width:100%;max-width:480px;color:var(--text-mute)">
       <title id="uth3-title">One source fanning out to five screens</title>
       <desc id="uth3-desc">A single rate value is copied into five screens. Four copies get updated when the rate changes; one copy, chosen by a seeded random pick, is missed and keeps the old value.</desc>
@@ -76,22 +89,24 @@
       <circle class="flow-pulse" r="2" fill="var(--sig-bad)" style="offset-path:path('M60,10 L116,76');--speed:2.4s;--delay:0s" />
       <text x="4" y="100" font-size="8" fill="var(--text-mute)">single source: one edit reaches all five, with no copy to forget</text>
     </svg>
+    </div>
     <p>
       In duplicated mode, "deploy" means finding and editing five copies by hand — and the
       lab always finds one (chosen by a seeded random pick, so it's reproducible, not
       hand-picked) that gets missed. In single-source mode, the five screens read the rate
       from one place, so there is nothing to forget: one edit, five correct screens.
     </p>
+    </div>
   </section>
 
-  <section class="lesson-block principle-box" data-block="principle">
+  <section class="lesson-block principle-box" id="principle" data-block="principle">
     <h2>The principle</h2>
     <p>A value that must be the same in five places will eventually be different in one of
     them. Put the shared fact in one place and have every screen read from it, so a change
     takes one edit, not five.</p>
   </section>
 
-  <section class="lesson-block" data-block="tradeoffs">
+  <section class="lesson-block" id="tradeoffs" data-block="tradeoffs">
     <h2>Trade-offs &amp; when NOT to</h2>
     <div class="tradeoff-grid">
       <div>
@@ -108,7 +123,7 @@
     </div>
   </section>
 
-  <section class="lesson-block" data-block="bites">
+  <section class="lesson-block" id="bites" data-block="bites">
     <h2>Where this bites in practice</h2>
     <p>
       Pricing and tax rates, feature flags, API version strings, and "just this one timeout
@@ -118,7 +133,7 @@
     </p>
   </section>
 
-  <section class="lesson-block" data-block="carry-away">
+  <section class="lesson-block" id="carry-away" data-block="carry-away">
     <h2>Carry it away</h2>
     <ul>
       <li>Before copying a value a second time, ask where it will need to change next, and put it there once.</li>
@@ -132,5 +147,7 @@
     <p>Every number on this page is computed live by the simulation above — nothing here is a stock photo of a chart.</p>
     <p>Built and maintained by Phuc</p>
   </footer>
+
+  <script type="module" src="../scripts/lesson-rail.js"></script>
 </body>
 </html>
