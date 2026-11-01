@@ -48,8 +48,8 @@ export default defineLab({
   id: "n-plus-one-query",
   stage: {
     bg: "deep",
-    layout: "waterfall",
-    zones: { control: "1/1/2/3", response: "2/1/3/2", internals: "2/2/3/3", verdict: "3/1/4/3" },
+    layout: "stacked",
+    zones: { control: "1/1/2/2", response: "2/1/3/2", internals: "3/1/4/2", verdict: "4/1/5/2" },
     hues: []
   },
   modes: { naive: "Loop per row", principled: "Join + batch" },

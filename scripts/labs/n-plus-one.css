@@ -1,12 +1,8 @@
 /* Stage CSS for n-plus-one-query. Scoped under .stage--n-plus-one-query, <=120
-   lines (Stage Contract §7 item 8). Desktop-only layout tweaks — mobile
-   stacks ①②③④ via lab.css's single-column default. */
-
-@media (min-width: 720px) {
-  .stage--n-plus-one-query {
-    grid-template-columns: 1fr 1fr;
-  }
-}
+   lines (Stage Contract §7 item 8). Single column at every width — matches
+   the approved mockup's stacked Response-above-Internals layout (lab-detail-
+   component-system.md), not a side-by-side split; lab.css's grid default
+   already gives us this, so there is no column override to make here. */
 
 /* rc-table th already paints its own background (kernel CSS); sticky only
    needs to be added here since it's a per-stage layout choice, not a kernel default. */
