@@ -5,12 +5,17 @@ import { dirname } from "node:path";
 
 const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
 
-// Byte budgets per UI plan §2.2. Keys are paths relative to repo root;
-// a path ending without an extension is treated as a directory total.
+// Byte budgets per UI plan §2.2, amended by lab-detail-component-system.md §2
+// (scripts/kernel is a new category: shared Lớp B instrument components used
+// by labs — e.g. DataTable/FlowDiagram/LogTerminal — distinct from the
+// store/clock/logger/server infra that scripts/runtime's cap was sized for).
+// Keys are paths relative to repo root; a path ending without an extension
+// is treated as a directory total.
 const BUDGET = {
   "source/labs.css": 26 * 1024,
   "source/lab.css": 18 * 1024,
   "scripts/runtime": 26 * 1024,
+  "scripts/kernel": 24 * 1024,
   "scripts/hub.js": 7 * 1024,
   "scripts/hub-view.js": 3.5 * 1024,
   "scripts/lab-card-anim.js": 4.5 * 1024,
@@ -71,11 +76,11 @@ for (const row of rows) {
   console.log(`  ${row.rel.padEnd(28)} ${row.status.padEnd(28)} ${row.pct}`);
 }
 
-// Per-lab JS budget (§2.2 UI plan): 10KB per lab file, and runtime + 1 lab
-// must stay under 60KB total for a lesson page.
+// Per-lab JS budget (§2.2 UI plan): 10KB per lab file, and shared JS (runtime
+// + kernel) + 1 lab must stay under 60KB total for a lesson page.
 const LAB_FILE_LIMIT = 10 * 1024;
 const PAGE_JS_LIMIT = 60 * 1024;
-const runtimeSize = sizeOf("scripts/runtime") ?? 0;
+const sharedJsSize = (sizeOf("scripts/runtime") ?? 0) + (sizeOf("scripts/kernel") ?? 0);
 const labsDir = join(ROOT, "scripts", "labs");
 /** @type {import("node:fs").Dirent[]} */
 let labEntries = [];
@@ -90,7 +95,7 @@ try {
 console.log("\nPer-lab JS budget:");
 for (const entry of labEntries) {
   const size = statSync(join(labsDir, entry.name)).size;
-  const pageTotal = runtimeSize + size;
+  const pageTotal = sharedJsSize + size;
   const ok = size <= LAB_FILE_LIMIT && pageTotal <= PAGE_JS_LIMIT;
   if (!ok) failed = true;
   console.log(

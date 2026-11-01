@@ -1230,6 +1230,17 @@ Sau khi bạn làm rõ: Lab là **site học tập độc lập**, ở sub-path 
 
 Một chỗ mình **không** đổi, dù có thể bị cho là mâu thuẫn: giữ nguyên "không build step" ở P0–P2 *đồng thời* dự đoán nó sẽ hỏng ở trang thứ 6. Đó không phải mâu thuẫn — đó là *reversible decision* được quản lý đúng cách, và nó là ví dụ sống cho đúng trang `build-it-for-the-future`.
 
+### Lab-detail component system amendment (2026-11-01)
+
+Implements `docs/implement/lab-detail-component-system.md` (approved mockup: `lab-detail-sample.html` v2) for `n-plus-one-query`. Two deviations from that plan's literal text, recorded here because the plan itself asks for this amendment:
+
+| # | Plan said | Changed to | Why |
+|---|---|---|---|
+| 19 | §3: put `ResponseCard`/`DataTable`/`FlowDiagram`/`LogTerminal` in `scripts/runtime/` | New `scripts/kernel/` directory, own 24KB budget line in `tools/budget.mjs` | `scripts/runtime` was already at 25.26KB/26KB (§2.2) when this work started — the 4 components alone run ~16.5KB. Splitting "runtime infra" (store/clock/logger/server/lab.js) from "Lớp B instrument components" keeps both budgets legible instead of one catch-all number |
+| 20 | §2: "thay hẳn mint/navy ở chassis" (replace the mint/navy chassis tokens with a new `--lab-*` set, light+dark) | No new tokens added | The chassis was already replaced by the 2026-11-01 "whole Lab identity" override above (§15 row before this one) — `--navy`/`--mint` → `--ink`/`--panel`/`--accent` (graphite + violet, dark-only, IBM Plex already). Adding a second parallel `--lab-*` set on top would be exactly the "2 hệ song song" the plan's own §2 says to avoid; the 3 Lớp B modules (`.rc-*`/`.fd-*`/`.lt-*`) use their own fixed mockup palette as specified, and only borrow `--accent`/`--font-sans`/`--font-mono` from the chassis that already exists |
+
+Everything else in the plan (4-zone Stage Contract untouched, DataTable wraps the response table, Internals stacks FlowDiagram above LogTerminal, every Verdict/log number traces to `db.costs()`) shipped as written. `npm run verify` green (135/135 tests, budget, contract) before handing off the remaining rollout (the other 2 labs) to a later session.
+
 ---
 
 ## 16. Bước tiếp theo ngay

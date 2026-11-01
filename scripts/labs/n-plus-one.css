@@ -8,14 +8,14 @@
   }
 }
 
-/* th sticky positioning is stage-specific (needs this stage's own background behind it). */
-.stage--n-plus-one-query .lab-row-table th {
+/* rc-table th already paints its own background (kernel CSS); sticky only
+   needs to be added here since it's a per-stage layout choice, not a kernel default. */
+.stage--n-plus-one-query .rc-table th {
   position: sticky;
   top: 0;
-  background: var(--stage-bg-deep);
 }
 
-.stage--n-plus-one-query [data-zone="response"] {
+.stage--n-plus-one-query [data-zone="response"] .rc-scroll {
   max-height: 42vh;
   overflow-y: auto;
 }
