@@ -503,6 +503,8 @@ Nhóm theo category, đã lọc qua tiêu chí "mô phỏng được".
 
 **MVP = 3 trang:** `n-plus-one-query`, `sql-injection-contact-form`, `one-rule-five-places`.
 
+**Cập nhật (2026-11-01):** đã thêm `no-index-no-mercy` (Lab 4) — trang thật thứ 4, theo đúng khuôn D ở trên. Xem `docs/implement/decisions.log` cho chi tiết triển khai.
+
 Ba trang này cover 3 category và 3 khuôn tương tác khác nhau (A, B, C) → vừa đủ để kiểm chứng rằng runtime dùng chung thực sự dùng chung được. Nếu đến trang thứ 3 mà `lab.js` phải sửa nhiều → thiết kế runtime sai, sửa trước khi viết tiếp trang 4.
 
 ---
