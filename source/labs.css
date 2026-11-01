@@ -533,6 +533,13 @@ a { color: var(--accent); }
   transform-box: fill-box;
 }
 .catalog-card__bg .flow-node--glow { animation: node-glow 2s ease-in-out infinite; }
+/* Lesson pages' hand-authored "Under the hood" SVGs: same flow-pulse keyframe
+   as the catalog cards, but each diagram's line geometry differs, so
+   offset-path/fill/--speed/--delay are set inline per circle. */
+[data-block="under-the-hood"] svg .flow-pulse {
+  animation: flow-pulse var(--speed, 2.6s) linear infinite;
+  animation-delay: var(--delay, 0s);
+}
 @keyframes flow-pulse {
   0% { offset-distance: 0%; opacity: 0; }
   8% { opacity: 1; }

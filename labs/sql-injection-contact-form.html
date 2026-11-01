@@ -58,6 +58,7 @@
       <text x="4" y="16" font-size="8" fill="currentColor">SELECT * FROM users WHERE email = '</text>
       <text x="4" y="34" font-size="9" fill="var(--sig-bad)">' OR '1'='1</text>
       <line x1="4" y1="40" x2="90" y2="40" stroke="var(--sig-bad)" />
+      <circle class="flow-pulse" r="2.4" fill="var(--sig-bad)" style="offset-path:path('M4,40 L90,40');--speed:1.8s" />
       <text x="4" y="54" font-size="8" fill="var(--sig-bad)">closes the literal, then adds a condition that is always true</text>
       <text x="4" y="76" font-size="8" fill="var(--sig-ok)">parameterized: the value is never pasted into the query text at all</text>
     </svg>

@@ -22,6 +22,22 @@
 [data-lab][data-stage-bg="void"] { background: var(--stage-bg-void); }
 [data-lab][data-stage-bg="ledger"] { background: var(--stage-bg-ledger); }
 
+/* Schematic-grid texture, blended into the stage's own background (behind
+   the zones, in front of nothing) so the live stage reads as the same
+   instrument-panel system as the landing/catalog cards. */
+[data-lab]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: inherit;
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
 [data-zone] {
   border: 1px solid var(--border-strong);
   border-radius: var(--radius);
