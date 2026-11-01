@@ -1241,6 +1241,8 @@ Implements `docs/implement/lab-detail-component-system.md` (approved mockup: `la
 
 Everything else in the plan (4-zone Stage Contract untouched, DataTable wraps the response table, Internals stacks FlowDiagram above LogTerminal, every Verdict/log number traces to `db.costs()`) shipped as written. `npm run verify` green (135/135 tests, budget, contract) before handing off the remaining rollout (the other 2 labs) to a later session.
 
+**Follow-up (same day):** the live deploy's DataTable/FlowDiagram still used the mockup's literal light palette, which read as two stark white cards on the site's dark chassis — not what the approved (light-shell) mockup conveyed. Re-themed `.rc`/`.fd` in `source/lab.css` onto the existing dark chassis tokens (`--panel-raised`/`--text-head`/`--sig-*`, etc.) instead; `LogTerminal` is untouched (its fixed phosphor-black was always intentional, never the complaint). This is a third deviation from the plan's literal "port near-verbatim, keep the mockup's own palette" instruction for 2 of the 3 modules — recorded here rather than as a new numbered row since it's a direct amendment to row 20 above, not a new independent decision.
+
 ---
 
 ## 16. Bước tiếp theo ngay

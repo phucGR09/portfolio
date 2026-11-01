@@ -61,7 +61,9 @@ export function createFlowDiagram(root, spec) {
 
   const svg = svgEl("svg", { viewBox: spec.viewBox, preserveAspectRatio: "xMinYMin meet" });
   const defs = svgEl("defs");
-  defs.append(buildMarker("fdArrow", "#8a8e99"), buildMarker("fdArrowActive", "#5a35d6"));
+  // Fallback fill only — source/lab.css's `.fd #fdArrow(Active) path` rules
+  // own the real color so it tracks --text-mute/--accent, not a literal here.
+  defs.append(buildMarker("fdArrow", "#74708a"), buildMarker("fdArrowActive", "#8d7bff"));
   svg.append(defs);
 
   /** @type {Map<string, SVGPathElement>} */

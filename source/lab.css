@@ -236,17 +236,18 @@ input[type="range"] { accent-color: var(--accent); min-height: 40px; }
 /* ---- noscript fallback — never a blank frame ---- */
 [data-lab] noscript { display: block; border: 1px solid var(--border); padding: var(--pane-pad); }
 
-/* Kernel modules below (DataTable/FlowDiagram/LogTerminal, lab-detail-
-   component-system.md §3) each keep their OWN fixed palette ported from
-   their mockup, independent of the chassis above — on purpose (§2). */
+/* Kernel modules (lab-detail-component-system.md §3). DataTable/FlowDiagram
+   use the dark chassis tokens, not the mockup's light palette (§15 amendment);
+   LogTerminal keeps its own fixed phosphor-black world regardless. */
 
 /* ---- DataTable (response) — ported from candidates-admin.html ---- */
 .rc {
-  --rc-panel: #fff; --rc-ink: #13151c; --rc-ink-soft: #5b5f6b; --rc-ink-faint: #8a8e99;
-  --rc-paper: #eef0f4; --rc-line: rgba(19, 21, 28, .12); --rc-line-strong: rgba(19, 21, 28, .22);
-  --rc-accent-soft: color-mix(in srgb, var(--accent) 9%, #fff);
-  --rc-ok-bg: #e4f5ea; --rc-ok-fg: #1c7a43; --rc-info-bg: #e7eefb; --rc-info-fg: #1c56b0;
-  --rc-warn-bg: #fbf0dd; --rc-warn-fg: #8a5a08;
+  --rc-panel: var(--panel-raised); --rc-ink: var(--text-head); --rc-ink-soft: var(--text-body); --rc-ink-faint: var(--text-mute);
+  --rc-paper: var(--panel); --rc-line: var(--border); --rc-line-strong: var(--border-strong);
+  --rc-accent-soft: color-mix(in srgb, var(--accent) 18%, var(--panel-raised));
+  --rc-ok-bg: color-mix(in srgb, var(--sig-ok) 18%, var(--panel-raised)); --rc-ok-fg: var(--sig-ok);
+  --rc-info-bg: color-mix(in srgb, var(--sig-info) 18%, var(--panel-raised)); --rc-info-fg: var(--sig-info);
+  --rc-warn-bg: color-mix(in srgb, var(--sig-warn) 18%, var(--panel-raised)); --rc-warn-fg: var(--sig-warn);
   background: var(--rc-panel); color: var(--rc-ink); font: 400 14px/1.5 var(--font-sans);
   border-radius: 10px; border: 1px solid var(--rc-line-strong); overflow: hidden;
 }
@@ -279,9 +280,9 @@ table.rc-table tr[data-ghost] td { color: var(--rc-ink-faint); }
 
 /* ---- FlowDiagram (internals, block 1) — ported from request-architecture.html ---- */
 .fd {
-  --fd-panel: #fff; --fd-paper: #eef0f4; --fd-ink-faint: #8a8e99;
-  --fd-line: rgba(19, 21, 28, .14); --fd-line-strong: rgba(19, 21, 28, .3);
-  --fd-accent-soft: color-mix(in srgb, var(--accent) 9%, #fff);
+  --fd-panel: var(--panel-raised); --fd-paper: var(--panel); --fd-ink: var(--text-head); --fd-ink-faint: var(--text-mute);
+  --fd-line: var(--border); --fd-line-strong: var(--border-strong);
+  --fd-accent-soft: color-mix(in srgb, var(--accent) 22%, var(--panel-raised));
   background: var(--fd-panel); border: 1px solid var(--fd-line-strong); border-radius: 12px; padding: 1.1rem;
 }
 .fd-title { font: 600 .78rem/1 var(--font-sans); color: var(--fd-ink-faint); margin: 0 0 .8rem; }
@@ -299,7 +300,9 @@ table.rc-table tr[data-ghost] td { color: var(--rc-ink-faint); }
 }
 .fd-node[data-active="true"] { border-color: var(--accent); box-shadow: 0 0 0 3px var(--fd-accent-soft); }
 .fd-icon { width: 28px; height: 28px; border-radius: 7px; background: var(--fd-paper); border: 1px solid var(--fd-line); flex: none; display: flex; align-items: center; justify-content: center; }
-.fd-node .title { font: 700 .78rem/1.2 var(--font-sans); color: #13151c; }
+.fd-node .title { font: 700 .78rem/1.2 var(--font-sans); color: var(--fd-ink); }
+.fd #fdArrow path { fill: var(--fd-ink-faint); }
+.fd #fdArrowActive path { fill: var(--accent); }
 .fd-node .role { font: 500 .6rem/1 var(--font-mono); text-transform: uppercase; letter-spacing: .05em; color: var(--fd-ink-faint); margin-top: .15em; }
 .fd-badge {
   position: absolute; top: -9px; right: -9px; background: var(--accent); color: #fff; font: 700 .62rem/1 var(--font-mono);
@@ -315,7 +318,7 @@ table.rc-table tr[data-ghost] td { color: var(--rc-ink-faint); }
 .fd-icon-table span:last-child { margin-bottom: 0; width: 10px; }
 @media (prefers-reduced-motion: reduce) { .fd-node, .fd-badge { transition-duration: .01ms; } }
 
-/* ---- LogTerminal (internals, block 2) — ported from server-terminal.html; own fixed phosphor-on-black palette, never themed ---- */
+/* ---- LogTerminal (internals, block 2) — ported from server-terminal.html; fixed phosphor-black, never themed ---- */
 .lt {
   --lt-bg: #0b0d0c; --lt-chrome: #15181a; --lt-line: rgba(57, 255, 133, .14);
   --lt-fg: #d8f5df; --lt-dim: #3a8a56; --lt-ok: #39ff85; --lt-warn: #ffd166;
