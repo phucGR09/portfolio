@@ -73,7 +73,7 @@ export default defineLab({
   stage: {
     bg: "raised",
     layout: "propagation",
-    zones: { control: "1/1/2/3", response: "2/2/3/3", internals: "2/1/3/2", verdict: "3/1/4/3" },
+    zones: { control: "1/1/2/2", response: "2/1/3/2", internals: "3/1/4/2", verdict: "4/1/5/2" },
     hues: []
   },
   modes: { naive: "Duplicated", principled: "Single source" },

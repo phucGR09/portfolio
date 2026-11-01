@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { readFileSync, writeFileSync } from "node:fs";
+import { readFileSync, writeFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { repoRoot } from "./_helpers.mjs";
 
@@ -14,10 +14,14 @@ function runContract() {
   return { status: result.status, stdout: result.stdout, stderr: result.stderr };
 }
 
-test("check-contract passes on all 3 real lesson pages", () => {
+test("check-contract passes on all real lesson pages", () => {
+  const pageCount = readdirSync(join(ROOT, "labs")).filter(
+    (name) => name.endsWith(".html") && !name.startsWith("_") && name !== "index.html"
+  ).length;
+  assert.ok(pageCount > 0, "expected at least one real lesson page");
   const { status, stdout } = runContract();
   assert.equal(status, 0);
-  assert.match(stdout, /contract: 3\/3 pages pass automated checks \(1,2,4,7,8\)/);
+  assert.ok(stdout.includes(`contract: ${pageCount}/${pageCount} pages pass automated checks (1,2,4,7,8)`));
   assert.match(stdout, /manual still required/);
 });
 

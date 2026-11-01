@@ -1,23 +1,42 @@
 /* Stage CSS for one-rule-five-places. Scoped under
    .stage--one-rule-five-places, <=120 lines (Stage Contract §7 item 8). */
 
-@media (min-width: 720px) {
-  .stage--one-rule-five-places {
-    grid-template-columns: 1fr 2fr;
-  }
+.stage--one-rule-five-places {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.stage--one-rule-five-places [data-zone] {
+  min-width: 0;
+}
+
+/* Auto margins center a diagram that fits and resolve to zero when it
+   overflows, keeping the source node reachable at the start of the scroll. */
+.stage--one-rule-five-places .fd-scroll {
+  justify-content: flex-start;
+}
+
+.stage--one-rule-five-places .fd-board {
+  margin-inline: auto;
+}
+
+.stage--one-rule-five-places .lab-response-card__status {
+  line-height: 1.5;
+  overflow-wrap: anywhere;
 }
 
 .stage--one-rule-five-places .lab-screen-tiles {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr));
   gap: var(--sp-2);
 }
 
 .stage--one-rule-five-places .lab-screen-tile {
+  min-width: 0;
   border: 1px solid var(--border);
   border-radius: 2px;
   padding: var(--sp-2);
   font: var(--fs-mono-sm) / 1.4 var(--font-mono);
+  overflow-wrap: anywhere;
 }
 
 .stage--one-rule-five-places .lab-screen-tile p:first-child {
@@ -36,25 +55,18 @@
   color: var(--sig-ok);
 }
 
-.stage--one-rule-five-places .lab-file-graph {
-  list-style: none;
+.stage--one-rule-five-places .lab-screen-tile p:last-child {
   margin: 0;
-  padding: 0;
-  font: var(--fs-mono-sm) / 1.6 var(--font-mono);
 }
 
-.stage--one-rule-five-places .lab-file-graph li {
-  padding: 0.2em 0;
-  border-left: 2px solid var(--border);
-  padding-left: var(--sp-2);
+.stage--one-rule-five-places .lt-chrome,
+.stage--one-rule-five-places .lt-readonly,
+.stage--one-rule-five-places .lab-readout {
+  flex-wrap: wrap;
 }
 
-.stage--one-rule-five-places .lab-file-graph li[data-sig="ok"] {
-  border-left-color: var(--sig-ok);
-  color: var(--sig-ok);
-}
-
-.stage--one-rule-five-places .lab-file-graph li[data-sig="bad"] {
-  border-left-color: var(--sig-bad);
-  color: var(--sig-bad);
+.stage--one-rule-five-places .lt-scroll .line .path {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  overflow: visible;
 }

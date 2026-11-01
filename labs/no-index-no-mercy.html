@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Searching candidates by email went from instant to half a second — Principles Lab</title>
+  <meta name="description" content="A runnable lab showing why a full table scan gets slower as a table grows, and how a B-tree index turns the same search into a log2(n) lookup — plus the reverse trade-off on writes." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="icon" href="../assets/labs-favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="../source/labs.css" />
+  <link rel="stylesheet" href="../source/lab.css" />
+  <link rel="stylesheet" href="../scripts/labs/no-index-no-mercy.css" />
+</head>
+<body style="--accent: #ffa657;">
+  <header class="lab-header" data-lab-header>
+    <div class="lab-header__bar">
+      <a class="lab-nav__wordmark" href="./">⬡ Principles Lab</a>
+
+      <nav class="lab-header__primary" aria-label="Primary">
+        <a href="./">All problems</a>
+        <div class="lab-header__browse" data-nav-browse>
+          <button type="button" class="lab-header__browse-toggle" data-nav-browse-toggle aria-haspopup="true" aria-expanded="false">
+            Browse
+            <svg viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.6" fill="none"/></svg>
+          </button>
+          <div class="lab-header__browse-menu" data-nav-browse-menu role="menu"></div>
+        </div>
+      </nav>
+
+      <div class="lab-header__spacer"></div>
+
+      <div class="lab-header__utility">
+        <span class="lab-header__stat" data-nav-stat></span>
+
+        <div class="lab-header__search" data-nav-search>
+          <button type="button" class="lab-header__search-toggle" data-nav-search-toggle aria-label="Search problems">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="9" cy="9" r="6.5"></circle><path d="M14 14l4.5 4.5"></path></svg>
+          </button>
+          <input type="text" class="lab-header__search-input" data-nav-search-input placeholder="Search problems…" autocomplete="off" />
+          <div class="lab-header__search-results" data-nav-search-results hidden></div>
+        </div>
+
+        <button type="button" class="lab-header__burger" data-nav-burger aria-label="Open menu" aria-expanded="false">
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 5h14M3 10h14M3 15h14"></path></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="lab-header__mobile" data-nav-mobile>
+      <div class="lab-header__mobile-group">
+        <p class="lab-header__mobile-label">Navigate</p>
+        <a href="./">All problems</a>
+      </div>
+      <div class="lab-header__mobile-group" data-nav-mobile-categories>
+        <p class="lab-header__mobile-label">Browse by category</p>
+      </div>
+      <div class="lab-header__mobile-search">
+        <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="9" cy="9" r="6.5"></circle><path d="M14 14l4.5 4.5"></path></svg>
+        <input type="text" class="lab-header__mobile-search-input" data-nav-mobile-search-input placeholder="Search problems…" autocomplete="off" />
+      </div>
+      <div class="lab-header__search-results" data-nav-mobile-search-results hidden></div>
+    </div>
+  </header>
+
+  <nav class="lesson-rail" aria-label="On this page">
+    <a href="#situation" data-rail><span class="dot"></span><span class="label">The situation</span></a>
+    <a href="#lab" data-rail><span class="dot"></span><span class="label">The lab</span></a>
+    <a href="#under-the-hood" data-rail><span class="dot"></span><span class="label">Under the hood</span></a>
+    <a href="#principle" data-rail><span class="dot"></span><span class="label">Principle</span></a>
+    <a href="#tradeoffs" data-rail><span class="dot"></span><span class="label">Trade-offs</span></a>
+    <a href="#bites" data-rail><span class="dot"></span><span class="label">Where it bites</span></a>
+    <a href="#carry-away" data-rail><span class="dot"></span><span class="label">Carry it away</span></a>
+  </nav>
+
+  <header class="lesson-hero" data-block="hero">
+    <p class="hero-principle">Missing Index</p>
+    <div class="hero__rule"><span></span></div>
+    <span class="pill">Performance &amp; Scale</span>
+    <span class="pill pill--difficulty">Intermediate</span>
+    <span class="pill" data-blast="expensive">Expensive</span>
+    <h1>Searching candidates by email was instant at 1,000 rows. At 50,000, it takes half a second.</h1>
+    <p class="metric-strip metric"><span>50,000 rows scanned</span> <span>→</span> <span>1 row scanned</span></p>
+    <span class="provenance-tag">Classic problem</span>
+  </header>
+
+  <section class="lesson-block" id="situation" data-block="situation">
+    <h2>The situation</h2>
+    <p>
+      An admin screen lets a recruiter look up a candidate by email. It was built against a
+      few hundred test rows, so a plain <code>WHERE email = ?</code> query felt instant — there
+      was nothing to optimize yet, and adding an index to a table that small wouldn't have
+      changed anything a human could perceive. Months later the candidates table has grown
+      to 50,000 rows the same way real tables do: one signup at a time, with no single commit
+      that made it "big." The query never changed. The table just kept growing underneath it,
+      and nobody was watching the one number that mattered: how many rows the database has to
+      look at to answer this question.
+    </p>
+  </section>
+
+  <section class="lesson-block--full" id="lab" data-block="lab">
+    <div data-lab>
+      <noscript>
+        <p>This lab needs JavaScript. With it: searching a 50,000-row table with no index
+        scans all 50,000 rows every time; adding a B-tree index turns the same search into
+        roughly 16 rows — and a separate "Insert 1,000 rows" button shows the index's own
+        cost on every write.</p>
+      </noscript>
+    </div>
+    <script type="module" src="../scripts/labs/no-index-no-mercy.js"></script>
+  </section>
+
+  <section class="lesson-block" id="under-the-hood" data-block="under-the-hood">
+    <h2>Under the hood</h2>
+    <div class="block__body">
+    <div class="schematic">
+    <svg viewBox="0 0 320 100" role="img" aria-labelledby="uth4-title uth4-desc" style="width:100%;max-width:480px;color:var(--text-mute)">
+      <title id="uth4-title">A sequential scan checks every row; an index jumps straight to the match</title>
+      <desc id="uth4-desc">With no index, the database has no way to find the matching row except by checking every row in order, one at a time. A B-tree index keeps the rows in a searchable structure, so the database can discard half the remaining rows at each step instead of checking them one by one.</desc>
+      <text x="4" y="14" font-size="8" fill="currentColor">Seq Scan on candidates (rows scanned: 50000)</text>
+      <line x1="4" y1="24" x2="300" y2="24" stroke="var(--sig-bad)" />
+      <circle class="flow-pulse" r="2" fill="var(--sig-bad)" style="offset-path:path('M4,24 L300,24');--speed:2.2s" />
+      <text x="4" y="48" font-size="8" fill="currentColor">Index Scan using idx_candidates_email (rows scanned: 16)</text>
+      <line x1="4" y1="58" x2="40" y2="58" stroke="var(--sig-ok)" />
+      <circle class="flow-pulse" r="2" fill="var(--sig-ok)" style="offset-path:path('M4,58 L40,58');--speed:2.2s" />
+      <text x="4" y="80" font-size="8" fill="var(--sig-warn)">every write to an indexed table also updates the index — the trade-off runs both ways</text>
+    </svg>
+    </div>
+    <p>
+      With no index, a row has no fixed address the database can jump to — the only way to
+      find it is to check rows one at a time until a match turns up, which means checking all
+      of them in the worst case. A B-tree index keeps a sorted, searchable copy of the column
+      being searched, so each comparison can discard roughly half of what's left, the same way
+      a phone book lets you skip to "M" instead of reading every name. 50,000 rows at one
+      comparison each becomes about 16 comparisons at two per step (log<sub>2</sub> 50,000 ≈ 16).
+      That speedup isn't free: the index itself has to be updated on every insert, so writes get
+      slower and the table takes more disk space — which is why an index is a trade a team makes
+      on purpose for a column it searches often, not something to add to every column by default.
+    </p>
+    </div>
+  </section>
+
+  <section class="lesson-block principle-box" id="principle" data-block="principle">
+    <h2>The principle</h2>
+    <p>A database table has no memory of where a row lives unless something tells it. Without
+    an index, finding a row means looking at all of them; with one, finding a row means
+    following a structure built for exactly that question — but every structure has to be
+    kept up to date, and that cost lands on every write, not just the reads it speeds up.</p>
+  </section>
+
+  <section class="lesson-block" id="tradeoffs" data-block="tradeoffs">
+    <h2>Trade-offs &amp; when NOT to</h2>
+    <div class="tradeoff-grid">
+      <div>
+        <h3>Apply this when</h3>
+        <p>A column is searched or filtered on often, the table is large enough that a scan is
+        measurable, and writes to that column are comparatively rare — the classic case is a
+        lookup key like email, username, or an external ID.</p>
+      </div>
+      <div>
+        <h3>Don't when</h3>
+        <p>The table is small enough that a full scan is already sub-millisecond, the column is
+        written far more often than it's searched, or you're tempted to index every column "just
+        in case" — each extra index is more write cost and storage for a read pattern that may
+        never happen.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="lesson-block" id="bites" data-block="bites">
+    <h2>Where this bites in practice</h2>
+    <p>
+      Admin and reporting screens are the usual victims — they're built early against a mostly
+      empty table, work fine for months, and nobody revisits the query once it's shipped. The
+      early sign: a query that filters or sorts on a column with no index, on a table whose row
+      count you can't name offhand. If "how big is this table now?" isn't a number someone
+      already knows, the query is at risk of degrading silently until a user notices first.
+    </p>
+  </section>
+
+  <section class="lesson-block" id="carry-away" data-block="carry-away">
+    <h2>Carry it away</h2>
+    <ul>
+      <li>Any column in a frequent <code>WHERE</code>, <code>JOIN</code>, or <code>ORDER BY</code> clause on a table that will grow is a candidate for an index.</li>
+      <li>An index speeds up reads on that column and slows down every write to it — add indexes on purpose, not by default.</li>
+      <li>"It's fast in dev" means nothing if dev has 200 rows and production will have 200,000.</li>
+      <li>Know the row count of your largest tables. A query's cost is a function of that number, whether anyone is tracking it or not.</li>
+    </ul>
+  </section>
+
+  <footer class="lab-footer">
+    <p>Every number on this page is computed live by the simulation above — nothing here is a stock photo of a chart.</p>
+    <p>Built and maintained by Phuc</p>
+  </footer>
+
+  <script type="module" src="../scripts/lesson-rail.js"></script>
+  <script type="module" src="../scripts/lab-nav.js"></script>
+</body>
+</html>

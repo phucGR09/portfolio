@@ -40,6 +40,17 @@ export const CATALOG = [
     provenance: "classic",
     related: [],
     runnable: true
+  },
+  {
+    slug: "no-index-no-mercy",
+    principle: "Missing Index",
+    title: "Searching candidates by email was instant at 1,000 rows. At 50,000, it takes half a second.",
+    category: "performance",
+    difficulty: "intermediate",
+    blastRadius: "expensive",
+    provenance: "classic",
+    related: [],
+    runnable: true
   }
 ];
 

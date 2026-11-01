@@ -1,0 +1,32 @@
+/* Stage CSS for no-index-no-mercy. Scoped under .stage--no-index-no-mercy,
+   <=120 lines (Stage Contract §7 item 8). The "Insert 1,000 rows" benchmark
+   is its own self-contained control-zone demo (not part of the main
+   naive/principled run), so it gets its own small chrome here. */
+
+.stage--no-index-no-mercy .lab-insert-bench {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75em;
+}
+
+.stage--no-index-no-mercy .lab-insert-bench__button {
+  font: var(--fs-control) / 1 var(--font-sans);
+  padding: 0.5em 1em;
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius);
+  background: none;
+  color: var(--text-body);
+  cursor: pointer;
+}
+
+.stage--no-index-no-mercy .lab-insert-bench__button:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.stage--no-index-no-mercy .lab-insert-bench__readout {
+  font: var(--fs-mono-sm) / 1.4 var(--font-mono);
+  color: var(--text-mute);
+  max-width: 60ch;
+}

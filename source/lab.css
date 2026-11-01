@@ -168,6 +168,23 @@ input[type="range"] { accent-color: var(--accent); min-height: 40px; }
   background: none;
 }
 
+/* ---- ConsoleField (text-input chrome shared by any lab with a free-text
+   control — Attacker Console's email field, no-index-no-mercy's search). ---- */
+.lab-console-field {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  background: var(--ink);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  padding: 0.5em 0.75em;
+  font: var(--fs-mono-sm) / 1 var(--font-mono);
+  transition: border-color 150ms steps(2), box-shadow 150ms steps(2);
+}
+.lab-console-field:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.lab-console-field__prefix { color: var(--sig-ok); user-select: none; }
+.lab-console-field input { font: inherit; background: none; color: var(--text-head); border: none; outline: none; min-width: 22ch; }
+
 /* ---- ResponseCard ---- */
 .lab-response-card { border: 1px solid var(--border); border-radius: var(--radius); padding: var(--pane-pad); }
 .lab-response-card__status {

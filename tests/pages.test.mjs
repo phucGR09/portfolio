@@ -11,7 +11,8 @@ const LAB_PAGES_DIR = join(ROOT, "labs");
 const PAGES = [
   { file: "n-plus-one-query.html", security: false },
   { file: "sql-injection-contact-form.html", security: true },
-  { file: "one-rule-five-places.html", security: false }
+  { file: "one-rule-five-places.html", security: false },
+  { file: "no-index-no-mercy.html", security: false }
 ];
 
 const BLOCKS = ["hero", "situation", "lab", "under-the-hood", "principle", "tradeoffs", "bites", "carry-away"];
