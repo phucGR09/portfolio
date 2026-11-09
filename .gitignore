@@ -7,9 +7,3 @@
 
 # Runtime files
 *.log
-!docs/implement/decisions.log
-
-# Node / toolchain
-node_modules/
-*.tsbuildinfo
-coverage/
