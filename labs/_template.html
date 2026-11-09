@@ -19,7 +19,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title><!-- FILL: symptom title --> — Principles Lab</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="icon" href="../assets/labs-favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="../source/labs.css" />
   <link rel="stylesheet" href="../source/lab.css" />
@@ -47,7 +47,12 @@
         <span class="lab-header__stat" data-nav-stat></span>
 
         <div class="lab-header__search" data-nav-search>
-          <input type="text" class="lab-header__search-input" data-nav-search-input placeholder="Search problems…" autocomplete="off" />
+          <div class="lab-header__search-field">
+            <div class="lab-header__search-inner">
+              <svg class="lab-header__search-icon" viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"></circle><path d="m16 16-3.2-3.2"></path></svg>
+              <input type="text" class="lab-header__search-input" data-nav-search-input placeholder="Search problems…" autocomplete="off" />
+            </div>
+          </div>
           <div class="lab-header__search-results" data-nav-search-results hidden></div>
         </div>
 
@@ -67,7 +72,12 @@
       </div>
       <div class="lab-header__mobile-group lab-header__mobile-search">
         <p class="lab-header__mobile-label">Search</p>
-        <input type="text" class="lab-header__search-input" data-nav-mobile-search-input placeholder="Search problems…" autocomplete="off" />
+        <div class="lab-header__search-field">
+          <div class="lab-header__search-inner">
+            <svg class="lab-header__search-icon" viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"></circle><path d="m16 16-3.2-3.2"></path></svg>
+            <input type="text" class="lab-header__search-input" data-nav-mobile-search-input placeholder="Search problems…" autocomplete="off" />
+          </div>
+        </div>
         <div class="lab-header__search-results" data-nav-mobile-search-results hidden></div>
       </div>
     </div>

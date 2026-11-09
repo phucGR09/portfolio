@@ -6,7 +6,7 @@
   <title>Searching candidates by email went from instant to half a second — Principles Lab</title>
   <meta name="description" content="A runnable lab showing why a full table scan gets slower as a table grows, and how a B-tree index turns the same search into a log2(n) lookup — plus the reverse trade-off on writes." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="icon" href="../assets/labs-favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="../source/labs.css" />
   <link rel="stylesheet" href="../source/lab.css" />
@@ -34,10 +34,12 @@
         <span class="lab-header__stat" data-nav-stat></span>
 
         <div class="lab-header__search" data-nav-search>
-          <button type="button" class="lab-header__search-toggle" data-nav-search-toggle aria-label="Search problems">
-            <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="9" cy="9" r="6.5"></circle><path d="M14 14l4.5 4.5"></path></svg>
-          </button>
-          <input type="text" class="lab-header__search-input" data-nav-search-input placeholder="Search problems…" autocomplete="off" />
+          <div class="lab-header__search-field">
+            <div class="lab-header__search-inner">
+              <svg class="lab-header__search-icon" viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"></circle><path d="m16 16-3.2-3.2"></path></svg>
+              <input type="text" class="lab-header__search-input" data-nav-search-input placeholder="Search problems…" autocomplete="off" />
+            </div>
+          </div>
           <div class="lab-header__search-results" data-nav-search-results hidden></div>
         </div>
 
@@ -55,11 +57,16 @@
       <div class="lab-header__mobile-group" data-nav-mobile-categories>
         <p class="lab-header__mobile-label">Browse by category</p>
       </div>
-      <div class="lab-header__mobile-search">
-        <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="9" cy="9" r="6.5"></circle><path d="M14 14l4.5 4.5"></path></svg>
-        <input type="text" class="lab-header__mobile-search-input" data-nav-mobile-search-input placeholder="Search problems…" autocomplete="off" />
+      <div class="lab-header__mobile-group lab-header__mobile-search">
+        <p class="lab-header__mobile-label">Search</p>
+        <div class="lab-header__search-field">
+          <div class="lab-header__search-inner">
+            <svg class="lab-header__search-icon" viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"></circle><path d="m16 16-3.2-3.2"></path></svg>
+            <input type="text" class="lab-header__search-input" data-nav-mobile-search-input placeholder="Search problems…" autocomplete="off" />
+          </div>
+        </div>
+        <div class="lab-header__search-results" data-nav-mobile-search-results hidden></div>
       </div>
-      <div class="lab-header__search-results" data-nav-mobile-search-results hidden></div>
     </div>
   </header>
 
@@ -114,14 +121,14 @@
     <h2>Under the hood</h2>
     <div class="block__body">
     <div class="schematic">
-    <svg viewBox="0 0 320 100" role="img" aria-labelledby="uth4-title uth4-desc" style="width:100%;max-width:480px;color:var(--text-mute)">
+    <svg data-schematic="no-index-scan" viewBox="0 0 320 100" role="img" aria-labelledby="uth4-title uth4-desc" style="width:100%;max-width:480px;color:var(--text-mute)">
       <title id="uth4-title">A sequential scan checks every row; an index jumps straight to the match</title>
       <desc id="uth4-desc">With no index, the database has no way to find the matching row except by checking every row in order, one at a time. A B-tree index keeps the rows in a searchable structure, so the database can discard half the remaining rows at each step instead of checking them one by one.</desc>
       <text x="4" y="14" font-size="8" fill="currentColor">Seq Scan on candidates (rows scanned: 50000)</text>
-      <line x1="4" y1="24" x2="300" y2="24" stroke="var(--sig-bad)" />
+      <line data-sketch x1="4" y1="24" x2="300" y2="24" stroke="var(--sig-bad)" />
       <circle class="flow-pulse" r="2" fill="var(--sig-bad)" style="offset-path:path('M4,24 L300,24');--speed:2.2s" />
       <text x="4" y="48" font-size="8" fill="currentColor">Index Scan using idx_candidates_email (rows scanned: 16)</text>
-      <line x1="4" y1="58" x2="40" y2="58" stroke="var(--sig-ok)" />
+      <line data-sketch x1="4" y1="58" x2="40" y2="58" stroke="var(--sig-ok)" />
       <circle class="flow-pulse" r="2" fill="var(--sig-ok)" style="offset-path:path('M4,58 L40,58');--speed:2.2s" />
       <text x="4" y="80" font-size="8" fill="var(--sig-warn)">every write to an indexed table also updates the index — the trade-off runs both ways</text>
     </svg>
@@ -197,3 +204,4 @@
   <script type="module" src="../scripts/lab-nav.js"></script>
 </body>
 </html>
+

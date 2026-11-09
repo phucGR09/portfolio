@@ -14,12 +14,20 @@ const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
 // old 2-link nav left only ~2.6KB of headroom, not enough for a real header.
 // Keys are paths relative to repo root; a path ending without an extension
 // is treated as a directory total.
+// scripts/vendor is the one deliberate exception to this project's zero-
+// dependency rule (see docs/implement/README.md D1/D2/D5): a vendored,
+// unminified-but-already-bundled rough.esm.js (27.9KB) for hand-drawn
+// schematic sketches, loaded straight from a relative import — no bundler,
+// no node_modules at deploy time, so its real byte cost still has to be
+// tracked here like everything else this site ships.
 const BUDGET = {
   "source/labs.css": 42 * 1024,
   "source/lab.css": 22 * 1024,
   "scripts/runtime": 26 * 1024,
   "scripts/kernel": 24 * 1024,
-  "scripts/hub.js": 9 * 1024,
+  "scripts/vendor": 32 * 1024,
+  // Raised 9KB -> 11KB for the landing's category filter dropdown
+  "scripts/hub.js": 11 * 1024,
   "scripts/hub-view.js": 3.5 * 1024,
   "scripts/lab-card-anim.js": 4.5 * 1024,
   "scripts/labs-bg.js": 2.5 * 1024,
@@ -81,23 +89,39 @@ for (const row of rows) {
 }
 
 // Per-lab JS budget (§2.2 UI plan): 10KB per lab file, and shared JS (runtime
-// + kernel) + the lab's local import tree must stay under 64KB total.
-// Raised from 60KB for the complete SQLi login form and scenario cards.
+// + kernel) + the lab's local import tree must stay under this total.
+// Raised 64KB -> 88KB: no-index-no-mercy is the first (so far only) page to
+// pull scripts/vendor/rough.esm.js (28.7KB) in via kernel/sketch.js for its
+// hand-drawn schematic — labImportSize() only charges vendor's bytes to a
+// page whose own import chain actually reaches it, so every other lab's
+// page total is unaffected by this raise.
 const LAB_FILE_LIMIT = 10 * 1024;
-const PAGE_JS_LIMIT = 64 * 1024;
+const PAGE_JS_LIMIT = 88 * 1024;
 const sharedJsSize = (sizeOf("scripts/runtime") ?? 0) + (sizeOf("scripts/kernel") ?? 0) + (sizeOf("scripts/lesson-rail.js") ?? 0);
 const labsDir = join(ROOT, "scripts", "labs");
-/** Include helper modules in the page budget instead of counting only its entry.
+const kernelDir = join(ROOT, "scripts", "kernel");
+const vendorDir = join(ROOT, "scripts", "vendor");
+/** @param {string} dir @param {string} target @returns {boolean} */
+function isUnder(dir, target) {
+  return target.startsWith(dir + "/") || target.startsWith(dir + "\\");
+}
+/**
+ * Include helper modules in the page budget instead of counting only its
+ * entry. scripts/kernel is already counted once for every page via
+ * sharedJsSize, so walking into it here must not add its bytes again — it's
+ * only traversed to find a path to scripts/vendor, which isn't part of that
+ * flat shared bucket since only some labs (so far) pull in a vendored lib.
  * @param {string} file @param {Set<string>} [seen] @returns {number}
  */
 function labImportSize(file, seen = new Set()) {
   if (seen.has(file)) return 0;
   seen.add(file);
-  let size = statSync(file).size;
+  const countable = isUnder(labsDir, file) || isUnder(vendorDir, file);
+  let size = countable ? statSync(file).size : 0;
   for (const [, dependency] of readFileSync(file, "utf8").matchAll(/from\s+["'](\.[^"']+)["']/g)) {
     if (!dependency) continue;
     const target = resolve(dirname(file), dependency);
-    if (target.startsWith(labsDir + "/") || target.startsWith(labsDir + "\\")) size += labImportSize(target, seen);
+    if (isUnder(labsDir, target) || isUnder(kernelDir, target) || isUnder(vendorDir, target)) size += labImportSize(target, seen);
   }
   return size;
 }

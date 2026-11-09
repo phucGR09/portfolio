@@ -13,10 +13,17 @@ import { buildDataset } from "../data/seed.js";
 import { createResponseCard } from "../kernel/response-card.js";
 import { createFlowDiagram } from "../kernel/flow-diagram.js";
 import { createLogTerminal } from "../kernel/log-terminal.js";
+import { sketchifyLines } from "../kernel/sketch.js";
 import { duration } from "../runtime/fmt.js";
 
 const SEED = 20261201;
 const DEFAULT_SIZE = 10000;
+
+// Hand-draw the "Under the hood" seq-scan/index-scan lines — the two static
+// <line data-sketch> in no-index-no-mercy.html stay a correct schematic with
+// no JS; this only swaps them for a rough.js sketch where JS does run.
+const schematic = /** @type {SVGSVGElement | null} */ (document.querySelector('svg[data-schematic="no-index-scan"]'));
+if (schematic) sketchifyLines(schematic);
 
 /** @param {number} size @returns {string} */
 function targetEmail(size) {

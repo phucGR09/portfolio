@@ -6,7 +6,7 @@
   <title>Principles Lab — flip the principle off, watch the system answer</title>
   <meta name="description" content="Runnable labs that demonstrate software principles with real, measured before/after numbers — free, no sign-up, runs entirely in your browser." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="icon" href="../assets/labs-favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="../source/labs.css" />
   <link rel="stylesheet" href="../source/lab.css" />
@@ -34,7 +34,12 @@
         <span class="lab-header__stat" data-nav-stat></span>
 
         <div class="lab-header__search" data-nav-search>
-          <input type="text" class="lab-header__search-input" data-nav-search-input placeholder="Search problems…" autocomplete="off" />
+          <div class="lab-header__search-field">
+            <div class="lab-header__search-inner">
+              <svg class="lab-header__search-icon" viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"></circle><path d="m16 16-3.2-3.2"></path></svg>
+              <input type="text" class="lab-header__search-input" data-nav-search-input placeholder="Search problems…" autocomplete="off" />
+            </div>
+          </div>
           <div class="lab-header__search-results" data-nav-search-results hidden></div>
         </div>
 
@@ -50,7 +55,12 @@
       </div>
       <div class="lab-header__mobile-group lab-header__mobile-search">
         <p class="lab-header__mobile-label">Search</p>
-        <input type="text" class="lab-header__search-input" data-nav-mobile-search-input placeholder="Search problems…" autocomplete="off" />
+        <div class="lab-header__search-field">
+          <div class="lab-header__search-inner">
+            <svg class="lab-header__search-icon" viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"></circle><path d="m16 16-3.2-3.2"></path></svg>
+            <input type="text" class="lab-header__search-input" data-nav-mobile-search-input placeholder="Search problems…" autocomplete="off" />
+          </div>
+        </div>
         <div class="lab-header__search-results" data-nav-mobile-search-results hidden></div>
       </div>
     </div>
@@ -104,34 +114,53 @@
   <section data-block="catalog" id="catalog">
     <h2 class="block-heading">Every problem</h2>
     <div class="catalog-head">
-      <div class="cat-grid" role="group" aria-label="Filter by category">
-        <button type="button" class="cat-chip" data-cat="data" data-filter-axis="category" data-filter-value="data" aria-pressed="false">
-          <span class="icon-tile"><svg viewBox="0 0 20 20" aria-hidden="true"><ellipse cx="10" cy="5" rx="6" ry="2.4"></ellipse><path d="M4 5v10c0 1.3 2.7 2.4 6 2.4s6-1.1 6-2.4V5"></path><path d="M4 10c0 1.3 2.7 2.4 6 2.4s6-1.1 6-2.4"></path></svg></span>
-          <span class="txt"><b>Data &amp; Database</b><small data-cat-count="data"></small></span>
-        </button>
-        <button type="button" class="cat-chip" data-cat="security" data-filter-axis="category" data-filter-value="security" aria-pressed="false">
-          <span class="icon-tile"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2.5 16 5v5c0 4-2.6 6.6-6 7.5-3.4-.9-6-3.5-6-7.5V5l6-2.5Z"></path><path d="M7.3 10 9.3 12l3.4-4"></path></svg></span>
-          <span class="txt"><b>Security &amp; Trust</b><small data-cat-count="security"></small></span>
-        </button>
-        <button type="button" class="cat-chip" data-cat="code-design" data-filter-axis="category" data-filter-value="code-design" aria-pressed="false">
-          <span class="icon-tile"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M7 5 2.5 10 7 15"></path><path d="M13 5l4.5 5-4.5 5"></path></svg></span>
-          <span class="txt"><b>Code Design</b><small data-cat-count="code-design"></small></span>
-        </button>
-        <button type="button" class="cat-chip" data-cat="api" data-filter-axis="category" data-filter-value="api" aria-pressed="false">
-          <span class="icon-tile"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M6 8V4.5M14 8V4.5M5 8h10v3a5 5 0 0 1-10 0V8Z"></path><path d="M10 15.5V17"></path></svg></span>
-          <span class="txt"><b>API &amp; Contracts</b><small data-cat-count="api"></small></span>
-        </button>
-        <button type="button" class="cat-chip" data-cat="performance" data-filter-axis="category" data-filter-value="performance" aria-pressed="false">
-          <span class="icon-tile"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 15a7 7 0 0 1 14 0"></path><path d="M10 15 13.3 8.8"></path><circle cx="10" cy="15" r="1"></circle></svg></span>
-          <span class="txt"><b>Performance &amp; Scale</b><small data-cat-count="performance"></small></span>
-        </button>
-        <button type="button" class="cat-chip" data-cat="reliability" data-filter-axis="category" data-filter-value="reliability" aria-pressed="false">
-          <span class="icon-tile"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M2.5 11h3l1.6-4 2.4 7.5L11.3 8l1.3 3h3.9"></path></svg></span>
-          <span class="txt"><b>Reliability &amp; Ops</b><small data-cat-count="reliability"></small></span>
-        </button>
-      </div>
-
       <div class="catalog-toolbar">
+        <div class="lab-header__browse" data-cat-filter>
+          <button type="button" class="lab-header__browse-toggle cat-filter__toggle" data-cat-filter-toggle aria-haspopup="true" aria-expanded="false">
+            Category
+            <span class="count-badge" data-cat-filter-badge hidden>0</span>
+            <svg viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.6" fill="none"/></svg>
+          </button>
+          <div class="lab-header__browse-menu cat-filter__menu" data-cat-filter-menu role="menu">
+            <button type="button" data-filter-axis="category" data-filter-value="data" aria-pressed="false">
+              <span class="dot" style="background: var(--cat-data)"></span>
+              Data &amp; Database
+              <span class="count" data-cat-count="data"></span>
+              <span class="check" aria-hidden="true">✓</span>
+            </button>
+            <button type="button" data-filter-axis="category" data-filter-value="security" aria-pressed="false">
+              <span class="dot" style="background: var(--cat-security)"></span>
+              Security &amp; Trust
+              <span class="count" data-cat-count="security"></span>
+              <span class="check" aria-hidden="true">✓</span>
+            </button>
+            <button type="button" data-filter-axis="category" data-filter-value="code-design" aria-pressed="false">
+              <span class="dot" style="background: var(--cat-code-design)"></span>
+              Code Design
+              <span class="count" data-cat-count="code-design"></span>
+              <span class="check" aria-hidden="true">✓</span>
+            </button>
+            <button type="button" data-filter-axis="category" data-filter-value="api" aria-pressed="false">
+              <span class="dot" style="background: var(--cat-api)"></span>
+              API &amp; Contracts
+              <span class="count" data-cat-count="api"></span>
+              <span class="check" aria-hidden="true">✓</span>
+            </button>
+            <button type="button" data-filter-axis="category" data-filter-value="performance" aria-pressed="false">
+              <span class="dot" style="background: var(--cat-performance)"></span>
+              Performance &amp; Scale
+              <span class="count" data-cat-count="performance"></span>
+              <span class="check" aria-hidden="true">✓</span>
+            </button>
+            <button type="button" data-filter-axis="category" data-filter-value="reliability" aria-pressed="false">
+              <span class="dot" style="background: var(--cat-reliability)"></span>
+              Reliability &amp; Ops
+              <span class="count" data-cat-count="reliability"></span>
+              <span class="check" aria-hidden="true">✓</span>
+            </button>
+          </div>
+        </div>
+
         <div class="more-filters">
           <button type="button" class="more-filters__trigger" data-more-trigger aria-expanded="false" aria-controls="moreFiltersPanel">
             <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 5h14M6 10h8M9 15h2"></path></svg>
@@ -184,6 +213,7 @@
       <summary>Changelog</summary>
       <p>2026-10-24 — Landing and 3 runnable labs shipped.</p>
       <p>2026-11-01 — New identity (graphite + violet, IBM Plex), full-width problem cards, list/slides toggle.</p>
+      <p>2026-11-06 — Category filter moved from tab chips to a dropdown (reusing the header's Browse menu); header search redesigned with a flowing neon/dark-blue border; typeface switched to Space Grotesk + JetBrains Mono.</p>
     </details>
     <p><button type="button" data-clear-progress>Clear my progress</button></p>
     <p>Built and maintained by Phuc</p>

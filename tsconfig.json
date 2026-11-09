@@ -18,5 +18,6 @@
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true
   },
-  "include": ["scripts/**/*.js", "scripts/**/*.d.ts", "tools/**/*.mjs", "tests/**/*.mjs"]
+  "include": ["scripts/**/*.js", "scripts/**/*.d.ts", "tools/**/*.mjs", "tests/**/*.mjs"],
+  "exclude": ["scripts/vendor/**"]
 }

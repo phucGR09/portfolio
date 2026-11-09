@@ -41,8 +41,8 @@
   --sig-focus: #ffffff;
 
   /* Chữ */
-  --font-sans: "IBM Plex Sans", system-ui, sans-serif;
-  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --font-sans: "Space Grotesk", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   --fs-hero: clamp(2.2rem, 5.5vw, 3.6rem);
   --fs-h2: 1.1rem;
   --fs-lead: 1.05rem;
@@ -156,6 +156,11 @@ a { color: var(--accent); }
 .lab-header__search-results a span { color: var(--text-mute); }
 .lab-header__browse-menu .dot, .lab-header__mobile-group .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
 .lab-header__browse-menu .count, .lab-header__mobile-group .count { margin-left: auto; color: var(--text-mute); font-family: var(--font-mono); font-size: 0.75rem; }
+/* Toggle-filter rows (catalog category dropdown reuses this same menu —
+   header's own Browse items never carry aria-pressed, so this is a no-op there). */
+.lab-header__browse-menu button[aria-pressed="true"] { background: var(--panel-raised); color: var(--text-head); }
+.lab-header__browse-menu button .check { display: none; margin-left: 0.4em; color: var(--accent); font: 700 0.7rem/1 var(--font-mono); flex: none; }
+.lab-header__browse-menu button[aria-pressed="true"] .check { display: inline; }
 
 .lab-header__spacer { flex: 1; min-width: 0; }
 .lab-header__utility { display: flex; align-items: center; gap: var(--sp-2); flex-shrink: 0; }
@@ -163,9 +168,30 @@ a { color: var(--accent); }
 @media (min-width: 560px) { .lab-header__stat { display: inline; } }
 
 .lab-header__search { position: relative; }
-.lab-header__search-input { width: 9.5rem; padding: 0.4rem 0.6rem; border: 1px solid var(--border); border-radius: var(--radius); background: transparent; color: var(--text-head); font: 0.82rem/1 var(--font-sans); outline: none; }
-.lab-header__search-input:focus { border-color: var(--border-strong); }
-.lab-header__mobile-search .lab-header__search-input { width: 100%; padding: 0.55rem 0.6rem; }
+/* Flowing neon/dark-blue "light transfer" border: a gradient sweeps across
+   via background-position only (no rotation/transform), so the ring never
+   spins — it just keeps shifting color, slower at rest and quicker on focus. */
+.lab-header__search-field {
+  padding: 2px;
+  border-radius: calc(var(--radius) + 8px);
+  background: linear-gradient(115deg, var(--accent) 0%, #0f2e6b 30%, var(--accent) 60%, #0f2e6b 100%);
+  background-size: 260% 260%;
+  animation: lab-search-flow 10s linear infinite;
+  box-shadow: 0 4px 18px -10px color-mix(in srgb, var(--accent) 55%, transparent);
+}
+.lab-header__search-field:focus-within { animation-duration: 2.6s; box-shadow: 0 4px 20px -8px color-mix(in srgb, var(--accent) 75%, transparent); }
+.lab-header__search-inner { display: flex; align-items: center; gap: 0.55em; background: var(--ink); border-radius: calc(var(--radius) + 6px); padding: 0.5rem 0.75rem 0.5rem 0.65rem; }
+.lab-header__search-icon { width: 14px; height: 14px; stroke: var(--text-mute); fill: none; stroke-width: 1.7; flex: none; }
+.lab-header__search-field:focus-within .lab-header__search-icon { stroke: var(--accent); }
+.lab-header__search-input { width: 12.5rem; min-width: 0; flex: 1 1 auto; padding: 0; border: none; background: none; color: var(--text-head); font: 0.84rem/1 var(--font-sans); outline: none; }
+.lab-header__search-input::placeholder { color: var(--text-mute); }
+.lab-header__mobile-search .lab-header__search-field { width: 100%; }
+.lab-header__mobile-search .lab-header__search-inner { padding: 0.6rem 0.75rem; }
+.lab-header__mobile-search .lab-header__search-input { width: 100%; }
+@keyframes lab-search-flow {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
 
 .lab-header__burger { display: none; align-items: center; justify-content: center; width: 2.1rem; height: 2.1rem; border: 1px solid var(--border); border-radius: var(--radius); background: transparent; color: var(--text-head); cursor: pointer; }
 .lab-header__burger svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.6; }
@@ -562,33 +588,26 @@ body { counter-reset: block-num; }
 }
 .labs-bg__square--static { animation: none; opacity: var(--peak, 0.08); }
 
-/* ---- catalog: category chips, "more filters" menu, view dial, cards ---- */
+/* ---- catalog: category filter dropdown, "more filters" menu, view dial, cards ---- */
 .catalog-head { display: flex; flex-direction: column; gap: var(--sp-3); margin-bottom: var(--sp-4); }
 
-.cat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(168px, 1fr)); gap: var(--sp-2); margin: 0; padding: 0; list-style: none; }
-.cat-chip {
-  --c: var(--text-mute);
-  display: flex; align-items: center; gap: 0.65em; width: 100%; text-align: left;
-  border: 1px solid var(--border-strong); background: var(--panel-raised); border-radius: var(--radius);
-  padding: 0.55em 0.7em; cursor: pointer; color: var(--text-body); min-height: 40px;
-  transition: border-color 130ms, background 130ms;
-}
-.cat-chip:hover { border-color: var(--c); }
-.cat-chip[aria-pressed="true"] { border-color: var(--c); background: color-mix(in srgb, var(--c) 12%, var(--panel-raised)); }
-.cat-chip .icon-tile { width: 26px; height: 26px; border-radius: var(--radius); display: flex; align-items: center; justify-content: center; flex: none; background: color-mix(in srgb, var(--c) 18%, var(--panel-raised)); color: var(--c); }
-.cat-chip .icon-tile svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 1.6; }
-.cat-chip .txt { display: flex; flex-direction: column; gap: 0.1em; min-width: 0; }
-.cat-chip .txt b { font: 600 0.78rem var(--font-sans); color: var(--text-head); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.cat-chip .txt small { font: 0.66rem var(--font-mono); color: var(--text-mute); }
-.cat-chip[aria-pressed="true"] .txt small { color: var(--c); }
-.cat-chip[data-cat="data"] { --c: var(--cat-data); }
-.cat-chip[data-cat="security"] { --c: var(--cat-security); }
-.cat-chip[data-cat="code-design"] { --c: var(--cat-code-design); }
-.cat-chip[data-cat="api"] { --c: var(--cat-api); }
-.cat-chip[data-cat="performance"] { --c: var(--cat-performance); }
-.cat-chip[data-cat="reliability"] { --c: var(--cat-reliability); }
-
 .catalog-toolbar { display: flex; align-items: center; gap: var(--sp-2); flex-wrap: wrap; }
+
+/* Category filter — a dropdown built from the exact same component as the
+   header's Browse-by-category menu (.lab-header__browse*), not a bespoke
+   one, just dressed as a standalone toolbar button instead of a nav link. */
+.cat-filter__toggle {
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  padding: 0.6em 0.9em;
+  min-height: 40px;
+  text-transform: none;
+  letter-spacing: normal;
+  font: 600 0.78rem/1 var(--font-sans);
+}
+.cat-filter__toggle:hover, .lab-header__browse.is-open .cat-filter__toggle { border-color: var(--accent); color: var(--text-head); }
+.cat-filter__toggle .count-badge { font: 700 0.64rem var(--font-mono); background: var(--accent); color: var(--accent-ink); border-radius: var(--radius-pill); padding: 0.1em 0.5em; }
+.cat-filter__menu { width: 17rem; z-index: 20; }
 
 .more-filters { position: relative; }
 .more-filters__trigger {

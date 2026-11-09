@@ -82,6 +82,49 @@ function setupMoreFilters() {
   for (const row of rows) row.addEventListener("click", updateBadge);
 }
 
+/**
+ * Category filter — a dropdown wired the same way as the header's own
+ * Browse-by-category menu (scripts/lab-nav.js's setupBrowseDropdown), just
+ * local to this page and multi-select instead of navigate-on-click. The
+ * actual filtering is handled by the generic [data-filter-axis] loop in
+ * setupCatalog(); this only owns open/close + the toggle's badge count.
+ */
+function setupCategoryDropdown() {
+  const root = /** @type {HTMLElement | null} */ (document.querySelector("[data-cat-filter]"));
+  const toggle = document.querySelector("[data-cat-filter-toggle]");
+  const menu = document.querySelector("[data-cat-filter-menu]");
+  const badge = /** @type {HTMLElement | null} */ (document.querySelector("[data-cat-filter-badge]"));
+  if (!root || !toggle || !menu || !badge) return;
+
+  // An arrow, not a hoisted declaration, so the null checks above still narrow menu and badge inside it
+  const updateBadge = () => {
+    const count = menu.querySelectorAll('button[aria-pressed="true"]').length;
+    badge.hidden = count === 0;
+    badge.textContent = String(count);
+  };
+  for (const button of menu.querySelectorAll("button[data-filter-axis]")) {
+    button.addEventListener("click", updateBadge);
+  }
+
+  toggle.addEventListener("click", () => {
+    const open = root.classList.toggle("is-open");
+    toggle.setAttribute("aria-expanded", open ? "true" : "false");
+  });
+  document.addEventListener("click", (event) => {
+    if (!root.contains(/** @type {Node} */ (event.target))) {
+      root.classList.remove("is-open");
+      toggle.setAttribute("aria-expanded", "false");
+    }
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      root.classList.remove("is-open");
+      toggle.setAttribute("aria-expanded", "false");
+    }
+  });
+  updateBadge();
+}
+
 /** @param {import("./types.d.ts").BlastRadius} blast @returns {HTMLElement} */
 function buildSeverityBadge(blast) {
   const badge = el("span", `badge-severity badge-severity--${blast}`);
@@ -211,5 +254,6 @@ function setupClearProgress() {
 renderHero();
 renderCategoryCounts();
 setupCatalog();
+setupCategoryDropdown();
 setupMoreFilters();
 setupClearProgress();
